@@ -1,12 +1,19 @@
 # .instructions
 
-In diesem Ordner werden alle projektspezifischen Anleitungen, HowTos und Build-/Deployment-Informationen gesammelt.
+In diesem Ordner werden alle projektspezifischen Anleitungen, HowTos, LLM-Prompts und Build-/Deployment-Informationen gesammelt.
 
 ## Empfohlene Struktur
 - `build.md` – Hinweise zum Bauen und Deployen des Projekts
 - `setup.md` – Projekt-Setup und lokale Entwicklungsumgebung
-- `howto_feature_x.md` – Schritt-für-Schritt-Anleitungen für spezielle Features
 - `ci_cd.md` – Hinweise zu CI/CD, Automatisierung und Pipelines
+- `prompt.md` – Beispielprompts für LLMs und Automatisierung
+- `instructions_llm.md` – LLM-/Automatisierungsanweisungen
+- `merge_decisions_and_field_sources.md` – Entscheidungsdokumentation für MergeService
+
+## Querverweise & Ergänzungen
+- Siehe `.documents/principles_matrix.md` für eine zentrale Übersicht aller Prinzipien und Empfehlungen.
+- Für Architektur und State-Management siehe `.documents/architecture_clean_architecture.md` und `.documents/state_management_riverpod_bloc.md`.
+- Für Produktanforderungen siehe `.documents/prd_white_label_podcast_app.md`.
 
 ## Best Practices (GitHub Copilot & Copilot Chat)
 - Nutze `/explain`, `/fix`, `/tests`, `/doc` für schnelle Analysen, Erklärungen und Testgenerierung.
@@ -17,3 +24,4 @@ In diesem Ordner werden alle projektspezifischen Anleitungen, HowTos und Build-/
 ## Hinweise
 - Jede Anleitung sollte klar, prägnant und aktuell gehalten werden.
 - Für wiederkehrende Aufgaben (z.B. Release, Migration) eigene HowTos anlegen.
+- Verweise in der Haupt-README oder CONTRIBUTING.md auf diesen Ordner, damit auch andere Entwickler und Tools ihn finden.

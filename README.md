@@ -1,16 +1,14 @@
-# template
+# Flutter Template Projekt
 
-A new Flutter project.
+Dieses Projekt ist ein modernes, best-practice-orientiertes Flutter-Template mit klarer Dokumentationsstruktur, Clean Architecture, State-Management (Riverpod/BLoC), automatisierten Tests und LLM/Automatisierungs-Support.
 
-## Getting Started
+## Hinweise zur Projektstruktur
+- Alle relevanten Best-Practices, Prinzipien und Vorgehensweisen wurden aus dem temporären Ordner `anderes_projekt` extrahiert und in die zentrale Dokumentation übernommen.
+- Der Ordner `anderes_projekt` kann nach Abschluss der Template-Erstellung gelöscht werden und ist nicht Teil des eigentlichen Templates.
 
-This project is a starting point for a Flutter application.
+## Einstieg
+- Lies die [GETTING_STARTED.md](GETTING_STARTED.md) für eine Schritt-für-Schritt-Anleitung.
+- Siehe [CONTRIBUTING.md](CONTRIBUTING.md) für Mitwirkende.
+- Siehe `.documents/` und `.instructions/` für alle Architektur-, Doku- und HowTo-Themen.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Viel Erfolg beim Projektstart und der Weiterentwicklung!
