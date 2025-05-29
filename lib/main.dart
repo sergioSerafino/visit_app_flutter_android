@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+// Beispiel für ein MVVM-ViewModel nach Flutter/Dart 3-Prinzipien
+class CounterViewModel extends ChangeNotifier {
+  int _counter = 0;
+  int get counter => _counter;
+
+  void increment() {
+    _counter++;
+    notifyListeners();
+  }
+}
 
 void main() {
   runApp(const MyApp());
@@ -53,27 +65,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // MVVM: ViewModel-Instanz
+  final CounterViewModel _viewModel = CounterViewModel();
 
-  void _incrementCounter() {
-    setState(() {
-      // Dieser Aufruf von setState teilt dem Flutter-Framework mit, dass sich
-      // etwas in diesem State geändert hat, wodurch die build-Methode unten erneut
-      // ausgeführt wird, sodass die Anzeige die aktualisierten Werte widerspiegeln kann.
-      // Wenn wir _counter ändern würden, ohne setState() aufzurufen, würde die build-Methode
-      // nicht erneut aufgerufen werden und es würde scheinbar nichts passieren.
-      _counter++;
-    });
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Diese Methode wird jedes Mal erneut ausgeführt, wenn setState aufgerufen wird, z. B. wie oben
-    // von der _incrementCounter-Methode.
-    //
-    // Das Flutter-Framework wurde optimiert, um das erneute Ausführen von build-Methoden schnell zu machen,
-    // sodass Sie einfach alles neu aufbauen können, was aktualisiert werden muss, anstatt einzelne
-    // Widget-Instanzen manuell zu ändern.
     return Scaffold(
       appBar: AppBar(
         // PROBIEREN SIE FOLGENDES: Ändern Sie die Farbe hier auf eine bestimmte Farbe (z. B. Colors.amber)
@@ -87,29 +89,33 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center ist ein Layout-Widget. Es nimmt ein einzelnes Kind und positioniert es
         // in der Mitte des Eltern-Widgets.
-        child: Column(
-          // Column ist ebenfalls ein Layout-Widget. Es nimmt eine Liste von Kindern und
-          // ordnet sie vertikal an. Standardmäßig passt es sich der Breite seiner Kinder an
-          // und versucht, so hoch wie das Eltern-Widget zu sein.
-          //
-          // Column hat verschiedene Eigenschaften, um zu steuern, wie es sich selbst und seine
-          // Kinder positioniert. Hier verwenden wir mainAxisAlignment, um die Kinder vertikal zu
-          // zentrieren; die Hauptachse ist hier die Vertikale (die Querachse wäre horizontal).
-          //
-          // PROBIEREN SIE FOLGENDES: Rufen Sie "Debug Painting" auf (wählen Sie die Aktion "Toggle Debug Paint"
-          // in der IDE oder drücken Sie "p" in der Konsole), um das Wireframe für jedes Widget zu sehen.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: AnimatedBuilder(
+          animation: _viewModel,
+          builder:
+              (context, _) => Column(
+                // Column ist ebenfalls ein Layout-Widget. Es nimmt eine Liste von Kindern und
+                // ordnet sie vertikal an. Standardmäßig passt es sich der Breite seiner Kinder an
+                // und versucht, so hoch wie das Eltern-Widget zu sein.
+                //
+                // Column hat verschiedene Eigenschaften, um zu steuern, wie es sich selbst und seine
+                // Kinder positioniert. Hier verwenden wir mainAxisAlignment, um die Kinder vertikal zu
+                // zentrieren; die Hauptachse ist hier die Vertikale (die Querachse wäre horizontal).
+                //
+                // PROBIEREN SIE FOLGENDES: Rufen Sie "Debug Painting" auf (wählen Sie die Aktion "Toggle Debug Paint"
+                // in der IDE oder drücken Sie "p" in der Konsole), um das Wireframe für jedes Widget zu sehen.
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('You have pushed the button this many times:'),
+                  Text(
+                    '${_viewModel.counter}',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ],
+              ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _viewModel.increment,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // Dieses Komma am Ende macht das Auto-Formatieren für build-Methoden angenehmer.
