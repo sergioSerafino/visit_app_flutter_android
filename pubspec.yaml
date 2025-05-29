@@ -1,5 +1,5 @@
-name: template
-description: "A new Flutter project."
+name: empty_flutter_template
+description: Ein neutrales Flutter-Template als Ausgangsbasis für neue Projekte.
 # Die folgende Zeile verhindert, dass das Paket versehentlich mit
 # `flutter pub publish` nach pub.dev veröffentlicht wird. Dies ist für private Pakete bevorzugt.
 publish_to: 'none' # Entfernen Sie diese Zeile, wenn Sie auf pub.dev veröffentlichen möchten
@@ -19,7 +19,7 @@ publish_to: 'none' # Entfernen Sie diese Zeile, wenn Sie auf pub.dev veröffentl
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ">=3.3.0 <4.0.0"
 
 # Abhängigkeiten geben andere Pakete an, die Ihr Paket benötigt, um zu funktionieren.
 # Um Ihre Paketabhängigkeiten automatisch auf die neuesten Versionen zu aktualisieren,
@@ -30,20 +30,48 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # Folgendes fügt die Cupertino Icons-Schriftart zu Ihrer Anwendung hinzu.
-  # Verwenden Sie sie mit der CupertinoIcons-Klasse für iOS-Style-Icons.
-  cupertino_icons: ^1.0.8
+  # audioplayers: ^5.2.1
+  # bloc: ^9.0.0
+  # cupertino_icons: ^1.0.8
+  # dio: ^5.3.3
+  # emojis: ^0.9.9
+  flutter_riverpod: ^2.5.1
+  get_it: ^7.6.7
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  injectable: ^2.4.1
+  yaml: ^3.1.3
+  # intl: ^0.17.0
+  # json_annotation: ^4.9.0
+  # json_serializable: ^6.7.1
+  # just_audio: ^0.9.36
+  # lottie: ^3.0.0
+  # provider: ^6.1.4
+  # shared_preferences: ^2.2.2
+  # shimmer: ^3.0.0
+  # webfeed: ^0.7.0
+  # xml: ^5.0.2
+  # xml_parser: ^1.0.0
+  # yaml: ^3.1.3
+  # equatable: ^2.0.7
+  # freezed: ^2.4.3
+  # freezed_annotation: ^2.4.1
+  # flutter_bloc: ^8.1.4 # Alternative zu Riverpod, siehe Doku
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^5.0.0
+  # build_runner: ^2.4.8 # Für Code-Generierung, siehe Doku
+  # hive_generator: ^2.0.1
+  # mockito: ^5.4.5
+  # mocktail: ^1.0.3
+  # test: ^1.25.15
 
   # Das untenstehende Paket "flutter_lints" enthält eine empfohlene Menge an Lints,
   # die gute Programmierpraktiken fördern. Das Lint-Set wird in der Datei
   # `analysis_options.yaml` im Wurzelverzeichnis Ihres Pakets aktiviert. Siehe diese Datei
   # für Informationen zum Deaktivieren bestimmter Lint-Regeln und zum Aktivieren zusätzlicher.
-  flutter_lints: ^5.0.0
 
 # Informationen zum generischen Dart-Teil dieser Datei finden Sie auf der
 # folgenden Seite: https://dart.dev/tools/pub/pubspec

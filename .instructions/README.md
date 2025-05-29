@@ -25,3 +25,16 @@ In diesem Ordner werden alle projektspezifischen Anleitungen, HowTos, LLM-Prompt
 - Jede Anleitung sollte klar, prägnant und aktuell gehalten werden.
 - Für wiederkehrende Aufgaben (z.B. Release, Migration) eigene HowTos anlegen.
 - Verweise in der Haupt-README oder CONTRIBUTING.md auf diesen Ordner, damit auch andere Entwickler und Tools ihn finden.
+
+## Kommentar- und Dokumentationsstil
+
+- Alle Kommentare im Code (und in neuen Dateien) sollen in klarer, verständlicher Sprache verfasst werden.
+- Praxisbezug: Kommentare sollen – wie im Template – auf Best Practices, Quellen (z. B. Reso Coder) und konkrete Anwendungsszenarien eingehen.
+- Stil: Prägnant, hilfreich, mit Verweis auf relevante Doku-Dateien (z. B. `.documents/architecture_clean_architecture.md`).
+- Beispiel siehe Testvorlage in `test/widget_test.dart`.
+
+## Code Style & Formatierung
+
+- Nach jedem return-Statement im Widget-Baum folgt eine Leerzeile (siehe Beispiel in lib/main.dart).
+- Kommentare im Code sollen Stil, Praxisbezug und Sprache des Templates aufgreifen (siehe Abschnitt "Kommentar- und Dokumentationsstil").
+- Weitere Style-Konventionen siehe analysis_options.yaml.

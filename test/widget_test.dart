@@ -1,30 +1,22 @@
-// Dies ist ein grundlegender Flutter Widget-Test.
-//
-// Um eine Interaktion mit einem Widget in Ihrem Test durchzuführen, verwenden Sie das WidgetTester-
-// Hilfsobjekt aus dem flutter_test-Paket. Zum Beispiel können Sie Tipp- und Scrollgesten senden.
-// Sie können WidgetTester auch verwenden, um untergeordnete Widgets im Widget-Baum zu finden,
-// Text zu lesen und zu überprüfen, ob die Werte von Widget-Eigenschaften korrekt sind.
+// Testvorlage nach TDD-Prinzipien (Reso Coder)
+// Siehe .documents/architecture_clean_architecture.md für TDD- und Clean Architecture-Best-Practices.
+// TDD-Zyklus: Red (Test schlägt fehl) → Green (Code implementieren) → Refactor (Code verbessern).
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:template/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Unsere App bauen und einen Frame auslösen.
-    await tester.pumpWidget(const MyApp());
+  group('Beispiel UseCase', () {
+    // Schritt 1: Schreibe einen fehlschlagenden Test (Red)
+    test('should return expected result when ...', () {
+      // Arrange: Testdaten und Mocks vorbereiten
 
-    // Überprüfen, ob unser Zähler bei 0 startet.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // Act: Methode/UseCase aufrufen
 
-    // Das '+'-Symbol antippen und einen Frame auslösen.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      // Assert: Erwartetes Ergebnis prüfen
+      // expect(..., ...);
+    });
 
-    // Überprüfen, ob unser Zähler erhöht wurde.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Schritt 2: Implementiere minimalen Code, bis der Test grün ist (Green)
+    // Schritt 3: Refactoring, sobald der Test grün ist (Refactor)
   });
 }

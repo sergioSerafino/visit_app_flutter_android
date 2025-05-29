@@ -20,6 +20,18 @@ Basierend auf den Tutorials von Reso Coder und aktuellen Flutter/Dart 3-Praktike
 - `on<Event>` statt `mapEventToState` (flutter_bloc)
 - Fehlerbehandlung mit sealed classes statt dartz
 
+## Externe Ressourcen & empfohlene Tutorials
+- [Flutter TDD Clean Architecture Course (Reso Coder, YouTube)](https://www.youtube.com/playlist?list=PLB6lc7nQ1n4jT2-J_bApC4l3pH0k8B1f2)
+  - Umfassende Videoreihe zu TDD, Clean Architecture, Layering, Testing und Best Practices in Flutter.
+  - Empfohlene Vorgehensweise laut Reso Coder:
+    - **TDD-Zyklus:** Schreibe zuerst einen fehlschlagenden Test (Red), implementiere minimalen Code bis der Test grün ist (Green), dann Refactoring (Refactor).
+    - **Architektur:** Strikte Trennung von Domain, Data und Presentation Layer.
+    - **Testabdeckung:** Jede Business-Logik (UseCase, Repository, Service) sollte durch Unit- und ggf. Integrationstests abgedeckt werden.
+    - **Mocking:** Verwende Mocks für externe Abhängigkeiten (z. B. Datenquellen, APIs) im Test.
+    - **Fehlerbehandlung:** Teste auch Fehlerfälle und Randbedingungen.
+    - **Empfohlene Tools:** `mockito`, `flutter_test`, ggf. `bloc_test` oder `riverpod_test`.
+  - Siehe auch: [Reso Coder Blog](https://resocoder.com/) für weiterführende Artikel und Beispiele.
+
 ---
 
 Siehe auch: `.instructions/setup.md` und `.instructions/build.md` für praktische Umsetzung.

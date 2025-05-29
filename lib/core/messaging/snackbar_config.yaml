@@ -1,0 +1,233 @@
+# snackbar_config.yaml
+snackbar_events:
+  # Handlungszweck "Willkommen zurück"
+  welcome_back:
+    duration: short
+    # icon: "👋" # Emoji direkt
+    icon: "wavingHand" # Enum-Name
+    message_key: welcome_back
+    type: info
+  # Handlungszweck "Ungültige CollectionId"
+  collection_invalid:
+    duration: long
+    # icon: "❌"
+    icon: "cross"
+    message_key: collection_invalid
+    type: error
+  # Handlungszweck "Keine Verbindung verfügbar"
+  network_no_connection:
+    duration: long
+    # icon: "☁️"
+    icon: "cloud"
+    message_key: network_no_connection
+    type: error
+  # Handlungszweck "Offline-Modus aktiviert"
+  network_offline_mode:
+    duration: short
+    # icon: "☁️"
+    icon: "cloud"
+    message_key: network_offline_mode
+    type: info
+  # Handlungszweck "Audio erfolgreich offline gespeichert"
+  audio_download_success:
+    duration: short
+    # icon: "⬇️"
+    icon: "downArrow"
+    message_key: audio_download_success
+    type: success
+  # Handlungszweck "Favorit gespeichert"
+  favorites_saved:
+    duration: short
+    # icon: "⭐"
+    icon: "star"
+    message_key: favorites_saved
+    type: success
+  # Handlungszweck "Favorit entfernt"
+  favorites_removed:
+    duration: short
+    # icon: "💔"
+    icon: "heartBroken"
+    message_key: favorites_removed
+    type: info
+  # Handlungszweck "Speicherplatz freigegeben"
+  storage_file_deleted:
+    duration: short
+    # icon: "🗑️"
+    icon: "trash"
+    message_key: storage_file_deleted
+    type: info
+  # Handlungszweck "Favorit dauerhaft übernommen"
+  favorites_permanent:
+    duration: short
+    # icon: "🌟"
+    icon: "glowingStar"
+    message_key: favorites_permanent
+    type: success
+  # Handlungszweck "Favorit abgelaufen, Flag bleibt erhalten"
+  favorites_expired_keep_flag:
+    duration: short
+    # icon: "ℹ️"
+    icon: "info"
+    message_key: favorites_expired_keep_flag
+    type: info
+  # Handlungszweck "Favorit bis Datum verfügbar"
+  favorites_valid_until:
+    duration: short
+    # icon: "⏰"
+    icon: "hourglass"
+    message_key: favorites_valid_until
+    type: info
+  # Handlungszweck "Audio abgelaufen"
+  audio_expired:
+    duration: long
+    # icon: "⚠️"
+    icon: "warning"
+    message_key: audio_expired
+    type: warning
+  # Handlungszweck "Audio erneut gespeichert"
+  audio_resaved:
+    duration: short
+    # icon: "🔄"
+    icon: "refresh"
+    message_key: audio_resaved
+    type: success
+  # Handlungszweck "Speicher optimiert"
+  storage_optimized:
+    duration: short
+    # icon: "🧼"
+    icon: "soap"
+    message_key: storage_optimized
+    type: info
+  # Handlungszweck "Nicht favorisierte Folge gelöscht"
+  storage_unfavorited_deleted:
+    duration: short
+    # icon: "🗑️"
+    icon: "trash"
+    message_key: storage_unfavorited_deleted
+    type: info
+  # Handlungszweck "Favorit bleibt erhalten, nur Offline-Version entfernt"
+  favorites_retained:
+    duration: short
+    # icon: "❤️"
+    icon: "heart"
+    message_key: favorites_retained
+    type: info
+  # Handlungszweck "Einstellungen übernommen"
+  settings_saved:
+    duration: short
+    # icon: "✅"
+    icon: "check"
+    message_key: settings_saved
+    type: success
+  # Handlungszweck "Eingabe ungültig"
+  input_invalid:
+    duration: short
+    # icon: "❌"
+    icon: "cross"
+    message_key: input_invalid
+    type: error
+  # Handlungszweck "Onboarding abgeschlossen"
+  onboarding_done:
+    duration: long
+    # icon: "🎉"
+    icon: "partyPopper"
+    message_key: onboarding_done
+    type: success
+  # Handlungszweck "Onboarding neu gestartet"
+  onboarding_restarted:
+    duration: short
+    # icon: "🔄"
+    icon: "refresh"
+    message_key: onboarding_restarted
+    type: info
+  # Handlungszweck "Host-Info gespeichert"
+  host_info_saved:
+    duration: short
+    # icon: "🔄"
+    icon: "refresh"
+    message_key: host_info_saved
+    type: success
+  # Handlungszweck "Host-Profil aktualisiert"
+  host_profile_updated:
+    duration: short
+    # icon: "🧑‍💼"
+    icon: "person"
+    message_key: host_profile_updated
+    type: success
+  # Handlungszweck "Host-Update offline fehlgeschlagen"
+  host_update_failed_offline:
+    duration: short
+    # icon: "📴"
+    icon: "noMobile"
+    message_key: host_update_failed_offline
+    type: warning
+  # Handlungszweck "Sammlung aktualisiert"
+  collection_updated:
+    duration: short
+    # icon: "🆕"
+    icon: "newButton"
+    message_key: collection_updated
+    type: success
+  # Handlungszweck "Willkommen zurück (Sammlung geladen)"
+  collection_welcome_back:
+    duration: short
+    # icon: "👋"
+    icon: "wavingHand"
+    message_key: collection_welcome_back
+    type: info
+  # Handlungszweck "Host-Daten manuell aktualisiert"
+  host_manual_update:
+    duration: short
+    # icon: "🔃"
+    icon: "repeat"
+    message_key: host_manual_update
+    type: info
+  # Handlungszweck "Host-Daten konnten nicht geladen werden"
+  host_fetch_failed:
+    duration: long
+    # icon: "❗"
+    icon: "exclamation"
+    message_key: host_fetch_failed
+    type: error
+  # Handlungszweck "Demo-Modus aktiv"
+  environment_demo_warning:
+    duration: long
+    # icon: "🧪"
+    icon: "testTube"
+    message_key: environment_demo_warning
+    type: warning
+  # Handlungszweck "Login erfolgreich"
+  login_success:
+    duration: short
+    # icon: "✅"
+    icon: "check"
+    message_key: login_success
+    type: success
+  # Handlungszweck "Login fehlgeschlagen"
+  login_failed:
+    duration: long
+    # icon: "❌"
+    icon: "cross"
+    message_key: login_failed
+    type: error
+  # Handlungszweck "Allgemeiner Netzwerkfehler"
+  error_network_general:
+    duration: long
+    # icon: "☁️"
+    icon: "cloud"
+    message_key: error_network_general
+    type: error
+  # Handlungszweck "Favoriten aktualisiert"
+  favorites_updated:
+    duration: short
+    # icon: "💖"
+    icon: "heartSparkle"
+    message_key: favorites_updated
+    type: success
+  # Handlungszweck "Cache gelöscht"
+  settings_cache_cleared:
+    duration: short
+    # icon: "🧹"
+    icon: "broom"
+    message_key: settings_cache_cleared
+    type: info
