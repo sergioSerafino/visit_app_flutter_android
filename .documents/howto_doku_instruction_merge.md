@@ -79,6 +79,66 @@ Copy-Item "G:\ProjekteFlutter\storage_hold\.documents\howto_*.md" "G:\ProjekteFl
 
 ---
 
+## 6. Nützliche Git-Befehle für die Migration und den Doku-Merge
+
+### Branches und Stand verwalten
+```powershell
+# Neuen Branch für Migration anlegen und wechseln
+git checkout -b develop
+
+# Branch auf Remote pushen
+git push -u origin develop
+
+# Branch auf main zurücksetzen (lokal)
+git reset --hard main
+
+# Branch auf einen bestimmten Tag zurücksetzen
+git reset --hard v1.0.0
+
+# Stand auf Remote erzwingen (Achtung: destructive!)
+git push --force
+```
+
+### Tags und Releases
+```powershell
+# Tag auf aktuellen Stand setzen
+git tag v0.9.0 -m "Initial Commit: Aktueller Stand des Empty Flutter Templates als Ausgangspunkt für weitere Entwicklung."
+
+# Tag ins Remote-Repository pushen
+git push origin v0.9.0
+
+# Alle Tags anzeigen
+git tag
+```
+
+### Synchronisation und Status
+```powershell
+# Aktuellen Branch und Status anzeigen
+git branch
+git status
+
+# Branch auf Remote pushen (z. B. main)
+git push -u origin main
+
+# Änderungen von main in develop mergen
+git checkout develop
+git merge main
+git push origin develop
+```
+
+### Historie und Vergleich
+```powershell
+# Alle Commits seit einem bestimmten Tag anzeigen
+git log --oneline --reverse v1.0.0..HEAD
+```
+
+---
+
+**Hinweis:**
+Diese Git-Befehle sind typische Beispiele für Migration, Branch-Management und Doku-Abgleich. Passe sie bei Bedarf an deine lokale Umgebung und Branch-Namen an.
+
+---
+
 **Fazit:**  
 Mit dieser Anleitung und den Skripten kannst du den Doku-/Instruction-Merge zwischen altem Projekt und Template effizient, nachvollziehbar und konsistent durchführen.  
 Wenn du ein konkretes Skript für einen bestimmten Ordner oder eine automatisierte Zusammenführung für bestimmte Dateitypen möchtest, sag Bescheid!
