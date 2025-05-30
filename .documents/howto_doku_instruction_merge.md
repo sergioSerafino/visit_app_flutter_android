@@ -1,3 +1,17 @@
+# Wichtiger Best Practice: Vor jeder Migration rekursiv nach Markdown-Dateien suchen
+
+**Bevor du mit dem Doku-/Instruction-Merge beginnst, führe in allen Projektordnern eine rekursive Suche nach Markdown-Dateien (`.md`) durch!**
+
+> Hintergrund: In Altprojekten sind Doku-Dateien oft verstreut (z.B. in Unterordnern, Build-/Feature-Ordnern, etc.). Um keine relevante Dokumentation zu verlieren, müssen alle `.md`-Dateien identifiziert und zentral übernommen werden.
+
+**Empfohlener PowerShell-Befehl:**
+```powershell
+Get-ChildItem -Path "<Projektpfad>" -Filter *.md -Recurse | Select-Object FullName
+```
+> Ersetze `<Projektpfad>` durch das Wurzelverzeichnis deines Quellprojekts (z.B. `G:\ProjekteFlutter\storage_hold`).
+
+---
+
 # HowTo: Doku-/Instruction-Merge zwischen altem Projekt und Template
 
 ## 1. Checkliste für den Doku-/Instruction-Merge
