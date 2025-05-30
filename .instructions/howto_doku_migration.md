@@ -23,3 +23,28 @@ Get-ChildItem -Path "<Projektpfad>" -Filter *.md -Recurse | Select-Object FullNa
 ## 3. Hinweise
 - Dokumentiere im Migrationsprotokoll, welche Dateien übernommen, angepasst oder entfernt wurden.
 - Halte dich an die Best-Practice-Struktur für zentrale, LLM-freundliche Dokumentation.
+
+---
+
+## Ergänzung: Zentrale Best Practice und automatisiertes Kopieren
+
+**Vor jedem Doku-/Instruction-Merge:**
+- Führe immer zuerst die rekursive Suche nach Markdown-Dateien durch (siehe oben).
+- Nutze für die Übernahme aller `.md`-Dateien aus dem Quellprojekt nach `.instructions` im Template z.B. dieses PowerShell-Skript:
+
+```powershell
+$quelle = "<Quellprojektpfad>"
+$ziel = "<TemplatePfad>\.instructions"
+Get-ChildItem -Path $quelle -Filter *.md -Recurse | ForEach-Object {
+    $zielDatei = Join-Path $ziel $_.Name
+    Copy-Item $_.FullName $zielDatei -Force
+}
+```
+> Ersetze `<Quellprojektpfad>` und `<TemplatePfad>` entsprechend deiner Umgebung.
+
+- Die initiale zentrale Ablage aller `.md`-Dateien in `.instructions` ist Best Practice für die Migration und den Doku-Abgleich.
+- Die weitere Sortierung, Prüfung und das Merging erfolgt nach [howto_doku_instruction_merge.md](../.documents/howto_doku_instruction_merge.md).
+
+---
+
+Weitere Details und Checklisten siehe [howto_doku_instruction_merge.md](../.documents/howto_doku_instruction_merge.md).
