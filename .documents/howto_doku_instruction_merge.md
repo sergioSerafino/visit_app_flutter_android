@@ -1,0 +1,84 @@
+# HowTo: Doku-/Instruction-Merge zwischen altem Projekt und Template
+
+## 1. Checkliste für den Doku-/Instruction-Merge
+
+**A. Vorbereitung**
+- Klone beide Repos lokal in getrennte Ordner (z. B. `empty_flutter_template` und `storage_hold`).
+- Öffne beide Projekte parallel in VS Code oder einem anderen Editor mit guter Diff-Unterstützung.
+
+**B. Wichtige Doku-/Instruction-Ordner und -Dateien**
+- .documents (im Template, ggf. im alten Projekt als Markdown im Root oder in eigenen Doku-Ordnern)
+- .instructions (im Template, ggf. im alten Projekt als HowTo- oder Build-Dateien)
+- README.md, CONTRIBUTING.md, GETTING_STARTED.md
+- ggf. weitere HowTos, ADRs, Build- und Setup-Anleitungen
+
+---
+
+## 2. PowerShell-Skript für den Datei-Vergleich (optional)
+
+```powershell
+# Passe die Pfade an deine lokalen Verzeichnisse an!
+$alt = "G:\ProjekteFlutter\storage_hold"
+$template = "G:\ProjekteFlutter\empty_flutter_template"
+
+# Vergleiche zentrale Doku-Ordner
+Compare-Object -ReferenceObject (Get-ChildItem "$alt\.documents" -Recurse | Select-Object -ExpandProperty Name) `
+               -DifferenceObject (Get-ChildItem "$template\.documents" -Recurse | Select-Object -ExpandProperty Name) `
+               | Out-File "C:\Temp\documents_diff.txt"
+
+Compare-Object -ReferenceObject (Get-ChildItem "$alt\.instructions" -Recurse | Select-Object -ExpandProperty Name) `
+               -DifferenceObject (Get-ChildItem "$template\.instructions" -Recurse | Select-Object -ExpandProperty Name) `
+               | Out-File "C:\Temp\instructions_diff.txt"
+```
+> Damit bekommst du eine Liste aller Dateien, die nur in einem der beiden Projekte existieren.
+
+---
+
+## 3. Empfohlener Merge-Workflow
+
+1. **Vergleiche die README.md, CONTRIBUTING.md, GETTING_STARTED.md**  
+   - Öffne beide Versionen nebeneinander.
+   - Übernimm projektspezifische Hinweise aus dem alten Projekt, aber halte dich an die Struktur und Querverweise des Templates.
+
+2. **Vergleiche .documents und .instructions**  
+   - Für jede Datei:  
+     - Wenn sie nur im Template existiert → übernehmen.
+     - Wenn sie nur im alten Projekt existiert → prüfen, ob sie noch relevant ist, ggf. übernehmen und anpassen.
+     - Wenn sie in beiden existiert → Inhalte vergleichen, Unterschiede zusammenführen (Template als Basis, projektspezifische Ergänzungen einbauen).
+   - Nutze VS Code „Dateien vergleichen“ oder ein Tool wie `meld`.
+
+3. **ADR-/Entscheidungsdokumente**  
+   - Prüfe, ob projektspezifische Architekturentscheidungen (z. B. in `decisions/`) übernommen werden sollen.
+
+4. **HowTos, Build- und Setup-Anleitungen**  
+   - Ergänze projektspezifische HowTos, falls sie im Template fehlen.
+
+5. **Nach dem Merge**  
+   - Linting und Formatierung prüfen (`dart format .`, `flutter analyze`).
+   - Querverweise und Links in der Doku aktualisieren.
+   - Alles committen und pushen.
+
+---
+
+## 4. Tipp: Automatisiertes Kopieren einzelner Dateien
+
+Wenn du z. B. alle HowTos aus dem alten Projekt übernehmen willst:
+```powershell
+Copy-Item "G:\ProjekteFlutter\storage_hold\.documents\howto_*.md" "G:\ProjekteFlutter\empty_flutter_template\.documents\" -Force
+```
+
+---
+
+## 5. Checkliste für die manuelle Review
+- [ ] README.md, CONTRIBUTING.md, GETTING_STARTED.md verglichen und zusammengeführt
+- [ ] .documents und .instructions abgeglichen, doppelte/alte Inhalte entfernt
+- [ ] Projektspezifische HowTos und ADRs übernommen
+- [ ] Querverweise und Links aktualisiert
+- [ ] Linting und Formatierung geprüft
+- [ ] Alles getestet und committet
+
+---
+
+**Fazit:**  
+Mit dieser Anleitung und den Skripten kannst du den Doku-/Instruction-Merge zwischen altem Projekt und Template effizient, nachvollziehbar und konsistent durchführen.  
+Wenn du ein konkretes Skript für einen bestimmten Ordner oder eine automatisierte Zusammenführung für bestimmte Dateitypen möchtest, sag Bescheid!
