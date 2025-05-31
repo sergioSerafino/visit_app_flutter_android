@@ -1,0 +1,14 @@
+{
+  "collectionId": 1590516386,
+  "hostName": "Test Host",
+  "description": "Testbeschreibung",
+  "contact": { "email": "test@example.com" },
+  "branding": { "logoUrl": "https://example.com/logo.png" },
+  "features": { "showPortfolioTab": true },
+  "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
+  "content": { "bio": "", "mission": "", "rss": null, "links": [] },
+  "primaryGenreName": "Health",
+  "authTokenRequired": false,
+  "debugOnly": false,
+  "lastUpdated": "2025-05-31T12:00:00.000Z"
+}

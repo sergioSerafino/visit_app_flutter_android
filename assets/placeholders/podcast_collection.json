@@ -1,0 +1,14 @@
+{
+  "podcasts": [
+    {
+      "wrapperType": "track",
+      "collectionId": 1590516386,
+      "collectionName": "Opalia Talk",
+      "artistName": "Sabine Guhr-Biermann",
+      "primaryGenreName": "Health",
+      "artworkUrl600": "https://example.com/artwork.png",
+      "feedUrl": "https://opalia.group/feed",
+      "episodes": []
+    }
+  ]
+}

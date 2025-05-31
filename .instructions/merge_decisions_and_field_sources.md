@@ -1,9 +1,36 @@
 # MergeService: Entscheidungsdokumentation & Feldherkunft
 
+<!-- Siehe auch: doku_matrix.md für die zentrale Übersicht aller Doku- und HowTo-Dateien. -->
+<!-- Verwandte Themen: howto_merge_caching.md, adr-001-merge-strategy.md -->
+
 ## Feldquellen und Merge-Strategie
 - collectionId: iTunes API (Hauptquelle), Schlüssel für alle Podcast-Daten
 - feedUrl: iTunes API, essenziell für RSS-Abruf
 - about.json & host_model.json: werden zu LocalJsonData zusammengeführt, kapseln Zusatzinfos wie FeatureFlags, Branding, Localization
+
+### Details zu den wichtigsten Feldern
+
+#### collectionId
+- **Quelle:** iTunes API (Hauptquelle)
+- **Bedeutung:** Eindeutiger Schlüssel für alle Podcast-bezogenen Daten. Wird als "Source of Truth" für alle weiteren Datenflüsse verwendet.
+- **Hinweis:** Wird niemals leer verwendet. Falls keine gültige collectionId, wird das Objekt nicht als Hauptkontext geladen.
+
+#### feedUrl
+- **Quelle:** iTunes API (direkt im Podcast-Objekt)
+- **Bedeutung:** Essenziell für den RSS-Abruf. Ohne feedUrl kein RSS-Merge möglich.
+- **Hinweis:** feedUrl ist die zweitwichtigste Stelle nach collectionId. Wird im StateProvider und im MergeService als Schlüssel verwendet.
+
+#### about.json & host_model.json
+- **Quelle:**
+  - Ursprünglich: about.json als generisches Zusatz-JSON pro Tenant.
+  - host_model.json: Zweite, strukturierte Revision für Host-bezogene Daten.
+  - **Aktuell:** Beide werden zusammengeführt (Merge zu LocalJsonData), um alle nicht-iTunes- und nicht-RSS-Felder zu kapseln.
+- **Bedeutung:**
+  - Dient als Fallback und Ergänzung für Felder, die nicht aus iTunes oder RSS kommen.
+  - Felder wie authTokenRequired, featureFlags, Branding, Localization, Content etc. werden hier gepflegt.
+- **Hinweis:**
+  - Die Zusammenführung ist notwendig, weil about.json historisch "Auffangbecken" für alle Zusatzinfos war, die nicht in die strukturierte host_model.json passten.
+  - Die aktuelle Merge-Strategie sieht vor, dass LocalJsonData alle relevanten Felder aus beiden Quellen aggregiert.
 
 ## Feldherkunft im MergeService (Beispiele)
 | Feld                   | Quelle (Priorität)         | Bemerkung |
@@ -28,3 +55,10 @@
 | localization           | LocalJson                  | defaultLanguageCode ggf. aus iTunes |
 | localizedTexts         | LocalJson                  | |
 | content                | LocalJson                  | |
+
+---
+
+**Hinweis:**
+- Diese Datei ist die zentrale, aktuelle MergeService-Dokumentation. Veraltete oder abweichende Varianten (z. B. aus storage_hold) sind zu entfernen oder zu archivieren.
+- Siehe doku_matrix.md für die Übersicht aller Doku- und HowTo-Dateien.
+- Bei Änderungen immer die Matrix und Querverweise aktualisieren.

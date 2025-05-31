@@ -79,7 +79,36 @@ Willkommen im Flutter-Template! Dieses Dokument erklärt, wie du zum Projekt bei
 - `.documents/` – Architektur, Prinzipien, API, ADRs, externe Anforderungen
 - `.instructions/` – HowTos, Build, Setup, LLM-Prompts, Automatisierung
 - `.documents/principles_matrix.md` – Zentrale Übersicht aller Prinzipien
-- `README.md` – Projektüberblick
+
+---
+
+## Legacy-/Migrationshinweise (aus storage_hold)
+
+Dieses Projekt wurde aus einem Vorgängerprojekt migriert. Die ursprünglichen Hinweise und Doku-Workflows lauteten:
+
+### Dokumentationsstruktur (Altprojekt)
+- Alle Architektur-, HowTo- und Entscheidungsdokumente befanden sich im Verzeichnis `.documents/` im Projektroot.
+- Die Datei `doku_matrix.md` bot eine zentrale Übersicht und Querverweise zu allen relevanten Doku-Dateien.
+
+#### Einstiegspunkt (Altprojekt)
+- **Doku-Matrix:** `.documents/doku_matrix.md` (zentrale Übersicht, Querverweise)
+- **HowTos, Architektur, ADRs:** Siehe Matrix und Querverweise in den einzelnen Dateien
+
+#### Neue Dokumente anlegen (Altprojekt)
+1. Neue HowTos, Architektur- oder Entscheidungsdokumente immer im Verzeichnis `.documents/` (bzw. `.documents/decisions/` für ADRs) ablegen.
+2. Den neuen Eintrag in der `doku_matrix.md` ergänzen.
+3. Am Anfang der Datei einen Querverweis auf die Matrix und ggf. verwandte Themen ergänzen (siehe Beispiele in bestehenden Dateien).
+
+#### Namenskonventionen (Altprojekt)
+- Bei gleichnamigen Dateien bitte mit Suffix wie `-2` oder ähnlichem kennzeichnen, um Überschreibungen zu vermeiden.
+
+#### Code-Conventions und Review (Altprojekt)
+- Siehe `.documents/project_structure_best_practices.md` und `.documents/architecture_clean_architecture.md` für Architektur- und Coding-Guidelines.
+- Review-Checkliste und offene Punkte: `.documents/status_report.md`
+
+#### Fragen (Altprojekt)
+- Bei Unklarheiten bitte zuerst die Doku-Matrix und Querverweise prüfen.
+- Für neue Themen oder größere Änderungen bitte einen kurzen Hinweis in der Matrix und im Status-Report ergänzen.
 
 ---
 

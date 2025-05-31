@@ -74,24 +74,12 @@ Compare-Object -ReferenceObject (Get-ChildItem "$alt\.instructions" -Recurse | S
 
 ---
 
-## 4. Automatisiertes Kopieren aller Markdown-Dateien (Best Practice)
+## 4. Tipp: Automatisiertes Kopieren einzelner Dateien
 
-**Vor dem eigentlichen Merge:**
-- Führe immer zuerst die rekursive Suche nach Markdown-Dateien durch (siehe oben).
-- Kopiere alle `.md`-Dateien aus dem Quellprojekt zentral nach `.instructions` im Template, z.B. mit:
-
+Wenn du z. B. alle HowTos aus dem alten Projekt übernehmen willst:
 ```powershell
-$quelle = "<Quellprojektpfad>"
-$ziel = "<TemplatePfad>\.instructions"
-Get-ChildItem -Path $quelle -Filter *.md -Recurse | ForEach-Object {
-    $zielDatei = Join-Path $ziel $_.Name
-    Copy-Item $_.FullName $zielDatei -Force
-}
+Copy-Item "G:\ProjekteFlutter\storage_hold\.documents\howto_*.md" "G:\ProjekteFlutter\empty_flutter_template\.documents\" -Force
 ```
-> Ersetze `<Quellprojektpfad>` und `<TemplatePfad>` entsprechend deiner Umgebung.
-
-- Die initiale zentrale Ablage aller `.md`-Dateien in `.instructions` ist Best Practice für die Migration und den Doku-Abgleich.
-- Die weitere Sortierung, Prüfung und das Merging erfolgt nach dieser Anleitung.
 
 ---
 
@@ -120,6 +108,7 @@ git reset --hard main
 
 # Branch auf einen bestimmten Tag zurücksetzen
 git reset --hard v1.0.0
+git reset --hard <commit—hash>
 
 # Stand auf Remote erzwingen (Achtung: destructive!)
 git push --force

@@ -27,9 +27,6 @@ linter:
     always_declare_return_types: true
     sort_pub_dependencies: true
     file_names: true
-    # Leerzeile nach Klassen und Widget-Definitionen
-    lines_between_class_members: true
-    lines_between_types: true
     # Kommentare & Dokumentation
     public_member_api_docs: false # Für öffentliche APIs ggf. auf true setzen
     # Flutter-spezifisch
@@ -46,6 +43,10 @@ linter:
     always_use_package_imports: false # Erlaube relative Imports
     prefer_relative_imports: true # Bevorzuge relative Imports im Projekt
     # Optional: weitere Regeln nach Team-Absprache
+
+# Entfernte nicht unterstützte Lint-Regeln:
+# lines_between_class_members
+# lines_between_types
 
 # Weitere Informationen zu dieser Datei finden Sie unter
 # https://dart.dev/guides/language/analysis-options

@@ -34,4 +34,14 @@ Basierend auf den Tutorials von Reso Coder und aktuellen Flutter/Dart 3-Praktike
 
 ---
 
+## Legacy-/Migrationshinweise (aus storage_hold)
+
+Diese Datei wurde im Rahmen der Migration aus dem Altprojekt `storage_hold` übernommen und weiterentwickelt.
+
+- Ursprünglicher Hinweis: Sammlung bewährter Flutter-Prinzipien & Architekturstrategien, basierend auf den Tutorial-Serien von Reso Coder.
+- Historische Querverweise: Siehe auch `doku_matrix.md` für die zentrale Übersicht aller Doku- und HowTo-Dateien. Verwandte Themen: `project_structure_best_practices.md`, `howto_feature_flags.md`.
+- Altprojekt-Abschnitt „Firebase & Domain-Driven Design (DDD)“: Siehe ggf. die aktuelle Doku zu ValueObjects, Fassade, Fehlerbehandlung und DDD in den jeweiligen HowTos und Architektur-Abschnitten.
+
+---
+
 Siehe auch: `.instructions/setup.md` und `.instructions/build.md` für praktische Umsetzung.
