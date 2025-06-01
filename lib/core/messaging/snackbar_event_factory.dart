@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'snackbar_event.dart';
 import 'emoji.dart';
+import 'snackbar_messages.dart';
 
 class SnackbarEventFactory {
   final Map<String, dynamic> _config;
@@ -12,8 +13,17 @@ class SnackbarEventFactory {
     if (event == null) {
       throw ArgumentError('Unbekannter Snackbar-Key: $eventKey');
     }
-    String? message = event['message'] as String? ?? eventKey;
-    message = _interpolate(message, args ?? {});
+    // 1. message aus YAML, 2. message_key aus YAML + snackbarMessages, 3. Fallback eventKey
+    String? message = event['message'] as String?;
+    if (message == null) {
+      final key = event['message_key'] as String?;
+      if (key != null && snackbarMessages.containsKey(key)) {
+        message = snackbarMessages[key];
+      } else {
+        message = eventKey;
+      }
+    }
+    message = _interpolate(message!, args ?? {});
     IconData? icon;
     String? emoji;
     // Emoji aus Enum, falls als Name angegeben
