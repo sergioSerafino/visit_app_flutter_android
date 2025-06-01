@@ -177,3 +177,122 @@ Füge am Anfang des Pre-Commit-Hooks folgende Zeile ein:
 - Die Entfernung des Quell-Projekts ist damit risikolos möglich.
 
 ---
+
+## Remote-Repository klonen und lokal einrichten
+
+Um das bereinigte Projekt auf einer neuen Maschine oder in einem neuen Arbeitsverzeichnis zu nutzen, gehe wie folgt vor:
+
+```powershell
+cd G:\ProjekteFlutter\
+git clone https://github.com/sergioSerafino/visit_app_flutter_android.git
+cd .\visit_app_flutter_android
+# Optional: Auf den gewünschten Branch wechseln
+# git checkout dev
+flutter pub get
+```
+
+Ab jetzt kannst du wie gewohnt Änderungen vornehmen, mit `git add`, `git commit` und `git push` versionieren und alles mit dem Remote-Repository synchronisieren.
+
+---
+
+### ✅ Branch-Workflow für Entwicklung und MVP-Veröffentlichung
+
+Für eine saubere, nachvollziehbare Entwicklung und eine effiziente MVP-Veröffentlichung empfiehlt sich folgender Branch-Workflow:
+
+#### 🔁 Branch-Struktur
+
+- **main**: Stabile Produktions-/Release-Version. Nur getestete, veröffentlichungsreife Commits werden hier gemerged.
+- **dev**: Aktive Entwicklungsbasis. Hier werden alle Features, Bugfixes und Integrationen zusammengeführt und getestet, bevor sie auf main gemerged werden.
+- **feature/<name>**: Für einzelne Features, Experimente oder Bugfixes. Nach Fertigstellung Merge in dev.
+
+#### ⚙️ Typischer Workflow
+
+**1. Start:**
+- Repository klonen und dev-Branch auschecken.
+
+**2. Neues Feature beginnen:**
+```powershell
+git checkout dev
+git pull
+git checkout -b feature/<feature-name>
+```
+
+**3. Entwicklung:**
+- Im Feature-Branch arbeiten und regelmäßig committen.
+
+**4. Merge in dev:**
+```powershell
+git checkout dev
+git pull
+git merge feature/<feature-name>
+git push
+```
+
+**5. Release-Vorbereitung (MVP):**
+```powershell
+git checkout main
+git pull
+git merge dev
+git push
+```
+
+#### 🏷️ Tagging – Projektzustände markieren (optional, empfohlen)
+
+Verwende Tags, um wichtige Projektzustände dauerhaft zu dokumentieren:
+
+| Zweck        | Beschreibung                        | Beispiel             |
+|--------------|-------------------------------------|----------------------|
+| Release      | Versionierung                       | v1.0.0               |
+| Deployment   | Genaue Deploy-Stände (z. B. Prod)   | prod-2024-06-01      |
+| Milestone    | Relevante Projektpunkte             | after-refactor       |
+| Review       | Review-fertiger Stand               | pre-review-audio     |
+| Archivierung | Letzter Stand vor Branch-Delete     | archived-feature-x   |
+
+**Beispielhafte Befehle:**
+```powershell
+git tag v1.0.0
+git tag prod-2024-06-01
+git tag -a after-refactor -m "Nach Refactoring"
+git push --tags
+```
+
+#### 📌 Hinweise
+
+- Feature-Branches können nach dem Merge gelöscht werden:
+  ```powershell
+  git branch -d feature/<feature-name>
+  ```
+- Hotfixes für die Produktion können direkt von main abgezweigt werden.
+- Für größere Teams: Pull-Requests / Merge-Requests nutzen.
+- Tags helfen bei Reproduzierbarkeit, Debugging, Rollbacks und Releases – nicht nur für Versionen!
+
+#### 🗂 Empfohlene Branch-Namen
+
+- **main** – Release/Produktiv
+- **dev** – Entwicklung
+- **feature/<feature-name>** – z. B. feature/audio-player
+
+Weitere Details und Beispiele siehe [MIGRATION_HISTORY.md](./MIGRATION_HISTORY.md) und [GETTING_STARTED.md](./GETTING_STARTED.md).
+
+## Git-Hinweis zu nicht gestagten Änderungen
+
+Wenn du Änderungen an Dateien vorgenommen hast, die noch nicht für den nächsten Commit vorgemerkt ("gestaged") sind, zeigt `git status` folgenden Hinweis an:
+
+```
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+```
+
+**Bedeutung:**
+- Die aufgelisteten Dateien wurden geändert, sind aber noch nicht für den nächsten Commit vorgemerkt.
+- Mit `git add <datei>` kannst du die Änderungen zum Commit vormerken (stagen).
+- Mit `git restore <datei>` kannst du die Änderungen an der Datei wieder verwerfen.
+
+**Empfohlener Workflow:**
+1. Prüfe mit `git status`, welche Dateien geändert wurden.
+2. Verwende `git add <datei>`, um gewünschte Änderungen zu stagen.
+3. Führe `git commit` aus, um die gestagten Änderungen zu speichern.
+4. Optional: Mit `git restore <datei>` kannst du einzelne Änderungen zurücksetzen.
+
+Weitere Infos: [Git Dokumentation](https://git-scm.com/docs/git-status)
