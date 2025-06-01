@@ -7,6 +7,7 @@ snackbar_events:
     icon: "wavingHand" # Enum-Name
     message_key: welcome_back
     type: info
+    delay: 5000
   # Handlungszweck "Ungültige CollectionId"
   collection_invalid:
     duration: long
@@ -230,4 +231,10 @@ snackbar_events:
     # icon: "🧹"
     icon: "broom"
     message_key: settings_cache_cleared
+    type: info
+  # Zeigt die aktuell geladene Collection-ID an
+  collection_id_info:
+    duration: short
+    icon: "info"
+    message_key: collection_id_info
     type: info

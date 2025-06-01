@@ -77,4 +77,6 @@ const Map<String, String> snackbarMessages = {
   'favorites_updated': 'Favoriten wurden aktualisiert.',
   // Handlungszweck "Cache gelöscht"
   'settings_cache_cleared': 'Cache erfolgreich gelöscht.',
+  // Zeigt die aktuell geladene Collection-ID an
+  'collection_id_info': 'Aktive Collection-ID: {id}',
 };
