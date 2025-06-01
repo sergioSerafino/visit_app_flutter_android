@@ -1,0 +1,20 @@
+{
+  "collectionId": 1481054140,
+  "hostName": "Test Host 3",
+  "description": "Beschreibung für Host 3 (Collection 1481054140)",
+  "contact": { "email": "host3@example.com" },
+  "branding": {
+    "primaryColorHex": "#F08DA2",
+    "secondaryColorHex": "#F08DA2",
+    "headerImageUrl": "https://example.com/host3-header.png",
+    "themeMode": "light",
+    "logoUrl": "https://example.com/host3-logo.png"
+  },
+  "features": { "showPortfolioTab": true },
+  "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
+  "content": { "bio": "Bio Host 3", "mission": "Mission Host 3", "rss": null, "links": [] },
+  "primaryGenreName": "Lifestyle",
+  "authTokenRequired": false,
+  "debugOnly": false,
+  "lastUpdated": "2025-06-01T00:00:00.000Z"
+}

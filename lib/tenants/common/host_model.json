@@ -1,0 +1,20 @@
+{
+  "collectionId": 0,
+  "hostName": "Platzhalter-Host",
+  "description": "Standardbeschreibung für alle Hosts ohne spezifische Konfiguration.",
+  "contact": { "email": "placeholder@example.com" },
+  "branding": {
+    "primaryColorHex": "#CCCCCC",
+    "secondaryColorHex": "#EEEEEE",
+    "headerImageUrl": "https://example.com/placeholder-header.png",
+    "themeMode": "system",
+    "logoUrl": "https://example.com/placeholder-logo.png"
+  },
+  "features": { "showPortfolioTab": false },
+  "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
+  "content": { "bio": "", "mission": "", "rss": null, "links": [] },
+  "primaryGenreName": "Unknown",
+  "authTokenRequired": false,
+  "debugOnly": false,
+  "lastUpdated": "2025-06-01T00:00:00.000Z"
+}

@@ -1,0 +1,21 @@
+## ➡️  Hinweis: Dieses Format ist auch 1:1 in JSON nutzbar 
+##     und eignet sich perfekt für freezed-basierte Typisierung.
+
+hostName: "Universell Podcasten"
+logoUrl: "assets/common/logo.png"
+contactEmail: "kontakt@universell-podcast.app"
+impressumUrl: "https://universell-podcast.app/impressum"
+themeMode: "system"
+primaryColorHex: "#2E3A59"
+secondaryColorHex: "#FFB300"
+defaultLanguageCode: "de"
+showPortfolioTab: false
+enableContactForm: true
+customStartTab: "episodes"
+localizedTexts:
+  welcomeTitle: "Willkommen"
+  welcomeSubtitle: "Deine unabhängige Podcast-Plattform"
+socialLinks:
+  instagram: "https://instagram.com/universell_podcast"
+  website: "https://universell-podcast.app"
+debugOnly: false

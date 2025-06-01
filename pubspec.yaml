@@ -85,8 +85,17 @@ flutter:
   # generate: true
 
   assets:
-    # - assets/audio_loader.json
-    - assets/placeholders/
+    #- visit_app_flutter_android/assets/
+    - assets/about.json
+    - assets/host_model.json
+
+    - lib/tenants/common/host_model.json
+    - lib/tenants/collection_1590516386/host_model.json
+    - lib/tenants/collection_1765742605/host_model.json
+    - lib/tenants/collection_1469653179/host_model.json
+    - lib/tenants/collection_1481054140/host_model.json
+    - lib/tenants/collection_9876543210/host_model.json
+    # ...weitere host_model.json falls benötigt...
     - lib/tenants/common/assets/visit22.png
     - lib/core/messaging/snackbar_config.yaml
     # - lib/tenants/collection_0123456789/assets/

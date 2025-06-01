@@ -9,9 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/enums/collection_load_state.dart';
 import '../controllers/collection_load_controller.dart';
 import '../../domain/models/branding_model.dart';
+import '../../domain/models/host_model.dart';
 import '../../core/placeholders/placeholder_content.dart';
 import 'package:hive/hive.dart';
 import '../../core/services/collection_id_storage.dart';
+import '../../config/tenant_loader_service.dart';
 
 //1469653179 Shayan & Nizar
 //1765742605 Fest und Flauschig
@@ -60,6 +62,11 @@ final brandingProvider = StateProvider<Branding>(
   (ref) => PlaceholderContent.hostModel.branding,
 );
 
+/// Provider für das aktuell geladene HostModel (dynamisch, mit Fallback)
+final hostModelProvider = StateProvider<Host>(
+  (ref) => PlaceholderContent.hostModel,
+);
+
 void updateBrandingOnCollectionChange(dynamic ref, int newCollectionId) async {
   // Versuche Branding aus Hive zu laden
   final box = await Hive.openBox('hostInfoBox');
@@ -69,6 +76,17 @@ void updateBrandingOnCollectionChange(dynamic ref, int newCollectionId) async {
   } else {
     ref.read(brandingProvider.notifier).state =
         PlaceholderContent.hostModel.branding;
+  }
+}
+
+void updateHostModelOnCollectionChange(
+    WidgetRef ref, int newCollectionId) async {
+  final box = await Hive.openBox('hostInfoBox');
+  final hostModel = box.get(newCollectionId.toString());
+  if (hostModel != null) {
+    ref.read(hostModelProvider.notifier).state = hostModel;
+  } else {
+    ref.read(hostModelProvider.notifier).state = PlaceholderContent.hostModel;
   }
 }
 
@@ -82,9 +100,25 @@ ref.read(snackbarManagerProvider).showByKey('host_data_fetch_failed');
 
 // Listener für Collection-Wechsel (z. B. im main() oder in einem Initializer-Widget aufrufen)
 void listenToCollectionIdChanges(WidgetRef ref) {
-  ref.listen<int>(collectionIdProvider, (previous, next) {
+  ref.listen<int>(collectionIdProvider, (previous, next) async {
     if (previous != next) {
-      updateBrandingOnCollectionChange(ref, next);
+      // Dynamisches Branding-Update bei CollectionId-Wechsel
+      try {
+        final host = await TenantLoaderService.loadHostModel(next.toString());
+        ref.read(brandingProvider.notifier).state = host.branding;
+        ref.read(hostModelProvider.notifier).state = host;
+      } catch (e) {
+        // Fallback auf Placeholder-Branding und HostModel
+        ref.read(brandingProvider.notifier).state =
+            PlaceholderContent.hostModel.branding;
+        ref.read(hostModelProvider.notifier).state =
+            PlaceholderContent.hostModel;
+      }
     }
   });
 }
+
+/// Dokumentation:
+/// Diese Funktion sollte beim App-Start (z. B. in main.dart oder app.dart) einmalig aufgerufen werden.
+/// Sie sorgt dafür, dass bei jeder Änderung der CollectionId das passende Branding geladen und gesetzt wird.
+/// Das Branding wird aus der jeweiligen host_model.json geladen (mit Fallback auf common/placeholder).

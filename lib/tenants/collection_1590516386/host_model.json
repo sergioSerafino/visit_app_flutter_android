@@ -1,0 +1,20 @@
+{
+  "collectionId": 1590516386,
+  "hostName": "Test Host 1",
+  "description": "Beschreibung für Host 1 (Collection 1590516386)",
+  "contact": { "email": "host1@example.com" },
+  "branding": {
+    "primaryColorHex": "#A2006D",
+    "secondaryColorHex": "#E0115F",
+    "headerImageUrl": "https://example.com/host1-header.png",
+    "themeMode": "light",
+    "logoUrl": "https://example.com/host1-logo.png"
+  },
+  "features": { "showPortfolioTab": true },
+  "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
+  "content": { "bio": "Bio Host 1", "mission": "Mission Host 1", "rss": null, "links": [] },
+  "primaryGenreName": "Business",
+  "authTokenRequired": false,
+  "debugOnly": false,
+  "lastUpdated": "2025-06-01T00:00:00.000Z"
+}

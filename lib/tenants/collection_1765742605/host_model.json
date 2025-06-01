@@ -1,11 +1,11 @@
 {
-  "collectionId": 9876543210,
+  "collectionId": 1765742605,
   "hostName": "Test Host 2",
-  "description": "Beschreibung für Host 2 (Collection 9876543210)",
+  "description": "Beschreibung für Host 2 (Collection 1765742605)",
   "contact": { "email": "host2@example.com" },
   "branding": {
-    "primaryColorHex": "#0000FF",
-    "secondaryColorHex": "#FFFF00",
+    "primaryColorHex": "#69757A",
+    "secondaryColorHex": "#ABBEBC",
     "headerImageUrl": "https://example.com/host2-header.png",
     "themeMode": "dark",
     "logoUrl": "https://example.com/host2-logo.png"

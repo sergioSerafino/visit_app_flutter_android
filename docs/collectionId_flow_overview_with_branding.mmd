@@ -1,0 +1,37 @@
+flowchart TD
+    AppStart(["App Start"])
+    LoadPrefs["Lade gespeicherte collectionId aus Storage"]
+    InitProviders["Initialisiere Provider (collectionIdProvider, hostModelProvider, brandingProvider, ...)"]
+    Placeholder["Lade Placeholder-HostModel und Branding"]
+    ListenCollection["Listener auf collectionIdProvider"]
+    UserChange["User/Dev wechselt collectionId (z.B. via Preferences)"]
+    LoadHostModel["Lade HostModel (host_model.json) für collectionId aus assets/tenants/..."]
+    ExtractBranding["Extrahiere Branding-Objekt aus HostModel"]
+    CheckBranding["Prüfe Branding-Felder (Farben, Logo, etc.)"]
+    FallbackBranding["Fallback auf Standardwerte falls Feld fehlt"]
+    UpdateBrandingProvider["BrandingProvider aktualisieren"]
+    LoadPodcast["Lade & merge PodcastCollection (RSS, API)"]
+    MergingService["MergingService: Führe Daten-Merge durch"]
+    UpdateHostProvider["HostModelProvider aktualisieren"]
+    UIUpdate["UI aktualisiert sich (HostsTab, Theme, etc.)"]
+
+    AppStart --> LoadPrefs --> InitProviders --> Placeholder
+    InitProviders --> ListenCollection
+    ListenCollection -->|"collectionId ändert sich"| UserChange
+    UserChange --> LoadHostModel --> ExtractBranding --> CheckBranding
+    CheckBranding -- "Feld fehlt" --> FallbackBranding --> UpdateBrandingProvider
+    CheckBranding -- "Alle Felder ok" --> UpdateBrandingProvider
+    LoadHostModel --> LoadPodcast
+    LoadPodcast --> MergingService --> UpdateHostProvider --> UIUpdate
+    UpdateBrandingProvider --> UIUpdate
+    Placeholder -.-> UIUpdate
+
+    classDef service fill:#e0e0e0,stroke:#333,stroke-width:2px;
+    MergingService:::service
+    LoadHostModel:::service
+    LoadPodcast:::service
+    ExtractBranding:::service
+    CheckBranding:::service
+    FallbackBranding:::service
+    UpdateBrandingProvider:::service
+    UpdateHostProvider:::service

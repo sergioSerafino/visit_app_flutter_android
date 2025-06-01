@@ -8,30 +8,28 @@ import '../../domain/models/podcast_collection_model.dart';
 class TenantLoaderService {
   static Future<Host> loadHostModel(String? collectionId) async {
     final tenant = collectionId != null ? 'collection_$collectionId' : 'common';
-    final resourceKey = 'host_model_$tenant';
+    // final resourceKey = 'host_model_$tenant';
 
+    // TODO: Cache-Logik für spätere Optimierung wieder aktivieren/überarbeiten
+    /*
+    //' Überprüfen, ob die Ressource veraltet ist
     final cacheManager = NetworkCacheManager(HiveCacheStorage());
-
-    // Überprüfen, ob die Ressource veraltet ist
-    if (!await cacheManager.isResourceExpired(
-      resourceKey,
-      const Duration(hours: 24),
-    )) {
-      return Host.empty(); // Verwende die leere Methode für Fallback
+    if (!await cacheManager.isResourceExpired(resourceKey, const Duration(hours: 24))) {
+      return Host.empty();
     }
+    */
 
     try {
       final json = await rootBundle.loadString(
-        'assets/tenants/$tenant/host_model.json',
+        'lib/tenants/$tenant/host_model.json',
       );
       final host = Host.fromJson(jsonDecode(json));
 
-      // Aktualisiere den TimeStamp nach erfolgreichem Abruf
-      await cacheManager.updateTimeStamp(resourceKey);
+      // await cacheManager.updateTimeStamp(resourceKey); // TODO: ggf. wieder aktivieren
       return host;
     } catch (_) {
       final fallback = await rootBundle.loadString(
-        'assets/tenants/common/host_model.json',
+        'lib/tenants/common/host_model.json',
       );
       return Host.fromJson(jsonDecode(fallback));
     }

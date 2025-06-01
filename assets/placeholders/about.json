@@ -1,0 +1,22 @@
+{
+    "primaryColorHex": "#0x4DFFFFFF",
+    "secondaryColorHex": "#FFCCDD",
+    "themeMode": "light",
+    "headerImageUrl": "https://example.com/images/header.jpg",
+    "impressumUrl": "https://opalia-consulting.group/impressum",
+    "socialLinks": {
+        "instagram": "https://instagram.com/opalia",
+        "linkedin": "https://linkedin.com/in/sabine-guhr-biermann"
+    },
+    "showPortfolioTab": true,
+    "enableContactForm": false,
+    "showPodcastGenre": true,
+    "customStartTab": "episodes",
+    "localizedTexts": {
+        "welcomeText": "Herzlich willkommen bei Opalia Talk!",
+        "contactButton": "Kontakt aufnehmen"
+    },
+    "authTokenRequired": false,
+    "debugOnly": false,
+    "lastUpdated": "2025-04-15T10:00:00Z"
+}
