@@ -34,7 +34,16 @@ class SnackbarEventFactory {
       emoji = iconValue;
     }
     final duration = _parseDuration(event['duration']);
-    int? delayMs = event['delay'] is int ? event['delay'] as int : null;
+    // NEU: Optionales delay-Feld (int, ms)
+    int? delayMs;
+    if (event.containsKey('delay')) {
+      final delayValue = event['delay'];
+      if (delayValue is int) {
+        delayMs = delayValue;
+      } else if (delayValue is String) {
+        delayMs = int.tryParse(delayValue);
+      }
+    }
     return SnackbarEvent(
       type: _parseType(event['type']),
       message: message,
