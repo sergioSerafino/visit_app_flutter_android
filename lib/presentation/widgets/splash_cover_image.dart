@@ -10,6 +10,7 @@ class SplashCoverImage extends ConsumerStatefulWidget {
   final Duration duration;
   final double scaleFactor;
   final bool showLabel;
+  final bool forceAssetPath;
 
   const SplashCoverImage({
     Key? key,
@@ -18,6 +19,7 @@ class SplashCoverImage extends ConsumerStatefulWidget {
     this.duration = const Duration(milliseconds: 1200),
     this.scaleFactor = 0.5,
     this.showLabel = false,
+    this.forceAssetPath = false,
   }) : super(key: key);
 
   @override
@@ -60,6 +62,16 @@ class _SplashCoverImageState extends ConsumerState<SplashCoverImage>
   }
 
   Widget _buildImage() {
+    // Wenn explizit gewünscht, immer assetPath verwenden
+    if (widget.forceAssetPath &&
+        widget.assetPath != null &&
+        widget.assetPath!.isNotEmpty) {
+      return Image.asset(
+        widget.assetPath!,
+        fit: BoxFit.fitWidth,
+        errorBuilder: (context, error, stackTrace) => _fallback(),
+      );
+    }
     if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
       return Image.network(
         widget.imageUrl!,
@@ -68,20 +80,25 @@ class _SplashCoverImageState extends ConsumerState<SplashCoverImage>
       );
     }
 
-    if (widget.assetPath != null && widget.assetPath!.isNotEmpty) {
-      return Image.asset(
-        widget.assetPath!,
-        fit: BoxFit.fitWidth,
-        errorBuilder: (context, error, stackTrace) => _fallback(),
-      );
-    }
-
-    // 🔁 Fallback auf tenant-Asset
+    // Immer zuerst das collection-spezifische logo.png suchen
     final collectionId = ref.watch(collectionIdProvider);
     final loader = TenantAssetLoader(collectionId);
-    final dynamicPath = loader.imagePath("opalia_talk_logo.png");
+    final logoAssetPath = loader.imagePath();
 
-    return _fallback();
+    return Image.asset(
+      logoAssetPath,
+      fit: BoxFit.fitWidth,
+      errorBuilder: (context, error, stackTrace) {
+        if (widget.assetPath != null && widget.assetPath!.isNotEmpty) {
+          return Image.asset(
+            widget.assetPath!,
+            fit: BoxFit.fitWidth,
+            errorBuilder: (context, error, stackTrace) => _fallback(),
+          );
+        }
+        return _fallback();
+      },
+    );
   }
 
   Widget _fallback() {

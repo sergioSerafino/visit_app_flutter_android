@@ -65,12 +65,12 @@ class _LandingPageState extends ConsumerState<LandingPage> {
 
                   return Padding(
                     padding: const EdgeInsets.only(top: 0, left: 16.0),
-                    child: welcomeHeader(dynamicHostName),
+                    child: welcomeHeader(dynamicHostName, context: context),
                   );
                 },
                 error: (_) => Padding(
                   padding: const EdgeInsets.only(top: 0, left: 16.0),
-                  child: welcomeHeader("dynamicHostName"),
+                  child: welcomeHeader("dynamicHostName", context: context),
                 ),
                 loading: () => const Padding(
                   padding: EdgeInsets.only(top: 0, left: 16.0),
@@ -83,7 +83,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
               ),
               error: (_, __) => Padding(
                 padding: const EdgeInsets.only(top: 0, left: 16.0),
-                child: welcomeHeader("Fehler beim Laden"),
+                child: welcomeHeader("Fehler beim Laden", context: context),
               ),
             ),
 

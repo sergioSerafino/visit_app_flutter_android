@@ -8,7 +8,7 @@ class TenantAssetLoader {
   const TenantAssetLoader(this.collectionId);
 
   /// Pfad-Vorlage für assets
-  static const _basePath = 'assets/tenants';
+  static const _basePath = 'lib/tenants';
 
   /// Versucht zuerst tenant-spezifisches Asset zu laden, sonst fallback
   Future<String> loadAsset(String filename) async {
@@ -26,13 +26,14 @@ class TenantAssetLoader {
     }
   }
 
-  /// Für Images: gibt immer zuerst den tenant-spezifischen Pfad zurück;
+  /// Für Images: gibt immer zuerst den tenant-spezifischen Pfad zu 'logo.png' zurück;
   /// die Fehlerbehandlung erfolgt UI-seitig z.B. über `errorBuilder`
-  String imagePath(String filename) {
+  String imagePath() {
+    const filename = 'logo.png';
     if (collectionId != null) {
-      return '$_basePath/collection_$collectionId/assets/$filename';
+      return 'lib/tenants/collection_$collectionId/assets/$filename';
     } else {
-      return '$_basePath/common/assets/$filename';
+      return 'lib/tenants/common/assets/$filename';
     }
   }
 }

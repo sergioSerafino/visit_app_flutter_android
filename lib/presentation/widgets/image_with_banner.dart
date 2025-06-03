@@ -16,6 +16,8 @@ class ImageWithBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap, // 👈 macht das ganze Widget tappable
       child: Stack(
@@ -31,9 +33,9 @@ class ImageWithBanner extends StatelessWidget {
                     height: 250,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) =>
-                        _buildPlaceholder(),
+                        _buildPlaceholder(theme),
                   )
-                : _buildPlaceholder(),
+                : _buildPlaceholder(theme),
           ),
           // Banner-Overlay
           Positioned(
@@ -42,17 +44,14 @@ class ImageWithBanner extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
               decoration: BoxDecoration(
-                color: Colors.black.withAlpha(
-                  95,
-                ), // Schwarzer Hintergrund mit Transparenz
+                color: theme.colorScheme.surface.withAlpha(180),
                 borderRadius: BorderRadius.circular(3),
               ),
               child: Text(
                 label.toUpperCase(), // Automatisch in Capslock
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: theme.colorScheme.onSurface,
                   fontSize: 10,
-                  //fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -64,12 +63,13 @@ class ImageWithBanner extends StatelessWidget {
   }
 
   // Methode für Platzhalter-Icon
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(ThemeData theme) {
     return Container(
       width: 250,
       height: 250,
-      color: Colors.grey[300],
-      child: Icon(Icons.image, size: 80, color: Colors.grey[500]),
+      color: theme.colorScheme.surfaceVariant,
+      child: Icon(Icons.image,
+          size: 80, color: theme.colorScheme.onSurface.withAlpha(120)),
     );
   }
 }

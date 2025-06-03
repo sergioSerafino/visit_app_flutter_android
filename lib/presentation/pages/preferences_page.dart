@@ -80,7 +80,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   // --- Apple-Style Trennung ---
                   Container(
                     height: 1,
-                    color: const Color(0xFFE5E5EA), // Apple-like Divider
+                    color: Theme.of(context).dividerColor,
                     margin: const EdgeInsets.symmetric(vertical: 0),
                   ),
                   const SizedBox(height: 8),
@@ -106,7 +106,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   const SizedBox(height: 18),
                   Container(
                     height: 1,
-                    color: const Color(0xFFE5E5EA),
+                    color: Theme.of(context).dividerColor,
                     margin: const EdgeInsets.symmetric(vertical: 0),
                   ),
                   const SizedBox(height: 8),
@@ -115,7 +115,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                       ref.watch(dataSourceProvider) == RepositorySourceType.api
                           ? Icons.public // Weltkugel
                           : Icons.edit, // Stift
-                      // color: Colors.grey,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 24,
                     ),
                     title: const Text('API-Modus umschalten (Admin-Switch)'),
@@ -141,13 +141,14 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   const SizedBox(height: 18),
                   Container(
                     height: 1,
-                    color: const Color(0xFFE5E5EA),
+                    color: Theme.of(context).dividerColor,
                     margin: const EdgeInsets.symmetric(vertical: 0),
                   ),
                   const SizedBox(height: 8),
 
                   ListTile(
-                    leading: const Icon(Icons.numbers, size: 24),
+                    leading: Icon(Icons.numbers,
+                        size: 24, color: Theme.of(context).colorScheme.primary),
                     title: const Text('Eingabe iTunes API (Admin-Input)'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

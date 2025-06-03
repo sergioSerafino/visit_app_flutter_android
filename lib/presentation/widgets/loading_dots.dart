@@ -47,7 +47,18 @@ class _LoadingDotsState extends State<LoadingDots>
     super.dispose();
   }
 
-  Widget _dot(Animation<double> anim) {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dotColor =
+        widget.color == Colors.white ? theme.colorScheme.primary : widget.color;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: _animations.map((anim) => _dot(anim, dotColor)).toList(),
+    );
+  }
+
+  Widget _dot(Animation<double> anim, Color color) {
     return AnimatedBuilder(
       animation: anim,
       builder: (context, child) {
@@ -59,19 +70,11 @@ class _LoadingDotsState extends State<LoadingDots>
           '.',
           style: TextStyle(
             fontSize: 36,
-            color: widget.color,
+            color: color,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: _animations.map(_dot).toList(),
     );
   }
 }

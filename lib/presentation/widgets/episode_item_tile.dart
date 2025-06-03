@@ -32,9 +32,9 @@ class EpisodeItemTile extends StatelessWidget {
                       height: 85,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
-                          _buildPlaceholder(),
+                          _buildPlaceholder(context),
                     )
-                  : _buildPlaceholder(),
+                  : _buildPlaceholder(context),
             ),
 
             const SizedBox(width: 16),
@@ -47,9 +47,10 @@ class EpisodeItemTile extends StatelessWidget {
                 children: [
                   Text(
                     episode.trackName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -57,7 +58,12 @@ class EpisodeItemTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     episode.description ?? "Keine Beschreibung verfügbar",
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(180)),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -75,10 +81,13 @@ class EpisodeItemTile extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     _formatDuration(episode.trackTimeMillis),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withAlpha(180),
                     ),
                   ),
                 ),
@@ -90,10 +99,13 @@ class EpisodeItemTile extends StatelessWidget {
                     heightFactor: 1,
                     widthFactor: 1,
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.more_horiz,
                         size: 32,
-                        color: Colors.grey,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(180),
                       ),
                       onPressed: () {
                         // Optional: show modal / actions
@@ -109,12 +121,14 @@ class EpisodeItemTile extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholder() {
+  Widget _buildPlaceholder(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: 85,
       height: 85,
-      color: Colors.grey[300],
-      child: Icon(Icons.music_note, size: 50, color: Colors.grey[500]),
+      color: theme.colorScheme.surfaceVariant,
+      child: Icon(Icons.music_note,
+          size: 50, color: theme.colorScheme.onSurface.withAlpha(120)),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
+import '../../application/providers/theme_provider.dart';
 import '../../presentation/widgets/home_header.dart';
 import '../../../presentation/pages/podcast_page.dart';
 import '../../../presentation/pages/hosts_page.dart';
@@ -70,110 +71,136 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90), // <- konstante Höhe!
-        child: AppBar(
-          title: Consumer(
-            builder: (context, ref, _) {
-              final collectionId = ref.watch(collectionIdProvider);
-              final collectionAsync = ref.watch(
-                podcastCollectionProvider(collectionId),
+        child: Consumer(
+          builder: (context, ref, _) {
+            final theme = ref.watch(appThemeProvider);
+            final collectionId = ref.watch(collectionIdProvider);
+            final collectionAsync = ref.watch(
+              podcastCollectionProvider(collectionId),
+            );
+
+            String hostName = "artistName"; //"collectionName";
+
+            collectionAsync.whenData((apiResponse) {
+              apiResponse.when(
+                success: (collection) {
+                  final podcast = collection.podcasts.firstOrNull;
+                  if (podcast != null) {
+                    hostName = podcast.artistName; //collectionName;
+                  }
+                },
+                error: (_) {},
+                loading: () {},
               );
+            });
 
-              String hostName = "artistName"; //"collectionName";
-
-              collectionAsync.whenData((apiResponse) {
-                apiResponse.when(
-                  success: (collection) {
-                    final podcast = collection.podcasts.firstOrNull;
-                    if (podcast != null) {
-                      hostName = podcast.artistName; //collectionName;
-                    }
-                  },
-                  error: (_) {},
-                  loading: () {},
-                );
-              });
-
-              return Row(
+            return AppBar(
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(child: homeHeader(hostName)),
+                  Flexible(
+                      child: homeHeader(
+                    hostName,
+                    textColor: theme.colorScheme.onPrimary,
+                    backgroundColor: theme.colorScheme.primary,
+                  )),
                   const SizedBox(width: 12),
                   // const CollectionInputWrapper(),
                 ],
-              );
-            },
-          ),
-          actions: [
-            // Dark Mode Umschalter
-            // IconButton(
-            //   icon: Icon(widget.isDarkMode ? Icons.dark_mode : Icons.light_mode),
-            //   onPressed:
-            //       widget.toggleDarkMode, // Verwendet die übergebene Funktion
-            // ),
-            // Dropdown-Menü
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.menu),
-              onSelected: (value) {
-                if (value == "Einstellungen") {
-                  // Wenn "Einstellungen" ausgewählt wurde, zeige das Modal Bottom Sheet
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const PreferencesBottomSheet();
-                      // Deine benutzerdefinierte Widget für das Bottom Sheet
-                    },
-                  );
-                } else if (value == "Über") {
-                  // Hier kannst du eine andere Logik für "Über" implementieren, z.B. eine Dialogbox
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.landingRoute,
-                    arguments: {"isReturningUser": true},
-                  );
-                  debugPrint("Über diese App");
-                }
-              },
-              itemBuilder: (BuildContext context) => [
-                const PopupMenuItem(
-                  value: "Über",
-                  child: Row(
-                    children: [
-                      Text("Über diese App"),
-                      Spacer(),
-                      Icon(Icons.arrow_back),
-                    ],
+              ),
+              actions: [
+                Theme(
+                  data: theme.copyWith(
+                    popupMenuTheme: theme.popupMenuTheme.copyWith(
+                      color: theme.colorScheme.primary,
+                      textStyle: TextStyle(color: theme.colorScheme.onPrimary),
+                    ),
+                    iconTheme:
+                        IconThemeData(color: theme.colorScheme.onPrimary),
                   ),
-                ),
-                const PopupMenuItem(
-                  value: "Einstellungen",
-                  child: Row(
-                    children: [
-                      Text("Einstellungen"),
-                      Spacer(),
-                      Icon(Icons.menu),
+                  child: PopupMenuButton<String>(
+                    icon: const Icon(Icons.menu),
+                    onSelected: (value) {
+                      if (value == "Einstellungen") {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const PreferencesBottomSheet();
+                          },
+                        );
+                      } else if (value == "Über") {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.landingRoute,
+                          arguments: {"isReturningUser": true},
+                        );
+                        debugPrint("Über diese App");
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem(
+                        value: "Über",
+                        child: Row(
+                          children: [
+                            Text("Über diese App",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary)),
+                            const Spacer(),
+                            Icon(Icons.arrow_back,
+                                color: Theme.of(context).colorScheme.onPrimary),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: "Einstellungen",
+                        child: Row(
+                          children: [
+                            Text("Einstellungen",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary)),
+                            const Spacer(),
+                            Icon(Icons.menu,
+                                color: Theme.of(context).colorScheme.onPrimary),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
-            ),
-          ],
-          toolbarHeight: 90,
+              toolbarHeight: 90,
+            );
+          },
         ),
       ),
       body: IndexedStack(index: _selectedIndex, children: _pages),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onTabSelected,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.podcasts),
-            label: "CastList",
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: "HostsView",
-          ),
-        ],
+      bottomNavigationBar: Consumer(
+        builder: (context, ref, _) {
+          final theme = ref.watch(appThemeProvider);
+          return BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onTabSelected,
+            backgroundColor: theme.colorScheme.primary,
+            selectedItemColor: theme.colorScheme.onPrimary,
+            unselectedItemColor: theme.colorScheme.onPrimary.withOpacity(0.6),
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.podcasts),
+                label: "CastList",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline),
+                label: "HostsView",
+              ),
+            ],
+          );
+        },
       ),
     );
   }

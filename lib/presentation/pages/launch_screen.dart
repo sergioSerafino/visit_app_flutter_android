@@ -134,6 +134,7 @@ class _LaunchScreenState extends State<LaunchScreen>
                     showLabel: true,
                     assetPath: fallbackLogo,
                     scaleFactor: 1.0,
+                    forceAssetPath: true,
                   ),
                 ),
               ),

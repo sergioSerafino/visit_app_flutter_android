@@ -43,7 +43,8 @@ class BottomPlayerWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: Icon(Icons.replay_10, color: Colors.grey[500]),
+              icon: Icon(Icons.replay_10,
+                  color: theme.colorScheme.onSurface.withAlpha(140)),
               iconSize: 32,
               onPressed: () {
                 final newPos = position - const Duration(seconds: 15);
@@ -71,7 +72,8 @@ class BottomPlayerWidget extends ConsumerWidget {
             ),
             const SizedBox(width: 32),
             IconButton(
-              icon: Icon(Icons.forward_10, color: Colors.grey[500]),
+              icon: Icon(Icons.forward_10,
+                  color: theme.colorScheme.onSurface.withAlpha(140)),
               iconSize: 32,
               onPressed: () {
                 final newPos = position + const Duration(seconds: 15);
@@ -81,7 +83,8 @@ class BottomPlayerWidget extends ConsumerWidget {
             ),
             if (onClose != null)
               IconButton(
-                icon: const Icon(Icons.close),
+                icon: Icon(Icons.close,
+                    color: theme.colorScheme.onSurface.withAlpha(140)),
                 onPressed: onClose,
                 tooltip: 'Player schließen',
               ),

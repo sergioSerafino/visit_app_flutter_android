@@ -9,6 +9,9 @@ import '../../presentation/pages/onboarding_page.dart';
 import '../../presentation/pages/home_page.dart';
 import '../../presentation/pages/landing_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import '../../application/providers/theme_provider.dart' as theme_prov;
+import '../../core/utils/tenant_asset_loader.dart';
+import '../../application/providers/collection_provider.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -18,11 +21,6 @@ class SplashPage extends ConsumerStatefulWidget {
 }
 
 class _SplashPageState extends ConsumerState<SplashPage> {
-  // Fallback-Logo falls dynamisches Branding nicht verfügbar
-  static final fallbackLogo =
-      "lib/tenants/collection_0123456789/assets/opalia_talk_reduced.png";
-  static final primaryColor = const Color(0xFFFFFFFF); // z. B. aus theme.dart
-
   // Start-Deckkraft
   double _opacity = 1.0;
 
@@ -82,11 +80,17 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    final collectionId = ref.watch(collectionIdProvider);
+//  final theme = ref.watch(theme_prov.appThemeProvider);
+
     // Größe des Splash-Bildes
     const double imageSize = 300;
+    // Dynamischer Fallback-Asset-Pfad
+    final loader = TenantAssetLoader(collectionId);
+    final fallbackLogo = loader.imagePath();
 
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: Colors.white,
       body: AnimatedOpacity(
         // animiert von 1.0 → 0.0
         opacity: _opacity,
@@ -97,15 +101,12 @@ class _SplashPageState extends ConsumerState<SplashPage> {
             // Bild zentriert
             Align(
               alignment: Alignment.center,
-              // child: Hero(
-              // tag: 'splashImage',
               child: SizedBox(
                 width: imageSize,
                 height: imageSize,
                 child: SplashCoverImage(
                   showLabel: true,
                   assetPath: fallbackLogo,
-
                   // Skalierung des Bildes
                   scaleFactor: 0.7,
                 ),

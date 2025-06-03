@@ -8,6 +8,7 @@ class CollectionInputWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     return SizedBox(
       width: 150,
       height: 38,
@@ -15,7 +16,8 @@ class CollectionInputWidget extends ConsumerWidget {
         decoration: InputDecoration(
           hintText: "Collection ID",
           hintStyle: const TextStyle(fontSize: 14),
-          prefixIcon: const Icon(Icons.numbers, size: 18),
+          prefixIcon: Icon(Icons.numbers,
+              size: 18, color: theme.colorScheme.onSurface.withAlpha(120)),
           isDense: true,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 6, horizontal: 10),

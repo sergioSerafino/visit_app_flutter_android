@@ -3,20 +3,29 @@
 
 import 'package:flutter/material.dart';
 
-Widget homeHeader(String hostName) {
+Widget homeHeader(String hostName,
+    {Color? textColor, Color? backgroundColor, BuildContext? context}) {
+  final theme = context != null ? Theme.of(context) : null;
   final formattedHost = _formatHostNameForLineBreak(hostName);
 
-  return RichText(
-    textAlign: TextAlign.start,
-    text: TextSpan(
-      style: const TextStyle(fontSize: 24, color: Colors.black),
-      children: [
-        const TextSpan(text: 'Visit'),
-        TextSpan(
-          text: "\n" + formattedHost,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ],
+  return Container(
+    color: backgroundColor ?? theme?.colorScheme.primary,
+    child: RichText(
+      textAlign: TextAlign.start,
+      text: TextSpan(
+        style: TextStyle(
+            fontSize: 24, color: textColor ?? theme?.colorScheme.onPrimary),
+        children: [
+          const TextSpan(text: 'Visit'),
+          TextSpan(
+            text: "\n" + formattedHost,
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: textColor ?? theme?.colorScheme.onPrimary),
+          ),
+        ],
+      ),
     ),
   );
 }

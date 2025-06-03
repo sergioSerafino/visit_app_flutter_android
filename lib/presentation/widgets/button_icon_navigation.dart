@@ -29,6 +29,10 @@ class ButtonIconNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final buttonColor = color ?? theme.colorScheme.primary;
+    final textColor = theme.colorScheme.onPrimary;
+
     final hasIcon = iconPosition != IconPosition.none &&
         (icon != null || customIcon != null);
 
@@ -65,19 +69,22 @@ class ButtonIconNavigation extends StatelessWidget {
                 horizontal: 24,
                 vertical: 12,
               ),
-              textStyle: TextStyle(fontSize: sizeOfFont),
+              textStyle: TextStyle(fontSize: sizeOfFont, color: textColor),
+              foregroundColor: textColor,
+              side: BorderSide(color: buttonColor),
             ),
             child: content,
           )
         : ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: color,
+              backgroundColor: buttonColor,
+              foregroundColor: textColor,
               padding: const EdgeInsets.symmetric(
                 horizontal: 24,
                 vertical: 12,
               ),
-              textStyle: TextStyle(fontSize: sizeOfFont),
+              textStyle: TextStyle(fontSize: sizeOfFont, color: textColor),
             ),
             child: content,
           );

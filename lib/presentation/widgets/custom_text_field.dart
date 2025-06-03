@@ -73,20 +73,24 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return TextField(
       controller: _controller,
       keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: theme.colorScheme.surface,
         labelText: widget.label,
         hintText: widget.hint,
         prefixIcon: widget.prefixIcon != null
-            ? Icon(widget.prefixIcon, color: Colors.black26)
+            ? Icon(widget.prefixIcon,
+                color: theme.colorScheme.onSurface.withAlpha(120))
             : null,
         suffixIcon: _controller.text.isNotEmpty
             ? IconButton(
-                icon: const Icon(Icons.clear),
+                icon: Icon(Icons.clear,
+                    color: theme.colorScheme.onSurface.withAlpha(120)),
                 onPressed: _clearText,
               )
             : null,

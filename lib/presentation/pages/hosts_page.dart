@@ -23,6 +23,7 @@ class HostsPage extends ConsumerWidget {
         ref.watch(podcastCollectionProvider(collectionId));
 
     return Scaffold(
+      // AppBar entfernt
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Card(
@@ -55,13 +56,17 @@ class HostsPage extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Text(
                   host.description,
-                  style: theme.textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Kontakt: ${host.contact.email}',
-                  style: theme.textTheme.bodySmall,
+                  'Kontakt:  ${host.contact.email}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -80,15 +85,17 @@ class HostsPage extends ConsumerWidget {
                 const SizedBox(height: 16),
                 if (showPortfolioTab)
                   Chip(
-                    label: const Text('PortfolioTab aktiviert'),
-                    backgroundColor: theme.colorScheme.secondary
-                        .withAlpha(51), // ca. 20% Deckkraft
+                    label: Text('PortfolioTab aktiviert',
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: theme.colorScheme.onSecondary)),
+                    backgroundColor: theme.colorScheme.secondary.withAlpha(51),
                   ),
                 if (!showPortfolioTab)
                   Chip(
-                    label: const Text('PortfolioTab deaktiviert'),
-                    backgroundColor: theme.colorScheme.error
-                        .withAlpha(51), // ca. 20% Deckkraft
+                    label: Text('PortfolioTab deaktiviert',
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: theme.colorScheme.onError)),
+                    backgroundColor: theme.colorScheme.error.withAlpha(51),
                   ),
                 const SizedBox(height: 16),
                 // Statusanzeige für PodcastCollection
@@ -100,37 +107,41 @@ class HostsPage extends ConsumerWidget {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.cloud_done, color: Colors.green),
+                              Icon(Icons.cloud_done,
+                                  color: theme.colorScheme.secondary),
                               const SizedBox(width: 8),
                               Text('RSS/Podcast-Daten geladen und gemerged',
-                                  style: theme.textTheme.bodySmall
-                                      ?.copyWith(color: Colors.green)),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.secondary)),
                             ],
                           );
                         } else if (apiResponse is Error) {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.cloud_off, color: Colors.red),
+                              Icon(Icons.cloud_off,
+                                  color: theme.colorScheme.error),
                               const SizedBox(width: 8),
                               Text('RSS/Podcast-Daten NICHT geladen',
-                                  style: theme.textTheme.bodySmall
-                                      ?.copyWith(color: Colors.red)),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.error)),
                             ],
                           );
                         } else {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(
+                              SizedBox(
                                 width: 16,
                                 height: 16,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: theme.colorScheme.secondary),
                               ),
                               const SizedBox(width: 8),
                               Text('Lade RSS/Podcast-Daten...',
-                                  style: theme.textTheme.bodySmall),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onPrimary)),
                             ],
                           );
                         }
@@ -138,24 +149,27 @@ class HostsPage extends ConsumerWidget {
                       loading: () => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: 16,
                             height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: theme.colorScheme.secondary),
                           ),
                           const SizedBox(width: 8),
                           Text('Lade RSS/Podcast-Daten...',
-                              style: theme.textTheme.bodySmall),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onPrimary)),
                         ],
                       ),
                       error: (err, stack) => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.cloud_off, color: Colors.red),
+                          Icon(Icons.cloud_off, color: theme.colorScheme.error),
                           const SizedBox(width: 8),
                           Text('Fehler beim Laden der RSS/Podcast-Daten',
                               style: theme.textTheme.bodySmall
-                                  ?.copyWith(color: Colors.red)),
+                                  ?.copyWith(color: theme.colorScheme.error)),
                         ],
                       ),
                     );

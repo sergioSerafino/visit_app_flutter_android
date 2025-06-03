@@ -84,25 +84,14 @@ class _BrandingListener extends ConsumerStatefulWidget {
 }
 
 class _BrandingListenerState extends ConsumerState<_BrandingListener> {
-  int? _lastCollectionId;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _listen();
-  }
-
-  @override
-  void didUpdateWidget(covariant _BrandingListener oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _listen();
-  }
-
-  void _listen() {
-    final collectionId = ref.watch(collectionIdProvider);
-    if (_lastCollectionId != collectionId) {
-      _lastCollectionId = collectionId;
-      _updateBranding(collectionId);
-    }
+  Widget build(BuildContext context) {
+    ref.listen<int>(collectionIdProvider, (previous, next) {
+      if (previous != next) {
+        _updateBranding(next);
+      }
+    });
+    return widget.child;
   }
 
   Future<void> _updateBranding(int collectionId) async {
@@ -112,7 +101,9 @@ class _BrandingListenerState extends ConsumerState<_BrandingListener> {
       final host =
           await TenantLoaderService.loadHostModel(collectionId.toString());
       logDebug(
-          'HostModel geladen: \nHostName: "+host.hostName+"\nBranding: ' +
+          'HostModel geladen: \nHostName: ' +
+              host.hostName +
+              '\nBranding: ' +
               host.branding.toString(),
           tag: LogTag.ui);
       ref.read(theme_prov.brandingProvider.notifier).setBranding(host.branding);
@@ -127,7 +118,4 @@ class _BrandingListenerState extends ConsumerState<_BrandingListener> {
       ref.read(hostModelProvider.notifier).state = PlaceholderContent.hostModel;
     }
   }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
 }

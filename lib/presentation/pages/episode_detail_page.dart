@@ -184,18 +184,20 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             children: [
                               Text(
                                 displayTitle,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                               const SizedBox(height: 6),
                               Divider(
-                                color: Colors.grey[
-                                    300], // oder Colors.grey.shade400 für feiner
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
                                 thickness: 2,
-                                height:
-                                    4, // vertikaler Abstand vor & nach der Linie
+                                height: 4,
                               ),
                             ],
                           ),
@@ -221,7 +223,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               IconButton(
                                 icon: Icon(
                                   Icons.star_border_outlined,
-                                  color: Colors.grey[500],
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
                                 tooltip: 'Favorisieren',
                                 onPressed: () {
@@ -235,7 +238,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               IconButton(
                                 icon: Icon(
                                   Icons.download,
-                                  color: Colors.grey[400],
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 tooltip: 'Download',
                                 onPressed: () {
@@ -273,9 +276,11 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 width: 48,
                                 child: Text(
                                   _formatDurationMMSS(position.inMilliseconds),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.grey,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface, // Volle Deckkraft für bessere Lesbarkeit
                                     fontFeatures: [
                                       FontFeature.tabularFigures(),
                                     ],
@@ -287,17 +292,25 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               Expanded(
                                 child: SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor: Colors.blue,
-                                    inactiveTrackColor: Colors.grey[250],
-                                    thumbColor: Colors.grey[350],
-                                    overlayColor: Colors.grey.withAlpha(32),
+                                    activeTrackColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    inactiveTrackColor: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceContainerHighest,
+                                    thumbColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    overlayColor: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withAlpha(32),
                                     trackHeight: 14,
                                     thumbShape: const RoundSliderThumbShape(
                                       enabledThumbRadius: 9,
                                     ),
                                     valueIndicatorShape:
                                         const PaddleSliderValueIndicatorShape(),
-                                    valueIndicatorColor: Colors.grey[350],
+                                    valueIndicatorColor:
+                                        Theme.of(context).colorScheme.primary,
                                     showValueIndicator:
                                         ShowValueIndicator.onlyForContinuous,
                                   ),
@@ -323,9 +336,11 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 width: 48,
                                 child: Text(
                                   '-${_formatDurationMMSS((duration - position).inMilliseconds)}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.grey,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface, // Volle Deckkraft für bessere Lesbarkeit
                                     fontFeatures: [
                                       FontFeature.tabularFigures(),
                                     ],
@@ -348,17 +363,20 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Divider(
-                            color: Colors.grey[
-                                300], // oder Colors.grey.shade400 für feiner
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
                             thickness: 2,
-                            height:
-                                4, // vertikaler Abstand vor & nach der Linie
+                            height: 4,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 18),
                             child: Text(
                               widget.episode.description ?? "",
-                              style: const TextStyle(fontSize: 22),
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 100),

@@ -49,25 +49,34 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
                       children: [
                         Text(
                           "Verfügbar seit $releaseDate",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface, // Bessere Lesbarkeit
                           ),
                         ),
                         Text(
                           duration,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 22,
-                            color: Colors.grey,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface, // Bessere Lesbarkeit
                           ),
                         ),
                       ],
                     ),
                   ),
                   const Divider(
-                    color: Color.fromRGBO(224, 224, 224, 1),
+                    // color: Color.fromRGBO(224, 224, 224, 1),
+                    // thickness: 2,
+                    // height: 4, // Abstand nach der Linie komplett entfernt
+                    //),
+                    // Durch Theme-Farbe ersetzen:
+                    color: Colors.transparent, // wird durch Theme überschrieben
                     thickness: 2,
-                    height: 4, // Abstand nach der Linie komplett entfernt
+                    height: 4,
                   ),
                   if (extraContent != null) ...[extraContent!],
                 ],

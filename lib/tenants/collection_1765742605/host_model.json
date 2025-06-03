@@ -7,7 +7,7 @@
     "primaryColorHex": "#69757A",
     "secondaryColorHex": "#ABBEBC",
     "headerImageUrl": "https://example.com/host2-header.png",
-    "themeMode": "dark",
+    "themeMode": "light",
     "logoUrl": "https://example.com/host2-logo.png"
   },
   "features": { "showPortfolioTab": false },

@@ -26,8 +26,10 @@ class CastAirPlayButton extends StatelessWidget {
       icon: Icon(
         isConnected ? Icons.cast_connected : Icons.cast,
         color: isAvailable
-            ? (isConnected ? Colors.blue : Colors.black87)
-            : Colors.grey,
+            ? (isConnected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurface.withAlpha(180))
+            : Theme.of(context).disabledColor,
         size: 32,
       ),
       tooltip:

@@ -11,19 +11,19 @@ class TenantBrandingService {
   /// Splash-/Startlogo (z. B. für LaunchScreen)
   String splashLogo() {
     final loader = TenantAssetLoader(collectionId);
-    return loader.imagePath("opalia_talk_reduced.png");
+    return loader.imagePath();
   }
 
   /// Normales App-Branding-Logo (z. B. für AppBar)
   String logoForTenant() {
     final loader = TenantAssetLoader(collectionId);
-    return loader.imagePath("logo.png");
+    return loader.imagePath();
   }
 
   /// Optionales Cover / großes visuelles Branding
   String coverImage() {
     final loader = TenantAssetLoader(collectionId);
-    return loader.imagePath("opalia_talk_logo.png");
+    return loader.imagePath();
   }
 
   /// Branding-Fallback z. B. wenn keine Konfig geladen wurde

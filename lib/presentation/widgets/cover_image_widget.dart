@@ -24,28 +24,30 @@ class CoverImageWidget extends StatelessWidget {
 
     final iconSize = size * 0.55;
     final labelBottomOffset = size * 0.13;
+    final theme = Theme.of(context);
 
     return Center(
       child: Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: Colors.grey[500],
+          color: theme.colorScheme.surfaceVariant,
           borderRadius: BorderRadius.circular(12),
         ),
         clipBehavior: Clip.antiAlias,
-        child: _buildContent(iconSize, labelBottomOffset),
+        child: _buildContent(iconSize, labelBottomOffset, theme),
       ),
     );
   }
 
-  Widget _buildContent(double iconSize, double labelBottomOffset) {
+  Widget _buildContent(
+      double iconSize, double labelBottomOffset, ThemeData theme) {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return Image.network(
         imageUrl!,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) =>
-            _buildFallback(iconSize, labelBottomOffset),
+            _buildFallback(iconSize, labelBottomOffset, theme),
       );
     }
     if (assetPath != null && assetPath!.isNotEmpty) {
@@ -53,20 +55,21 @@ class CoverImageWidget extends StatelessWidget {
         assetPath!,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) =>
-            _buildFallback(iconSize, labelBottomOffset),
+            _buildFallback(iconSize, labelBottomOffset, theme),
       );
     }
-    return _buildFallback(iconSize, labelBottomOffset);
+    return _buildFallback(iconSize, labelBottomOffset, theme);
   }
 
-  Widget _buildFallback(double iconSize, double labelBottomOffset) {
+  Widget _buildFallback(
+      double iconSize, double labelBottomOffset, ThemeData theme) {
     return Stack(
       children: [
         Center(
           child: Icon(
             Icons.podcasts,
             size: iconSize,
-            color: Colors.white,
+            color: theme.colorScheme.onSurface.withAlpha(180),
           ),
         ),
         if (showLabel)
@@ -78,7 +81,7 @@ class CoverImageWidget extends StatelessWidget {
               child: Text(
                 'Podcast',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   fontSize: iconSize * 0.25,
                   shadows: [
