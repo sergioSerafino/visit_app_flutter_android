@@ -11,15 +11,27 @@ class AppThemeMapper {
     final secondary =
         _parseHexColor(branding?.secondaryColorHex) ?? const Color(0xFF00D6F2);
 
+    // Automatische Kontrastfarbe für Text/Icon auf primary
+    final onPrimary = _getContrastColor(primary);
+    final onSecondary = _getContrastColor(secondary);
+
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: primary,
         primary: primary,
+        onPrimary: onPrimary,
         secondary: secondary,
+        onSecondary: onSecondary,
         brightness: _themeModeToBrightness(branding?.themeMode),
       ),
       useMaterial3: true,
     );
+  }
+
+  /// Gibt automatisch Schwarz oder Weiß für ausreichenden Kontrast zurück
+  static Color _getContrastColor(Color background) {
+    final brightness = ThemeData.estimateBrightnessForColor(background);
+    return brightness == Brightness.dark ? Colors.white : Colors.black;
   }
 
   static ThemeMode toThemeMode(String? rawMode) {

@@ -3,20 +3,32 @@
 
 import 'package:flutter/material.dart';
 
-Widget welcomeHeader(String hostName) {
+Widget welcomeHeader(String hostName,
+    {Color? textColor, Color? backgroundColor, required BuildContext context}) {
+  final theme = Theme.of(context);
   final formattedHost = _formatHostNameForLineBreak(hostName);
 
-  return RichText(
-    textAlign: TextAlign.start,
-    text: TextSpan(
-      style: const TextStyle(fontSize: 24, color: Colors.black),
-      children: [
-        const TextSpan(text: 'Willkommen\nbei '),
-        TextSpan(
-          text: formattedHost,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ],
+  return Container(
+    // kein Hintergrund!
+    child: RichText(
+      textAlign: TextAlign.start,
+      text: TextSpan(
+        style: TextStyle(
+            fontSize: 24,
+            color: textColor ??
+                theme.colorScheme.onSurface), // onSurface für Lesbarkeit
+        children: [
+          const TextSpan(text: 'Willkommen\nbei '),
+          TextSpan(
+            text: formattedHost,
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: textColor ??
+                    theme.colorScheme.onSurface), // auch hier onSurface
+          ),
+        ],
+      ),
     ),
   );
 }
