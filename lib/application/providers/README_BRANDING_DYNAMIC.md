@@ -41,8 +41,42 @@ void initState() {
 - Ungültige CollectionId → Fallback-Branding wird angezeigt, Snackbar informiert
 - App-Start ohne Netzwerk → Platzhalter-Branding sichtbar
 
+## Farb- und Kontrastregeln für dynamisches Branding
+
+### Farbwahl für Texte und Icons
+
+- **onPrimary**: Nur verwenden, wenn das UI-Element direkt auf `primary`-Hintergrund liegt (z.B. AppBar, Buttons mit `primary`-Farbe).
+- **onSecondary**: Nur verwenden, wenn das UI-Element direkt auf `secondary`-Hintergrund liegt.
+- **onSurface**: Standard für Texte und Icons auf neutralem oder hellem Hintergrund (z.B. Scaffold, Cards, Listen, WelcomeHeader ohne expliziten Hintergrund). Sorgt für optimalen Kontrast und Barrierefreiheit.
+- **onBackground**: Für Texte auf dem globalen App-Hintergrund (meist identisch mit onSurface, aber je nach Theme unterschiedlich).
+
+### Best Practices
+
+- Setze keinen expliziten Hintergrund im Widget, wenn der Text auf dem Standard-Hintergrund liegen soll. Nutze dann `onSurface` für Text und Icons.
+- Wenn ein Hintergrund gesetzt wird (z.B. primary), dann immer die passende on*-Farbe für Text/Icon verwenden.
+- Die automatische Kontrastberechnung (`_getContrastColor`) in `app_theme_mapper.dart` sorgt dafür, dass onPrimary/onSecondary immer schwarz oder weiß ist – je nach Helligkeit der Branding-Farbe.
+- Für dynamische Branding-Elemente (z.B. WelcomeHeader, HomeHeader) gilt: 
+  - Ohne Hintergrund: `onSurface` verwenden.
+  - Mit Hintergrund: passende on*-Farbe verwenden.
+
+### Beispiel WelcomeHeader
+
+```dart
+// Ohne Hintergrund, daher onSurface:
+Text(
+  'Willkommen bei ...',
+  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+)
+```
+
+### Fehlerquellen
+- Unlesbarkeit entsteht, wenn z.B. `onPrimary` auf hellem Hintergrund verwendet wird. Immer prüfen, ob der Hintergrund zur on*-Farbe passt!
+- Bei neuen Brandings immer mit hellen und dunklen Farbkombinationen testen.
+
 ## Siehe auch
-- `lib/tenants/HOWTO_BRANDING_TENANTS.md` (Pflege der Branding-Daten)
+- `lib/config/app_theme_mapper.dart` für die Kontrastlogik
+- `lib/presentation/widgets/welcome_header.dart` für ein Beispiel
+- `lib/tenants/HOWTO_BRANDING_TENANTS.md` für allgemeine Branding-Infos
 - `lib/config/tenant_loader_service.dart` (Ladelogik)
 - `lib/application/providers/collection_provider.dart` (Provider-Logik)
 - `.instructions/architecture_clean_architecture.md` (Architektur)

@@ -61,3 +61,13 @@ Dieses HowTo beschreibt, wie du für verschiedene Hosts/mandanten ("tenants") ei
 - Die Merge- und Loader-Services sind bereits so implementiert, dass sie diese Struktur und Fallback-Logik unterstützen.
 - Für neue Hosts einfach einen neuen Ordner und eine neue Datei nach obigem Muster anlegen.
 - Siehe auch die Doku in `.instructions/` und die Tests für weitere Details.
+
+## Farb- und Kontrastregeln für dynamisches Branding
+
+- **onPrimary**: Nur für Text/Icon auf primary-Hintergrund (z.B. Buttons, AppBar).
+- **onSurface**: Standard für Text/Icon auf neutralem Hintergrund (z.B. Scaffold, Cards, WelcomeHeader ohne Hintergrund).
+- **Best Practice**: 
+  - Kein Hintergrund → immer onSurface für Text/Icon.
+  - Mit Hintergrund (primary/secondary) → passende on*-Farbe.
+- Siehe auch: `lib/config/app_theme_mapper.dart` (automatische Kontrastberechnung), `lib/presentation/widgets/welcome_header.dart` (Beispiel).
+- Unlesbarkeit entsteht, wenn z.B. onPrimary auf hellem Hintergrund verwendet wird!
