@@ -18,7 +18,7 @@ Widget welcomeHeader(String hostName,
             color: textColor ??
                 theme.colorScheme.onSurface), // onSurface für Lesbarkeit
         children: [
-          const TextSpan(text: 'Willkommen\nbei '),
+          const TextSpan(text: 'Willkommen bei\n'),
           TextSpan(
             text: formattedHost,
             style: TextStyle(

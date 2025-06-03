@@ -69,6 +69,27 @@ Text(
 )
 ```
 
+## Wie kann man für einzelne Komponenten (z. B. homeHeader) gezielt einen bestimmten Kontrast erzwingen?
+
+- Die zentrale Kontrastberechnung (onPrimary/onSecondary) erfolgt in `app_theme_mapper.dart` und sorgt für Lesbarkeit auf Branding-Farben.
+- Wenn du für ein bestimmtes Widget (z. B. homeHeader) immer einen bestimmten Kontrast (z. B. immer schwarz als Text) möchtest, kannst du das direkt im Widget überschreiben:
+
+```dart
+homeHeader(
+  hostName,
+  textColor: Colors.black, // Immer schwarz, unabhängig vom Theme-Kontrast
+  backgroundColor: theme.colorScheme.primary,
+)
+```
+
+- Das ist in Flutter üblich und entspricht Best Practice: Für Spezialfälle wird die Theme-Farbe gezielt überschrieben.
+- Ein globaler Mechanismus für "immer hellen Kontrast für bestimmte Widgets" existiert nicht, da das Theme für die gesamte App gilt.
+- Dokumentiere solche Abweichungen im Code, damit die Intention klar ist.
+
+**Fazit:**
+- Standard: Theme-Kontrast nutzen (onPrimary/onSurface)
+- Spezialfall: explizit textColor setzen
+
 ### Fehlerquellen
 - Unlesbarkeit entsteht, wenn z.B. `onPrimary` auf hellem Hintergrund verwendet wird. Immer prüfen, ob der Hintergrund zur on*-Farbe passt!
 - Bei neuen Brandings immer mit hellen und dunklen Farbkombinationen testen.

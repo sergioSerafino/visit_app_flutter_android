@@ -29,18 +29,20 @@ class ButtonIconNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final buttonColor = color ?? theme.colorScheme.primary;
-    final textColor = theme.colorScheme.onPrimary;
-
     final hasIcon = iconPosition != IconPosition.none &&
         (icon != null || customIcon != null);
 
-    Widget? leadingIcon;
-    if (icon != null) leadingIcon = Icon(icon, size: 20);
-    if (customIcon != null) leadingIcon = customIcon;
+    Widget labelContent = Text(
+      label,
+      style:
+          const TextStyle(color: Colors.white), // Text immer weiß überschreiben
+    );
 
-    Widget labelContent = Text(label);
+    Widget? leadingIcon;
+    if (icon != null)
+      leadingIcon = Icon(icon,
+          size: 20, color: Colors.white); // Icon immer weiß überschreiben
+    if (customIcon != null) leadingIcon = customIcon;
 
     List<Widget> children;
     switch (iconPosition) {
@@ -69,22 +71,19 @@ class ButtonIconNavigation extends StatelessWidget {
                 horizontal: 24,
                 vertical: 12,
               ),
-              textStyle: TextStyle(fontSize: sizeOfFont, color: textColor),
-              foregroundColor: textColor,
-              side: BorderSide(color: buttonColor),
+              textStyle: TextStyle(fontSize: sizeOfFont),
             ),
             child: content,
           )
         : ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: buttonColor,
-              foregroundColor: textColor,
+              backgroundColor: color,
               padding: const EdgeInsets.symmetric(
                 horizontal: 24,
                 vertical: 12,
               ),
-              textStyle: TextStyle(fontSize: sizeOfFont, color: textColor),
+              textStyle: TextStyle(fontSize: sizeOfFont),
             ),
             child: content,
           );

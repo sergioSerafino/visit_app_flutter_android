@@ -40,6 +40,7 @@ class GlobalSnackbarListener extends ConsumerWidget {
               ],
             ),
             backgroundColor: _colorForType(next.type, branding),
+            // .withAlpha(180), // wirklich transparent, nicht mit ..
             duration: next.duration,
           ),
         );
@@ -53,11 +54,13 @@ class GlobalSnackbarListener extends ConsumerWidget {
       case SnackbarType.error:
         return Colors.red;
       case SnackbarType.success:
-        return _parseHexColor(branding.primaryColorHex) ?? Colors.green;
+        return (_parseHexColor(branding.primaryColorHex) ?? Colors.green);
+      // .withAlpha(180);
       case SnackbarType.warning:
-        return Colors.orange;
-      default:
-        return _parseHexColor(branding.secondaryColorHex) ?? Colors.blue;
+        return Colors.orange.withAlpha(180);
+      case SnackbarType.info:
+        return (_parseHexColor(branding.secondaryColorHex) ?? Colors.blue);
+      // .withAlpha(180);
     }
   }
 

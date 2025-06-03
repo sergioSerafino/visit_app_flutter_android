@@ -2,6 +2,11 @@
 // - dataSourceProvider - toggleDataSource() : API oder Mock
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:empty_flutter_template/application/providers/theme_provider.dart'
+    as theme_prov;
+import 'package:empty_flutter_template/application/providers/collection_provider.dart'
+    as collection_prov;
+import 'package:empty_flutter_template/application/providers/feature_flags_provider.dart';
 import '../../domain/enums/repository_source_type.dart';
 import '../controllers/should_load_controller.dart';
 import 'podcast_provider.dart';
@@ -20,7 +25,36 @@ void toggleDataSource(WidgetRef ref) {
 
   ref.read(dataSourceProvider.notifier).state = next;
 
-  // Optional: Reset aller relevanten States
+  // Debug-Log für Nachvollziehbarkeit
+  // ignore: avoid_print
+  print('[toggleDataSource] Datenquelle gewechselt auf: $next');
+
+  // Reset aller relevanten States (Branding, Host, FeatureFlags, Podcast, etc.)
   ref.invalidate(podcastCollectionProvider);
   ref.read(shouldLoadEpisodesProvider.notifier).reset();
+  ref.invalidate(theme_prov.brandingProvider); // Theme/Branding
+  ref.invalidate(collection_prov.hostModelProvider); // HostModel
+  ref.invalidate(featureFlagsProvider); // FeatureFlags
+  // Optional: Weitere Provider invalidieren, falls benötigt
+
+  // Nach dem Invalidate: explizit CollectionId-Listener triggern, damit Branding/HostModel asynchron neu geladen werden
+  final collectionId = ref.read(collection_prov.collectionIdProvider);
+  // ignore: avoid_print
+  print(
+      '[toggleDataSource] Triggere Branding/Host-Reload für CollectionId: $collectionId');
+  collection_prov.listenToCollectionIdChanges(ref);
 }
+
+///
+/// toggleDataSource: Umschalten zwischen API- und Mock-Modus
+///
+/// - Invalidiert alle Provider, die von der Datenquelle abhängen:
+///   - podcastCollectionProvider: Podcast-Daten
+///   - shouldLoadEpisodesProvider: Episoden-Controller
+///   - brandingProvider: Dynamisches Branding/Theming
+///   - hostModelProvider: Host-spezifische Daten
+///   - featureFlagsProvider: Feature-Flags pro Collection/Host
+///
+/// Dadurch wird sichergestellt, dass nach einem Wechsel des Datenmodus
+/// (API/Mock) alle UI-Elemente und States korrekt neu geladen werden.
+///

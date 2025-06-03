@@ -37,11 +37,16 @@ final collectionIdProvider = StateNotifierProvider<CollectionIdNotifier, int>((
 
 class CollectionIdNotifier extends StateNotifier<int> {
   final CollectionIdStorage storage;
-  CollectionIdNotifier(this.storage) : super(1814331727) {
-    _load();
+  CollectionIdNotifier(this.storage) : super(1590516386) {
+    _load(); // Deaktiviert für harten Testwert
   }
 
   Future<void> _load() async {
+    final loaded = await storage.load();
+    if (loaded != null) state = loaded;
+  }
+
+  Future<void> load() async {
     final loaded = await storage.load();
     if (loaded != null) state = loaded;
   }

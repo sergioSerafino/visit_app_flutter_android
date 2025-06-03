@@ -103,7 +103,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Flexible(
                       child: homeHeader(
                     hostName,
-                    textColor: theme.colorScheme.onPrimary,
+                    textColor: Colors.white,
                     backgroundColor: theme.colorScheme.primary,
                   )),
                   const SizedBox(width: 12),
@@ -121,7 +121,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                         IconThemeData(color: theme.colorScheme.onPrimary),
                   ),
                   child: PopupMenuButton<String>(
-                    icon: const Icon(Icons.menu),
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    ),
                     onSelected: (value) {
                       if (value == "Einstellungen") {
                         showModalBottomSheet(
@@ -140,33 +143,39 @@ class _HomePageState extends ConsumerState<HomePage> {
                       }
                     },
                     itemBuilder: (BuildContext context) => [
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: "Über",
                         child: Row(
                           children: [
-                            Text("Über diese App",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary)),
-                            const Spacer(),
-                            Icon(Icons.arrow_back,
-                                color: Theme.of(context).colorScheme.onPrimary),
+                            Text(
+                              "Über diese App",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ), //Theme.of(context).colorScheme.onPrimary),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ), //Theme.of(context).colorScheme.onPrimary),
                           ],
                         ),
                       ),
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: "Einstellungen",
                         child: Row(
                           children: [
-                            Text("Einstellungen",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary)),
-                            const Spacer(),
-                            Icon(Icons.menu,
-                                color: Theme.of(context).colorScheme.onPrimary),
+                            Text(
+                              "Einstellungen",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ), //Theme.of(context).colorScheme.onPrimary),
+                            Spacer(),
+                            Icon(
+                              Icons.menu,
+                              color: Colors.white,
+                            ), //Theme.of(context).colorScheme.onPrimary),
                           ],
                         ),
                       ),
@@ -187,16 +196,27 @@ class _HomePageState extends ConsumerState<HomePage> {
             currentIndex: _selectedIndex,
             onTap: _onTabSelected,
             backgroundColor: theme.colorScheme.primary,
-            selectedItemColor: theme.colorScheme.onPrimary,
-            unselectedItemColor: theme.colorScheme.onPrimary.withOpacity(0.6),
-            items: const [
+            selectedItemColor: Colors.white, // Labels und Icons immer weiß
+            unselectedItemColor:
+                Colors.white.withAlpha(70), // Unselected mit Transparenz
+            selectedLabelStyle: const TextStyle(color: Colors.white),
+            unselectedLabelStyle: const TextStyle(color: Colors.white),
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.podcasts),
+                icon: const Icon(
+                  Icons.podcasts,
+                  //color: Colors.white, // Icon immer weiß
+                ),
                 label: "CastList",
+                backgroundColor: theme.colorScheme.primary,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
+                icon: const Icon(
+                  Icons.person_outline,
+                  //color: Colors.white, // Icon immer weiß
+                ),
                 label: "HostsView",
+                backgroundColor: theme.colorScheme.primary,
               ),
             ],
           );

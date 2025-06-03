@@ -35,13 +35,23 @@ class _PodcastAppState extends ConsumerState<PodcastApp> {
   Future<void> _initApp() async {
     // 1.  ⏳ Placeholder-Fallback laden (z. B. collectionId = null)
     await PlaceholderLoaderService.init();
-    // 2.  collectionId lesen: collectionIdProvider - Welche ist die aktive Collection
-    // 3.  🎨 stimmt die collection überein Branding ins Theme übertragen
-    final host = PlaceholderLoaderService.hostModel;
-    ref.read(theme_prov.brandingProvider.notifier).setBranding(host.branding);
-    // 4.  Podcastdaten für collectionId laden
-    // ... ggf. weitere Initialisierung ...
-    setState(() => _initialized = true);
+    // 2.  Persistierte collectionId laden (warten, bis geladen)
+    await ref.read(collectionIdProvider.notifier).load();
+    // 3.  Branding für initiale collectionId laden und setzen
+    final initialCollectionId = ref.read(collectionIdProvider);
+    try {
+      final initialHost = await TenantLoaderService.loadHostModel(initialCollectionId.toString());
+      ref.read(theme_prov.brandingProvider.notifier).setBranding(initialHost.branding);
+      ref.read(hostModelProvider.notifier).state = initialHost;
+    } catch (e) {
+      ref.read(theme_prov.brandingProvider.notifier).setBranding(PlaceholderContent.hostModel.branding);
+      ref.read(hostModelProvider.notifier).state = PlaceholderContent.hostModel;
+    }
+    setState(() {
+      _initialized = true;
+    });
+    // 4.  Branding-Listener für spätere collectionId-Wechsel aktivieren
+    listenToCollectionIdChanges(ref);
   }
 
   @override
@@ -67,9 +77,7 @@ class _PodcastAppState extends ConsumerState<PodcastApp> {
         onGenerateRoute: AppRoutes.generateRoute,
         home: _initialized
             ? const LaunchScreen()
-            : const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              ),
+            : const LaunchScreen(), // Kein ProgressIndicator mehr, immer LaunchScreen
       ),
     );
   }

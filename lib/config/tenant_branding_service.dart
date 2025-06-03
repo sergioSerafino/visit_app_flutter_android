@@ -29,8 +29,8 @@ class TenantBrandingService {
   /// Branding-Fallback z. B. wenn keine Konfig geladen wurde
   Branding defaultBranding() {
     return const Branding(
-      primaryColorHex: "#673AB7", // deepPurple
-      secondaryColorHex: "#00D6F2",
+      primaryColorHex: "#CCCCCC", // neutral hellgrau
+      secondaryColorHex: "#EEEEEE", // noch heller
       themeMode: "light",
     );
   }

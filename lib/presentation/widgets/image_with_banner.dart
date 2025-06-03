@@ -44,13 +44,14 @@ class ImageWithBanner extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withAlpha(180),
+                color: Colors.black.withAlpha(90),
                 borderRadius: BorderRadius.circular(3),
               ),
               child: Text(
                 label.toUpperCase(), // Automatisch in Capslock
                 style: TextStyle(
-                  color: theme.colorScheme.onSurface,
+                  color: Colors.white,
+                  // color: theme.colorScheme.onSurface,
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),

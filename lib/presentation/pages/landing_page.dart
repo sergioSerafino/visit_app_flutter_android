@@ -26,6 +26,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (!_snackbarShown) {
       _snackbarShown = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -52,125 +54,127 @@ class _LandingPageState extends ConsumerState<LandingPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Begrüßung
-            collectionAsync.when(
-              data: (apiResponse) => apiResponse.when(
-                success: (collection) {
-                  final podcast = collection.podcasts.firstOrNull;
-                  final dynamicHostName =
-                      podcast?.collectionName ?? "Gastgeber-Format";
-
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 0, left: 16.0),
-                    child: welcomeHeader(dynamicHostName, context: context),
-                  );
-                },
-                error: (_) => Padding(
-                  padding: const EdgeInsets.only(top: 0, left: 16.0),
-                  child: welcomeHeader("dynamicHostName", context: context),
-                ),
-                loading: () => const Padding(
-                  padding: EdgeInsets.only(top: 0, left: 16.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              loading: () => const Padding(
-                padding: EdgeInsets.only(top: 0, left: 16.0),
-                child: CircularProgressIndicator(),
-              ),
-              error: (_, __) => Padding(
-                padding: const EdgeInsets.only(top: 0, left: 16.0),
-                child: welcomeHeader("Fehler beim Laden", context: context),
-              ),
-            ),
-
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 0, left: 16.0),
-            //   child: welcomeHeader(host.hostName),
-            // ),
-            const SizedBox(height: 20),
-
-            /// 🟦 Cover Platzhalter
-            // CoverImageWidget(
-            //   scaleFactor: 0.95,
-            //   showLabel: false,
-            //   imageUrl: host.branding.logoUrl,
-            // ),
-            // const SizedBox(height: 30),
-            collectionAsync.when(
-              data: (apiResponse) => apiResponse.when(
-                success: (collection) {
-                  final podcast = collection.podcasts.firstOrNull;
-                  return CoverImageWidget(
-                    scaleFactor: 0.95,
-                    showLabel: false,
-                    imageUrl: podcast?.artworkUrl600 ?? "",
-                  );
-                },
-                error: (_) => const CoverImageWidget(showLabel: true),
-                loading: () => const CircularProgressIndicator(),
-              ),
-              loading: () => const CircularProgressIndicator(),
-              error: (_, __) => const CoverImageWidget(showLabel: true),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: ButtonIconNavigation(
-                iconPosition: IconPosition.right,
-                sizeOfFont: 28,
-                label: "Starten",
-                icon: Icons.play_arrow,
-                onPressed: () {
-                  ref
-                      .read(hasCompletedStartProvider.notifier)
-                      .markStartComplete();
-                  debugPrint('🚀 hasCompletedStart gesetzt!');
-                  Navigator.of(context).pushAndRemoveUntil(
-                    AppRoutes.generateRoute(
-                      const RouteSettings(name: AppRoutes.homeRoute),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Begrüßung
+                collectionAsync.when(
+                  data: (apiResponse) => apiResponse.when(
+                    success: (collection) {
+                      final podcast = collection.podcasts.firstOrNull;
+                      final dynamicHostName =
+                          podcast?.collectionName ?? "Gastgeber-Format";
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            top: 24, left: 24, right: 24, bottom: 8),
+                        child: welcomeHeader(dynamicHostName, context: context),
+                      );
+                    },
+                    error: (_) => Padding(
+                      padding: const EdgeInsets.only(
+                          top: 24, left: 24, right: 24, bottom: 8),
+                      child: welcomeHeader("dynamicHostName", context: context),
                     ),
-                    (route) => false,
-                  );
-                },
-              ),
+                    loading: () => const Padding(
+                      padding: EdgeInsets.only(
+                          top: 24, left: 24, right: 24, bottom: 8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  loading: () => const Padding(
+                    padding: EdgeInsets.only(
+                        top: 24, left: 24, right: 24, bottom: 8),
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (_, __) => Padding(
+                    padding: const EdgeInsets.only(
+                        top: 24, left: 24, right: 24, bottom: 8),
+                    child: welcomeHeader("Fehler beim Laden", context: context),
+                  ),
+                ),
+                // Cover
+                const SizedBox(height: 8),
+                collectionAsync.when(
+                  data: (apiResponse) => apiResponse.when(
+                    success: (collection) {
+                      final podcast = collection.podcasts.firstOrNull;
+                      return Center(
+                        child: CoverImageWidget(
+                          scaleFactor: 0.95,
+                          showLabel: false,
+                          imageUrl: podcast?.artworkUrl600 ?? "",
+                        ),
+                      );
+                    },
+                    error: (_) =>
+                        const Center(child: CoverImageWidget(showLabel: true)),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (_, __) =>
+                      const Center(child: CoverImageWidget(showLabel: true)),
+                ),
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: ButtonIconNavigation(
+                    iconPosition: IconPosition.right,
+                    sizeOfFont: 28,
+                    label: "Starten",
+                    icon: Icons.play_arrow,
+                    onPressed: () {
+                      ref
+                          .read(hasCompletedStartProvider.notifier)
+                          .markStartComplete();
+                      debugPrint('🚀 hasCompletedStart gesetzt!');
+                      Navigator.of(context).pushAndRemoveUntil(
+                        AppRoutes.generateRoute(
+                          const RouteSettings(name: AppRoutes.homeRoute),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    color: theme.colorScheme.primary, // Hauptfarbe für Button
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(left: 28.0, top: 8),
+                  child: Text("einer", style: theme.textTheme.bodySmall),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 28.0, top: 2),
+                  child: Text(
+                    "Universell Podcasten -App",
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: ButtonIconNavigation(
+                    iconPosition: IconPosition.none,
+                    sizeOfFont: 18,
+                    label: "Einstellungen",
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => const PreferencesBottomSheet(),
+                      );
+                    },
+                    color: theme.colorScheme.primary, // Hauptfarbe für Button
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
-            const SizedBox(height: 10),
-
-            const Padding(
-              padding: EdgeInsets.only(top: 12, left: 12.0),
-              child: Text("einer", style: TextStyle(fontSize: 14)),
-            ),
-
-            const Padding(
-              padding: EdgeInsets.only(left: 12.0),
-              child: Text(
-                "Universell Podcasten -App",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: ButtonIconNavigation(
-                iconPosition: IconPosition.none,
-                sizeOfFont: 18,
-                label: "Einstellungen",
-                // color: const Color(0xFFCCDD),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true, // optional
-                    builder: (context) => const PreferencesBottomSheet(),
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

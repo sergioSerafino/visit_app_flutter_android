@@ -110,13 +110,12 @@ class _LaunchScreenState extends State<LaunchScreen>
 
     const double imageSize = 200;
     final double imageTop = screenHeight / 2 - imageSize / 2;
-    // TODO: imageLeft ist aktuell ungenutzt. Prüfe bei zukünftigem Refactoring, ob eine zentrierte Platzierung des Splash-Logos benötigt wird (siehe UI/Design-HowTo und Clean Architecture-Doku).
-    // final double imageLeft = screenWidth / 2 - imageSize / 2;
     final double textTop = imageTop + imageSize + 40;
     final double textLeft = screenWidth * 0.25;
 
+    // Fester neutraler Hintergrund, unabhängig vom Branding
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: Colors.white,
       body: AnimatedOpacity(
         opacity: _opacity,
         duration: const Duration(milliseconds: 0),

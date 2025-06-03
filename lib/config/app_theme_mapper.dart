@@ -6,10 +6,10 @@ import '../../domain/models/branding_model.dart';
 
 class AppThemeMapper {
   static ThemeData fromBranding(Branding? branding) {
-    final primary =
-        _parseHexColor(branding?.primaryColorHex) ?? Colors.deepPurple;
-    final secondary =
-        _parseHexColor(branding?.secondaryColorHex) ?? const Color(0xFF00D6F2);
+    final primary = _parseHexColor(branding?.primaryColorHex) ??
+        const Color(0xFFCCCCCC); // neutral hellgrau
+    final secondary = _parseHexColor(branding?.secondaryColorHex) ??
+        const Color(0xFFEEEEEE); // noch heller
 
     // Automatische Kontrastfarbe für Text/Icon auf primary
     final onPrimary = _getContrastColor(primary);
