@@ -27,6 +27,21 @@ class BottomPlayerWidget extends ConsumerWidget {
         ? (audioState as dynamic).duration as Duration
         : const Duration(seconds: 100);
 
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    // Fehler-Feedback: Snackbar bei ErrorState
+    if (audioState is ErrorState && audioState.message.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scaffoldMessenger.clearSnackBars();
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text(audioState.message),
+            backgroundColor: theme.colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      });
+    }
+
     return SafeArea(
       minimum: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
       child: Container(

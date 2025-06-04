@@ -20,32 +20,40 @@ final class PlayEpisode extends AudioPlayerEvent {
 }
 
 final class Pause extends AudioPlayerEvent {}
+
 final class Stop extends AudioPlayerEvent {}
+
 final class Seek extends AudioPlayerEvent {
   final Duration position;
   Seek(this.position);
 }
+
 final class UpdatePosition extends AudioPlayerEvent {
   final Duration position;
   UpdatePosition(this.position);
 }
+
 final class TogglePlayPause extends AudioPlayerEvent {}
 
 // States
 sealed class AudioPlayerState {}
 
 final class Idle extends AudioPlayerState {}
+
 final class Loading extends AudioPlayerState {}
+
 final class Playing extends AudioPlayerState {
   final Duration position;
   final Duration duration;
   Playing(this.position, this.duration);
 }
+
 final class Paused extends AudioPlayerState {
   final Duration position;
   final Duration duration;
   Paused(this.position, this.duration);
 }
+
 final class ErrorState extends AudioPlayerState {
   final String message;
   ErrorState(this.message);
@@ -68,7 +76,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       if (event.url.isEmpty || event.url.trim().isEmpty) {
         emit(ErrorState('Keine gültige Audio-URL übergeben.'));
         if (kDebugMode)
-          print('[AudioPlayerBloc] Leere oder ungültige URL: "["${event.url}"');
+          print(
+              '[AudioPlayerBloc] Leere oder ungültige URL: "["${event.url}"');
         return;
       }
       if (kDebugMode)
