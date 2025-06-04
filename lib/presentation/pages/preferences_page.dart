@@ -36,9 +36,13 @@ class PreferencesBottomSheet extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.settings),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.settings,
+                          color: const Color.fromARGB(180, 0, 0, 0),
+                          size: 28,
+                        ),
                       ),
                       Text(
                         '  Einstellungen',
@@ -49,7 +53,12 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   const Divider(),
                   // 🔄 Onboarding Reset
                   ListTile(
-                    leading: const Icon(Icons.replay_outlined),
+                    leading: Icon(
+                      Icons.replay_outlined,
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(180),
+                      size: 28,
+                    ),
                     title: const Text("Onboarding erneut starten"),
                     subtitle: const Text(
                       "Kann beim nächsten Start erneut durchlaufen werden.",
@@ -88,7 +97,12 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   ListTile(
-                    leading: const Icon(Icons.system_update),
+                    leading: Icon(
+                      Icons.system_update,
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(180),
+                      size: 28,
+                    ),
                     title: const Text('App auf Updates prüfen'),
                     subtitle: const Text(
                       'Rufe ab, ob Neuerungen verfügbar sind.',
@@ -113,11 +127,16 @@ class PreferencesBottomSheet extends ConsumerWidget {
                     margin: const EdgeInsets.symmetric(vertical: 0),
                   ),
                   const SizedBox(height: 8),
-                  const ListTile(
-                    leading: Icon(Icons.light_mode),
-                    title: Text('Daymode-Funktion'),
-                    subtitle:
-                        Text('Passe die Farben der App dem Tagesverlauf an.'),
+                  ListTile(
+                    leading: Icon(
+                      Icons.light_mode,
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(180),
+                      size: 28,
+                    ),
+                    title: const Text('Daymode-Funktion'),
+                    subtitle: const Text(
+                        'Passe die Farben der App dem Tagesverlauf an.'),
                   ),
 
                   const SizedBox(height: 18),
@@ -132,8 +151,9 @@ class PreferencesBottomSheet extends ConsumerWidget {
                       ref.watch(dataSourceProvider) == RepositorySourceType.api
                           ? Icons.public // Weltkugel
                           : Icons.edit, // Stift
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 24,
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(180),
+                      size: 28,
                     ),
                     title: const Text('API-Modus umschalten (Admin-Switch)'),
                     trailing: Switch(
@@ -164,8 +184,12 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   const SizedBox(height: 8),
 
                   ListTile(
-                    leading: Icon(Icons.numbers,
-                        size: 24, color: Theme.of(context).colorScheme.primary),
+                    leading: Icon(
+                      Icons.numbers,
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(180),
+                      size: 28,
+                    ),
                     title: const Text('Eingabe iTunes API (Admin-Input)'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -117,6 +117,38 @@ homeHeader(
 **Tipp:**
 - Nutze für die Navigation nach dem Laden ein `await` auf den Provider-Future und prüfe in der Zielseite, ob die Daten wirklich da sind (z. B. mit `isSuccess`).
 
+## Farbwahl: Sekundärfarbe bevorzugen, sonst Primärfarbe (Best Practice)
+
+Für alle UI-Elemente, die eine Branding-Farbe benötigen (z. B. Verläufe, prominente Buttons, Play-Icons, Schatten etc.), empfiehlt sich folgende Logik:
+
+- **Verwende zuerst die `secondaryColor` des Brandings**, wenn sie individuell gesetzt ist (also nicht der Standardwert, z. B. #EEEEEE).
+- **Falls keine individuelle `secondaryColor` gesetzt ist, verwende die `primaryColor`**.
+- So wird die Branding-Logik maximal mandantenspezifisch und bleibt fallback-sicher.
+
+**Beispiel (Flutter):**
+```dart
+final theme = Theme.of(context);
+final secondary = theme.colorScheme.secondary;
+const defaultSecondary = Color(0xFFEEEEEE); // Standardwert aus Skript
+bool isCustomSecondary(Color c) =>
+    c.r != defaultSecondary.r ||
+    c.g != defaultSecondary.g ||
+    c.b != defaultSecondary.b ||
+    c.a != defaultSecondary.a;
+final brandingColor = isCustomSecondary(secondary)
+    ? secondary
+    : theme.colorScheme.primary;
+```
+
+**Einsatzbereiche:**
+- Header-Verläufe
+- Play/Pause-Buttons
+- Schatteneffekte
+- u. v. m.
+
+**Hinweis:**
+Dieses Muster sorgt für konsistente, mandantenspezifische UI-Elemente und ist für alle zukünftigen Branding-Features empfohlen.
+
 ## Siehe auch
 - `lib/config/app_theme_mapper.dart` für die Kontrastlogik
 - `lib/presentation/widgets/welcome_header.dart` für ein Beispiel

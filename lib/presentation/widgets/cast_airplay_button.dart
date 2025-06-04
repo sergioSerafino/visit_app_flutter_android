@@ -11,6 +11,8 @@ class CastAirPlayButton extends StatelessWidget {
   final bool isConnected;
   final String? statusText;
   final VoidCallback? onPressed;
+  final Color? iconColor;
+  final double? iconSize;
 
   const CastAirPlayButton({
     super.key,
@@ -18,6 +20,8 @@ class CastAirPlayButton extends StatelessWidget {
     this.isConnected = false,
     this.statusText,
     this.onPressed,
+    this.iconColor,
+    this.iconSize,
   });
 
   @override
@@ -25,12 +29,13 @@ class CastAirPlayButton extends StatelessWidget {
     return IconButton(
       icon: Icon(
         isConnected ? Icons.cast_connected : Icons.cast,
-        color: isAvailable
-            ? (isConnected
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.onSurface.withAlpha(180))
-            : Theme.of(context).disabledColor,
-        size: 32,
+        color: iconColor ??
+            (isAvailable
+                ? (isConnected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.primary.withAlpha(180))
+                : Theme.of(context).disabledColor),
+        size: iconSize ?? 32,
       ),
       tooltip:
           statusText ?? (isConnected ? 'Verbunden' : 'Mit Gerät verbinden'),

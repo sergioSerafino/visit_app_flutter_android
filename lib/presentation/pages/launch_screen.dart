@@ -15,9 +15,12 @@ class LaunchScreen extends StatefulWidget {
 
 class _LaunchScreenState extends State<LaunchScreen>
     with SingleTickerProviderStateMixin {
-  // TODO: Hier kann dynamisch das Branding geladen werden
+  // Hinweis (04.06.2025):
+  // Das dynamische Branding wird bewusst erst ab SplashPage geladen und angewendet.
+  // Die LaunchScreen bleibt neutral (weiß, Platzhalter-Logo), um Ladeflackern zu vermeiden.
+  // Das frühere TODO ist damit obsolet und wurde entfernt.
   static final fallbackLogo = "lib/tenants/common/assets/visit22.png";
-  static final primaryColor = const Color(0x99FFFFFF); // z. B. aus theme.dart
+  // static final primaryColor = const Color(0x99FFFFFF); // z. B. aus theme.dart (nicht genutzt)
 
   // steuert die Animation
   late AnimationController _controller;

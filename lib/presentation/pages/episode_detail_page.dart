@@ -12,13 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
-import '../../application/providers/audio_player_provider.dart';
 import '../../application/providers/cast_airplay_provider.dart';
 import '../widgets/cast_airplay_button.dart';
-import '../../core/services/audio_player_bloc.dart';
 import '../widgets/cover_image_widget.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/bottom_player_widget.dart';
+import '../../core/messaging/snackbar_manager.dart';
 
 class EpisodeDetailPage extends StatefulWidget {
   final PodcastEpisode episode;
@@ -77,16 +76,6 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     // Riverpod Consumer für Player- und Cast-Status
     return Consumer(
       builder: (context, ref, _) {
-        final audioBloc = ref.watch(audioPlayerBlocProvider);
-        final audioState = ref
-            .watch(audioPlayerStateProvider)
-            .maybeWhen(data: (state) => state, orElse: () => null);
-        final position = (audioState is Playing || audioState is Paused)
-            ? (audioState as dynamic).position as Duration
-            : Duration.zero;
-        final duration = (audioState is Playing || audioState is Paused)
-            ? (audioState as dynamic).duration as Duration
-            : const Duration(seconds: 100);
         final devices = ref.watch(castDevicesProvider);
         final connectedDevice = ref.watch(connectedCastDeviceProvider);
         final isAvailable = devices.isNotEmpty;
@@ -105,6 +94,9 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                   SliverAppBar(
                     pinned: true,
                     expandedHeight: 280,
+                    iconTheme: const IconThemeData(
+                      color: Color.fromARGB(180, 0, 0, 0),
+                    ),
                     title: Opacity(
                       opacity: _titleOpacity,
                       child: Text(
@@ -122,15 +114,31 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                         children: [
                           // Hintergrund-Verlauf
                           Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                                 colors: [
-                                  Color.fromARGB(0, 0, 0, 0),
-                                  Colors.black45,
+                                  const Color.fromARGB(0, 0, 0, 0),
+                                  (() {
+                                    final theme = Theme.of(context);
+                                    final secondary =
+                                        theme.colorScheme.secondary;
+                                    // Standardwert, wie vom Skript gesetzt (z.B. #EEEEEE)
+                                    const defaultSecondary = Color(0xFFEEEEEE);
+                                    // Vergleiche explizit die Farbkomponenten statt .value (deprecated)
+                                    bool isCustomSecondary(Color c) =>
+                                        c.r != defaultSecondary.r ||
+                                        c.g != defaultSecondary.g ||
+                                        c.b != defaultSecondary.b ||
+                                        c.a != defaultSecondary.a;
+                                    return (isCustomSecondary(secondary)
+                                            ? secondary
+                                            : theme.colorScheme.primary)
+                                        .withAlpha(160);
+                                  })(),
                                 ],
-                                stops: [0.35, 0.85],
+                                stops: const [0.35, 0.85],
                               ),
                             ),
                           ),
@@ -145,10 +153,11 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(
-                                      alpha: 0.025,
-                                    ),
-                                    blurRadius: 1,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withAlpha(40),
+                                    blurRadius: 8,
                                     offset: const Offset(3, 10),
                                   ),
                                 ],
@@ -206,7 +215,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                     ),
                   ),
 
-                  // Sticky Header mit Dauer & Veröffentlichungsdatum + Button-Row + Progressbar
+                  // Sticky Header mit Dauer & Veröffentlichungsdatum + Button-Row
                   SliverPersistentHeader(
                     pinned: true,
                     delegate: StickyInfoHeader(
@@ -223,30 +232,29 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               IconButton(
                                 icon: Icon(
                                   Icons.star_border_outlined,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  size: 32, // wie Download-Icon
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary, // wie Download-Icon
                                 ),
                                 tooltip: 'Favorisieren',
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Favoriten-Feature folgt'),
-                                    ),
-                                  );
+                                  ref
+                                      .read(snackbarManagerProvider.notifier)
+                                      .showByKey('favorites_feature');
                                 },
                               ),
                               IconButton(
                                 icon: Icon(
                                   Icons.download,
+                                  size: 32,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                                 tooltip: 'Download',
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Download-Feature folgt'),
-                                    ),
-                                  );
+                                  ref
+                                      .read(snackbarManagerProvider.notifier)
+                                      .showByKey('download_feature');
                                 },
                               ),
                               CastAirPlayButton(
@@ -255,6 +263,10 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 statusText: statusText,
                                 onPressed: isAvailable
                                     ? () {
+                                        ref
+                                            .read(snackbarManagerProvider
+                                                .notifier)
+                                            .showByKey('cast_feature');
                                         if (isConnected) {
                                           service.disconnect();
                                         } else if (devices.isNotEmpty) {
@@ -266,87 +278,9 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                         }
                                       }
                                     : null,
-                              ),
-                            ],
-                          ),
-                          // Kein SizedBox mehr zwischen Buttons und Slider, Abstand komplett entfernt
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 48,
-                                child: Text(
-                                  _formatDurationMMSS(position.inMilliseconds),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface, // Volle Deckkraft für bessere Lesbarkeit
-                                    fontFeatures: [
-                                      FontFeature.tabularFigures(),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    inactiveTrackColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainerHighest,
-                                    thumbColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    overlayColor: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withAlpha(32),
-                                    trackHeight: 14,
-                                    thumbShape: const RoundSliderThumbShape(
-                                      enabledThumbRadius: 9,
-                                    ),
-                                    valueIndicatorShape:
-                                        const PaddleSliderValueIndicatorShape(),
-                                    valueIndicatorColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    showValueIndicator:
-                                        ShowValueIndicator.onlyForContinuous,
-                                  ),
-                                  child: Slider(
-                                    value: position.inSeconds.toDouble(),
-                                    max: duration.inSeconds.toDouble(),
-                                    divisions: duration.inSeconds > 0
-                                        ? duration.inSeconds
-                                        : null,
-                                    label: _formatDurationMMSS(
-                                      position.inMilliseconds,
-                                    ),
-                                    onChanged: (v) {
-                                      audioBloc.add(
-                                        Seek(Duration(seconds: v.toInt())),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              SizedBox(
-                                width: 48,
-                                child: Text(
-                                  '-${_formatDurationMMSS((duration - position).inMilliseconds)}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface, // Volle Deckkraft für bessere Lesbarkeit
-                                    fontFeatures: [
-                                      FontFeature.tabularFigures(),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.right,
-                                ),
+                                iconColor:
+                                    Theme.of(context).colorScheme.primary,
+                                iconSize: 32,
                               ),
                             ],
                           ),
@@ -379,7 +313,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 100),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height / 2),
                         ],
                       ),
                     ),
@@ -425,14 +360,6 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     final remainingSeconds = seconds % 60;
     // Für StickyInfoHeader: Format 'Xm YYs'
     return '${minutes}m ${remainingSeconds.toString().padLeft(2, '0')}s';
-  }
-
-  // Hilfsfunktion für Fortschrittsbalken (Slider) und Zeitanzeige: mm:ss
-  String _formatDurationMMSS(int millis) {
-    final seconds = (millis / 1000).round();
-    final minutes = (seconds / 60).floor();
-    final remainingSeconds = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   String formatReleaseDate(DateTime date) {

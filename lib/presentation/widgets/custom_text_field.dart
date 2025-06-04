@@ -85,12 +85,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
         hintText: widget.hint,
         prefixIcon: widget.prefixIcon != null
             ? Icon(widget.prefixIcon,
-                color: theme.colorScheme.onSurface.withAlpha(120))
+                color: theme.colorScheme.primary.withAlpha(180))
             : null,
         suffixIcon: _controller.text.isNotEmpty
             ? IconButton(
                 icon: Icon(Icons.clear,
-                    color: theme.colorScheme.onSurface.withAlpha(120)),
+                    color: theme.colorScheme.primary.withAlpha(180)),
                 onPressed: _clearText,
               )
             : null,

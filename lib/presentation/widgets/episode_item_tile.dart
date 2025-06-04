@@ -87,7 +87,7 @@ class EpisodeItemTile extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withAlpha(180),
+                          .withAlpha(140),
                     ),
                   ),
                 ),
@@ -105,7 +105,7 @@ class EpisodeItemTile extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withAlpha(180),
+                            .withAlpha(140),
                       ),
                       onPressed: () {
                         // Optional: show modal / actions
@@ -128,7 +128,7 @@ class EpisodeItemTile extends StatelessWidget {
       height: 85,
       color: theme.colorScheme.surfaceVariant,
       child: Icon(Icons.music_note,
-          size: 50, color: theme.colorScheme.onSurface.withAlpha(120)),
+          size: 50, color: theme.colorScheme.primary.withAlpha(180)),
     );
   }
 

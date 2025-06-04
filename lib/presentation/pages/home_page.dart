@@ -119,7 +119,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         IconThemeData(color: theme.colorScheme.onPrimary),
                   ),
                   child: PopupMenuButton<String>(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.menu,
                       color: Colors.white,
                     ),
@@ -141,7 +141,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       }
                     },
                     itemBuilder: (BuildContext context) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: "Über",
                         child: Row(
                           children: [
@@ -150,34 +150,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                               style: TextStyle(
                                 color: Colors.white,
                               ),
-                            ), //Theme.of(context).colorScheme.onPrimary),
+                            ),
                             Spacer(),
                             Icon(
                               Icons.light_mode,
                               color: Colors.white,
-                            ), //Theme.of(context).colorScheme.onPrimary),
+                            ),
                           ],
                         ),
                       ),
-                      const PopupMenuItem(
-                        value: "Über",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Über diese App",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ), //Theme.of(context).colorScheme.onPrimary),
-                            Spacer(),
-                            Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ), //Theme.of(context).colorScheme.onPrimary),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: "Einstellungen",
                         child: Row(
                           children: [
@@ -186,12 +168,30 @@ class _HomePageState extends ConsumerState<HomePage> {
                               style: TextStyle(
                                 color: Colors.white,
                               ),
-                            ), //Theme.of(context).colorScheme.onPrimary),
+                            ),
                             Spacer(),
                             Icon(
                               Icons.settings,
                               color: Colors.white,
-                            ), //Theme.of(context).colorScheme.onPrimary),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: "Über",
+                        child: Row(
+                          children: [
+                            Text(
+                              "Über diese App",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
                           ],
                         ),
                       ),

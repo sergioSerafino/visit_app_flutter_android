@@ -70,7 +70,7 @@ class ImageWithBanner extends StatelessWidget {
       height: 250,
       color: theme.colorScheme.surfaceVariant,
       child: Icon(Icons.image,
-          size: 80, color: theme.colorScheme.onSurface.withAlpha(120)),
+          size: 80, color: theme.colorScheme.primary.withAlpha(180)),
     );
   }
 }

@@ -30,8 +30,13 @@ class SnackbarEventFactory {
     final iconValue = event['icon'] as String?;
     if (iconValue != null && Emoji.values.any((e) => e.name == iconValue)) {
       emoji = Emoji.values.firstWhere((e) => e.name == iconValue).char;
-    } else {
-      emoji = iconValue;
+    } else if (iconValue != null) {
+      // Prüfe auf bekannte Material-Icons
+      icon = _materialIconForName(iconValue);
+      if (icon == null) {
+        // Fallback: Unicode-Emoji als String verwenden (z.B. direktes Emoji in YAML)
+        emoji = iconValue;
+      }
     }
     final duration = _parseDuration(event['duration']);
     // NEU: Optionales delay-Feld (int, ms)
@@ -94,5 +99,43 @@ class SnackbarEventFactory {
       }
     }
     return const Duration(seconds: 3);
+  }
+
+  // Mapping für typische Material-Icons aus der YAML-Konfiguration
+  IconData? _materialIconForName(String name) {
+    switch (name) {
+      case 'download':
+        return Icons.download;
+      case 'star':
+        return Icons.star;
+      case 'cast':
+        return Icons.cast;
+      case 'info':
+        return Icons.info;
+      case 'repeat':
+        return Icons.repeat;
+      case 'refresh':
+        return Icons.refresh;
+      case 'trash':
+        return Icons.delete;
+      case 'broom':
+        return Icons.cleaning_services;
+      case 'check':
+        return Icons.check_circle;
+      case 'cross':
+        return Icons.cancel;
+      case 'warning':
+        return Icons.warning;
+      case 'cloud':
+        return Icons.cloud;
+      case 'person':
+        return Icons.person;
+      case 'soap':
+        return Icons.soap;
+      case 'hourglass':
+        return Icons.hourglass_bottom;
+      default:
+        return null;
+    }
   }
 }

@@ -42,7 +42,8 @@ class HostsPage extends ConsumerWidget {
                       (logoUrl.isNotEmpty) ? NetworkImage(logoUrl) : null,
                   child: (logoUrl.isEmpty)
                       ? Icon(Icons.person,
-                          size: 48, color: theme.colorScheme.onPrimary)
+                          size: 48,
+                          color: theme.colorScheme.primary.withAlpha(180))
                       : null,
                 ),
                 const SizedBox(height: 16),
@@ -108,7 +109,8 @@ class HostsPage extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.cloud_done,
-                                  color: theme.colorScheme.secondary),
+                                  color:
+                                      theme.colorScheme.primary.withAlpha(180)),
                               const SizedBox(width: 8),
                               Text('RSS/Podcast-Daten geladen und gemerged',
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -120,7 +122,8 @@ class HostsPage extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.cloud_off,
-                                  color: theme.colorScheme.error),
+                                  color:
+                                      theme.colorScheme.primary.withAlpha(180)),
                               const SizedBox(width: 8),
                               Text('RSS/Podcast-Daten NICHT geladen',
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -165,7 +168,8 @@ class HostsPage extends ConsumerWidget {
                       error: (err, stack) => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.cloud_off, color: theme.colorScheme.error),
+                          Icon(Icons.cloud_off,
+                              color: theme.colorScheme.primary.withAlpha(180)),
                           const SizedBox(width: 8),
                           Text('Fehler beim Laden der RSS/Podcast-Daten',
                               style: theme.textTheme.bodySmall

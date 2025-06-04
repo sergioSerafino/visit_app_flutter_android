@@ -244,3 +244,19 @@ snackbar_events:
     message_key: onboarding_reset
     type: success
     delay: 3000
+  # Feature-Buttons im Episode-Detail-Header
+  favorites_feature:
+    duration: short
+    icon: "star"
+    message_key: favorites_feature
+    type: info
+  download_feature:
+    duration: short
+    icon: "📥" # Emoji für Download
+    message_key: download_feature
+    type: info
+  cast_feature:
+    duration: short
+    icon: "cast"
+    message_key: cast_feature
+    type: info

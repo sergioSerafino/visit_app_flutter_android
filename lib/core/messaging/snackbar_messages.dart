@@ -82,4 +82,8 @@ const Map<String, String> snackbarMessages = {
   // Handlungszweck "Onboarding zurückgesetzt"
   'onboarding_reset':
       'Das Onboarding wird beim nächsten App-Start erneut angezeigt.',
+  // Feature-Buttons im Episode-Detail-Header
+  'favorites_feature': 'Favoriten-Feature folgt demnächst!',
+  'download_feature': 'Download-Feature folgt demnächst!',
+  'cast_feature': 'Cast/AirPlay-Feature folgt demnächst!',
 };

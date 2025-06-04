@@ -69,7 +69,7 @@ class CoverImageWidget extends StatelessWidget {
           child: Icon(
             Icons.podcasts,
             size: iconSize,
-            color: theme.colorScheme.onSurface.withAlpha(180),
+            color: theme.colorScheme.primary.withAlpha(180),
           ),
         ),
         if (showLabel)

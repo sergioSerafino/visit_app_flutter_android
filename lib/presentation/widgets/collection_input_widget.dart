@@ -17,7 +17,7 @@ class CollectionInputWidget extends ConsumerWidget {
           hintText: "Collection ID",
           hintStyle: const TextStyle(fontSize: 14),
           prefixIcon: Icon(Icons.numbers,
-              size: 18, color: theme.colorScheme.onSurface.withAlpha(120)),
+              size: 18, color: theme.colorScheme.primary.withAlpha(180)),
           isDense: true,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 6, horizontal: 10),

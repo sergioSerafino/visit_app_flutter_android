@@ -14,7 +14,7 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
 
   // Dynamische Höhe: Basis + extraContent (Buttons/Slider)
   static const double _baseHeight = 44;
-  static const double _maxExtraHeight = 95;
+  static const double _maxExtraHeight = 44;
 
   @override
   double get minExtent => _baseHeight + _maxExtraHeight;
@@ -53,7 +53,8 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
                             fontSize: 14,
                             color: Theme.of(context)
                                 .colorScheme
-                                .onSurface, // Bessere Lesbarkeit
+                                .onSurface
+                                .withAlpha(160), // dezenter
                           ),
                         ),
                         Text(
@@ -62,7 +63,8 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
                             fontSize: 22,
                             color: Theme.of(context)
                                 .colorScheme
-                                .onSurface, // Bessere Lesbarkeit
+                                .onSurface
+                                .withAlpha(160), // dezenter
                           ),
                         ),
                       ],

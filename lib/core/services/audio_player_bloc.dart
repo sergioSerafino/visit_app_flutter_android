@@ -6,78 +6,49 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:async';
 import 'i_audio_player.dart';
 import 'package:flutter/foundation.dart';
 
 // Events
-abstract class AudioPlayerEvent extends Equatable {
-  const AudioPlayerEvent();
-  @override
-  List<Object?> get props => [];
-}
+sealed class AudioPlayerEvent {}
 
-class PlayEpisode extends AudioPlayerEvent {
+final class PlayEpisode extends AudioPlayerEvent {
   final String url;
-  const PlayEpisode(this.url);
-  @override
-  List<Object?> get props => [url];
+  PlayEpisode(this.url);
 }
 
-class Pause extends AudioPlayerEvent {}
-
-class Stop extends AudioPlayerEvent {}
-
-class Seek extends AudioPlayerEvent {
+final class Pause extends AudioPlayerEvent {}
+final class Stop extends AudioPlayerEvent {}
+final class Seek extends AudioPlayerEvent {
   final Duration position;
-  const Seek(this.position);
-  @override
-  List<Object?> get props => [position];
+  Seek(this.position);
 }
-
-class UpdatePosition extends AudioPlayerEvent {
+final class UpdatePosition extends AudioPlayerEvent {
   final Duration position;
-  const UpdatePosition(this.position);
-  @override
-  List<Object?> get props => [position];
+  UpdatePosition(this.position);
 }
-
-class TogglePlayPause extends AudioPlayerEvent {}
+final class TogglePlayPause extends AudioPlayerEvent {}
 
 // States
-abstract class AudioPlayerState extends Equatable {
-  const AudioPlayerState();
-  @override
-  List<Object?> get props => [];
-}
+sealed class AudioPlayerState {}
 
-class Idle extends AudioPlayerState {}
-
-class Loading extends AudioPlayerState {}
-
-class Playing extends AudioPlayerState {
+final class Idle extends AudioPlayerState {}
+final class Loading extends AudioPlayerState {}
+final class Playing extends AudioPlayerState {
   final Duration position;
   final Duration duration;
-  const Playing(this.position, this.duration);
-  @override
-  List<Object?> get props => [position, duration];
+  Playing(this.position, this.duration);
 }
-
-class Paused extends AudioPlayerState {
+final class Paused extends AudioPlayerState {
   final Duration position;
   final Duration duration;
-  const Paused(this.position, this.duration);
-  @override
-  List<Object?> get props => [position, duration];
+  Paused(this.position, this.duration);
 }
-
-class ErrorState extends AudioPlayerState {
+final class ErrorState extends AudioPlayerState {
   final String message;
-  const ErrorState(this.message);
-  @override
-  List<Object?> get props => [message];
+  ErrorState(this.message);
 }
 
 // Bloc
@@ -95,9 +66,9 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         super(Idle()) {
     on<PlayEpisode>((event, emit) async {
       if (event.url.isEmpty || event.url.trim().isEmpty) {
-        emit(const ErrorState('Keine gültige Audio-URL übergeben.'));
+        emit(ErrorState('Keine gültige Audio-URL übergeben.'));
         if (kDebugMode)
-          print('[AudioPlayerBloc] Leere oder ungültige URL: "${event.url}"');
+          print('[AudioPlayerBloc] Leere oder ungültige URL: "["${event.url}"');
         return;
       }
       if (kDebugMode)
@@ -164,14 +135,14 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         if (_currentUrl != null && _currentUrl!.isNotEmpty) {
           add(PlayEpisode(_currentUrl!));
         } else {
-          emit(const ErrorState('Keine gültige Audio-URL zum Fortsetzen.'));
+          emit(ErrorState('Keine gültige Audio-URL zum Fortsetzen.'));
         }
       } else {
         // Kein Track geladen: Fehler oder Idle
         if (_currentUrl != null && _currentUrl!.isNotEmpty) {
           add(PlayEpisode(_currentUrl!));
         } else {
-          emit(const ErrorState('Keine Audio-URL geladen.'));
+          emit(ErrorState('Keine Audio-URL geladen.'));
         }
       }
     });

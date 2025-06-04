@@ -37,11 +37,21 @@ class GlobalSnackbarListener extends ConsumerWidget {
                         alignment: Alignment.centerLeft,
                         child: next.emoji != null
                             ? Text(next.emoji!,
-                                style: const TextStyle(fontSize: 24))
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    color: _textColorForSnackbar(
+                                        next.type, branding)))
                             : (next.icon != null
-                                ? Icon(next.icon, color: Colors.white)
+                                ? Icon(next.icon,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withAlpha(180))
                                 : Icon(Icons.info_outline,
-                                    color: Colors.white)),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withAlpha(180))),
                       ),
                     ),
                     // Message immer sichtbar, mit flexiblem Zeilenumbruch

@@ -30,7 +30,7 @@ class BottomPlayerWidget extends ConsumerWidget {
     return SafeArea(
       minimum: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
       child: Container(
-        height: 96,
+        height: 140, // erhöht für Slider
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
@@ -39,58 +39,136 @@ class BottomPlayerWidget extends ConsumerWidget {
             BoxShadow(color: Colors.black.withAlpha(65), blurRadius: 4),
           ],
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-              icon: Icon(Icons.replay_10,
-                  color: theme.colorScheme.onSurface.withAlpha(140)),
-              iconSize: 32,
-              onPressed: () {
-                final newPos = position - const Duration(seconds: 15);
-                audioBloc
-                    .add(Seek(newPos > Duration.zero ? newPos : Duration.zero));
-              },
-              tooltip: '15 Sekunden zurück',
+            // --- NEU: Slider mit Zeitangaben ---
+            Row(
+              children: [
+                SizedBox(
+                  width: 48,
+                  child: Text(
+                    _formatDurationMMSS(position.inMilliseconds),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: theme.colorScheme.onSurface
+                          .withAlpha(160), // dezenter
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: theme.colorScheme.primary,
+                      inactiveTrackColor:
+                          theme.colorScheme.surfaceContainerHighest,
+                      thumbColor: theme.colorScheme.primary.withAlpha(180),
+                      overlayColor: theme.colorScheme.primary.withAlpha(32),
+                      trackHeight: 14,
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 9),
+                      valueIndicatorShape:
+                          const PaddleSliderValueIndicatorShape(),
+                      valueIndicatorColor:
+                          theme.colorScheme.primary.withAlpha(180),
+                      showValueIndicator: ShowValueIndicator.onlyForContinuous,
+                    ),
+                    child: Slider(
+                      value: position.inSeconds.toDouble(),
+                      max: duration.inSeconds.toDouble(),
+                      divisions:
+                          duration.inSeconds > 0 ? duration.inSeconds : null,
+                      label: _formatDurationMMSS(position.inMilliseconds),
+                      onChanged: (v) {
+                        audioBloc.add(Seek(Duration(seconds: v.toInt())));
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                SizedBox(
+                  width: 48,
+                  child: Text(
+                    '-${_formatDurationMMSS((duration - position).inMilliseconds)}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: theme.colorScheme.onSurface
+                          .withAlpha(160), // dezenter
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 32),
-            // Play/Pause Button (zentral, deutlich größer)
-            IconButton(
-              icon: Icon(
-                isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-                color: theme.colorScheme.primary,
-              ),
-              iconSize: 56,
-              onPressed: () {
-                if (isPlaying) {
-                  audioBloc.add(Pause());
-                } else {
-                  audioBloc.add(const PlayEpisode(''));
-                }
-              },
-              tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
+            const SizedBox(height: 8),
+            // --- Transport-Buttons ---
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.replay_10,
+                      color: theme.colorScheme.onSurface.withAlpha(140)),
+                  iconSize: 32,
+                  onPressed: () {
+                    final newPos = position - const Duration(seconds: 10);
+                    audioBloc.add(
+                        Seek(newPos > Duration.zero ? newPos : Duration.zero));
+                  },
+                  tooltip: '10 Sekunden zurück',
+                ),
+                const SizedBox(width: 32),
+                IconButton(
+                  icon: Icon(
+                    isPlaying
+                        ? Icons.pause_circle_filled
+                        : Icons.play_circle_fill,
+                    color: theme.colorScheme.onSurface.withAlpha(140),
+                  ),
+                  iconSize: 56,
+                  onPressed: () {
+                    if (isPlaying) {
+                      audioBloc.add(Pause());
+                    } else {
+                      audioBloc.add(PlayEpisode(''));
+                    }
+                  },
+                  tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
+                ),
+                const SizedBox(width: 32),
+                IconButton(
+                  icon: Icon(Icons.forward_10,
+                      color: theme.colorScheme.onSurface.withAlpha(140)),
+                  iconSize: 32,
+                  onPressed: () {
+                    final newPos = position + const Duration(seconds: 10);
+                    audioBloc.add(Seek(newPos < duration ? newPos : duration));
+                  },
+                  tooltip: '10 Sekunden vor',
+                ),
+                if (onClose != null)
+                  IconButton(
+                    icon: Icon(Icons.close,
+                        color: theme.colorScheme.onSurface.withAlpha(140)),
+                    onPressed: onClose,
+                    tooltip: 'Player schließen',
+                  ),
+              ],
             ),
-            const SizedBox(width: 32),
-            IconButton(
-              icon: Icon(Icons.forward_10,
-                  color: theme.colorScheme.onSurface.withAlpha(140)),
-              iconSize: 32,
-              onPressed: () {
-                final newPos = position + const Duration(seconds: 15);
-                audioBloc.add(Seek(newPos < duration ? newPos : duration));
-              },
-              tooltip: '15 Sekunden vor',
-            ),
-            if (onClose != null)
-              IconButton(
-                icon: Icon(Icons.close,
-                    color: theme.colorScheme.onSurface.withAlpha(140)),
-                onPressed: onClose,
-                tooltip: 'Player schließen',
-              ),
           ],
         ),
       ),
     );
+  }
+
+  // --- Hilfsfunktionen für Zeitformatierung ---
+  String _formatDurationMMSS(int millis) {
+    final seconds = (millis / 1000).round();
+    final minutes = (seconds / 60).floor();
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 }

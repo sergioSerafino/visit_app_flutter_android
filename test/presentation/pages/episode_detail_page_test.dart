@@ -55,7 +55,7 @@ void main() {
             audioPlayerBlocProvider.overrideWithValue(bloc),
             audioPlayerStateProvider.overrideWith(
               (ref) => Stream.value(
-                const Playing(Duration(seconds: 10), Duration(seconds: 60)),
+                Playing(Duration(seconds: 10), Duration(seconds: 60)),
               ),
             ),
           ],
