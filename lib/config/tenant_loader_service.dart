@@ -4,34 +4,43 @@ import 'package:flutter/services.dart';
 import '../../core/utils/network_cache_manager.dart';
 import '../../domain/models/host_model.dart';
 import '../../domain/models/podcast_collection_model.dart';
+import '../../core/logging/logger_config.dart';
 
 class TenantLoaderService {
   static Future<Host> loadHostModel(String? collectionId) async {
     final tenant = collectionId != null ? 'collection_$collectionId' : 'common';
-    // final resourceKey = 'host_model_$tenant';
-
-    // TODO: Cache-Logik für spätere Optimierung wieder aktivieren/überarbeiten
-    /*
-    //' Überprüfen, ob die Ressource veraltet ist
-    final cacheManager = NetworkCacheManager(HiveCacheStorage());
-    if (!await cacheManager.isResourceExpired(resourceKey, const Duration(hours: 24))) {
-      return Host.empty();
-    }
-    */
-
+    logDebug('[DEBUG] TenantLoaderService: Lade HostModel für tenant=$tenant',
+        tag: LogTag.ui);
     try {
       final json = await rootBundle.loadString(
         'lib/tenants/$tenant/host_model.json',
       );
       final host = Host.fromJson(jsonDecode(json));
-
-      // await cacheManager.updateTimeStamp(resourceKey); // TODO: ggf. wieder aktivieren
+      logDebug(
+          '[DEBUG] TenantLoaderService: HostModel geladen: ' + host.toString(),
+          tag: LogTag.ui);
+      logDebug(
+          '[DEBUG] TenantLoaderService: Branding geladen: ' +
+              host.branding.toString(),
+          tag: LogTag.ui);
       return host;
     } catch (_) {
+      logDebug(
+          '[DEBUG] TenantLoaderService: Fallback auf common/host_model.json',
+          tag: LogTag.ui);
       final fallback = await rootBundle.loadString(
         'lib/tenants/common/host_model.json',
       );
-      return Host.fromJson(jsonDecode(fallback));
+      final host = Host.fromJson(jsonDecode(fallback));
+      logDebug(
+          '[DEBUG] TenantLoaderService: Fallback-HostModel geladen: ' +
+              host.toString(),
+          tag: LogTag.ui);
+      logDebug(
+          '[DEBUG] TenantLoaderService: Fallback-Branding geladen: ' +
+              host.branding.toString(),
+          tag: LogTag.ui);
+      return host;
     }
   }
 

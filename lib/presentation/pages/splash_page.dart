@@ -3,15 +3,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../application/providers/onboarding_status_provider.dart';
-import '../../presentation/widgets/splash_cover_image.dart';
-import '../../presentation/pages/onboarding_page.dart';
-import '../../presentation/pages/home_page.dart';
-import '../../presentation/pages/landing_page.dart';
+import 'package:empty_flutter_template/application/providers/onboarding_status_provider.dart';
+import 'package:empty_flutter_template/presentation/widgets/splash_cover_image.dart';
+import 'package:empty_flutter_template/presentation/pages/onboarding_page.dart';
+import 'package:empty_flutter_template/presentation/pages/home_page.dart';
+import 'package:empty_flutter_template/presentation/pages/landing_page.dart';
+import 'package:empty_flutter_template/core/utils/tenant_asset_loader.dart';
+import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import 'package:empty_flutter_template/application/providers/podcast_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import '../../application/providers/theme_provider.dart' as theme_prov;
-import '../../core/utils/tenant_asset_loader.dart';
-import '../../application/providers/collection_provider.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -47,6 +47,11 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         target = const OnboardingPage();
       } else if (!hasCompletedStartAsync) {
         debugPrint('➡️ Zeige LandingPage');
+        // Warte, bis die PodcastCollection geladen ist, bevor LandingPage angezeigt wird
+        final collectionId = ref.read(collectionIdProvider);
+        try {
+          await ref.read(podcastCollectionProvider(collectionId).future);
+        } catch (_) {}
         target = const LandingPage();
       } else {
         debugPrint('✅ Direkt zur HomePage');
@@ -58,9 +63,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 1500),
           pageBuilder: (context, animation, _) {
-            // if (onboardingAsync) {
-            //   WidgetsBinding.instance.addPostFrameCallback((_) {});
-            // }
             return FadeTransition(opacity: animation, child: target);
           },
         ),
@@ -81,7 +83,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   Widget build(BuildContext context) {
     final collectionId = ref.watch(collectionIdProvider);
-//  final theme = ref.watch(theme_prov.appThemeProvider);
 
     // Größe des Splash-Bildes
     const double imageSize = 300;

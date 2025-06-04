@@ -3,15 +3,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../application/providers/collection_provider.dart';
-import '../../application/providers/onboarding_status_provider.dart';
-import '../../application/providers/podcast_provider.dart';
-import '../../config/app_routes.dart';
-import '../../presentation/pages/preferences_page.dart';
-import '../../presentation/widgets/button_icon_navigation.dart';
-import '../../presentation/widgets/cover_image_widget.dart';
-import '../../presentation/widgets/welcome_header.dart';
-import '../../core/messaging/snackbar_manager.dart';
+import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import 'package:empty_flutter_template/application/providers/onboarding_status_provider.dart';
+import 'package:empty_flutter_template/application/providers/podcast_provider.dart';
+import 'package:empty_flutter_template/config/app_routes.dart';
+import 'package:empty_flutter_template/presentation/pages/preferences_page.dart';
+import 'package:empty_flutter_template/presentation/widgets/button_icon_navigation.dart';
+import 'package:empty_flutter_template/presentation/widgets/cover_image_widget.dart';
+import 'package:empty_flutter_template/presentation/widgets/welcome_header.dart';
+import 'package:empty_flutter_template/core/messaging/snackbar_manager.dart';
+import 'package:empty_flutter_template/domain/common/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
@@ -52,6 +53,15 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     final collectionId = ref.watch(collectionIdProvider);
     final collectionAsync = ref.watch(podcastCollectionProvider(collectionId));
 
+    // Zeige die Seite nur, wenn die Daten wirklich da sind
+    final isReady = collectionAsync is AsyncData &&
+        collectionAsync.value != null &&
+        collectionAsync.value!.isSuccess;
+    if (!isReady) {
+      // Noch keine Daten: Zeige leeres Scaffold (keine UI, kein Flackern)
+      return const Scaffold(body: SizedBox.shrink());
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -78,17 +88,9 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                           top: 24, left: 24, right: 24, bottom: 8),
                       child: welcomeHeader("dynamicHostName", context: context),
                     ),
-                    loading: () => const Padding(
-                      padding: EdgeInsets.only(
-                          top: 24, left: 24, right: 24, bottom: 8),
-                      child: CircularProgressIndicator(),
-                    ),
+                    loading: () => const SizedBox.shrink(), // Kein Loading mehr
                   ),
-                  loading: () => const Padding(
-                    padding: EdgeInsets.only(
-                        top: 24, left: 24, right: 24, bottom: 8),
-                    child: CircularProgressIndicator(),
-                  ),
+                  loading: () => const SizedBox.shrink(), // Kein Loading mehr
                   error: (_, __) => Padding(
                     padding: const EdgeInsets.only(
                         top: 24, left: 24, right: 24, bottom: 8),
@@ -111,11 +113,9 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     },
                     error: (_) =>
                         const Center(child: CoverImageWidget(showLabel: true)),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => const SizedBox.shrink(), // Kein Loading mehr
                   ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  loading: () => const SizedBox.shrink(), // Kein Loading mehr
                   error: (_, __) =>
                       const Center(child: CoverImageWidget(showLabel: true)),
                 ),

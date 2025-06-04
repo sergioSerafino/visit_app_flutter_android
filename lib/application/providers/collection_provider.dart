@@ -8,20 +8,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/enums/collection_load_state.dart';
 import '../controllers/collection_load_controller.dart';
-import '../../domain/models/branding_model.dart';
-import '../../domain/models/host_model.dart';
 import '../../core/placeholders/placeholder_content.dart';
 import 'package:hive/hive.dart';
 import '../../core/services/collection_id_storage.dart';
-import '../../config/tenant_loader_service.dart';
+import '../../domain/models/host_model.dart';
 
-//1469653179 Shayan & Nizar
-//1765742605 Fest und Flauschig
-//1481054140 barbaradio
-//1292709842
-//1590516386 Opalia Talk
-//1191610678 Curse
-//1814331727 Fullcourt Attitude
+final hostModelProvider = StateProvider<Host>(
+  (ref) => PlaceholderContent.hostModel,
+);
 
 final collectionIdStorageProvider = Provider<CollectionIdStorage>(
   (ref) => CollectionIdStorage(),
@@ -37,7 +31,9 @@ final collectionIdProvider = StateNotifierProvider<CollectionIdNotifier, int>((
 
 class CollectionIdNotifier extends StateNotifier<int> {
   final CollectionIdStorage storage;
-  CollectionIdNotifier(this.storage) : super(1590516386) {
+  // Beispiele für Default-CollectionIds:
+  // 1814331727, 1590516386, 1469653179, 1481054140, 1765742605, 9876543210
+  CollectionIdNotifier(this.storage) : super(1469653179) {
     _load(); // Deaktiviert für harten Testwert
   }
 
@@ -63,38 +59,6 @@ final collectionLoadControllerProvider =
   (ref) => CollectionLoadController(ref),
 );
 
-final brandingProvider = StateProvider<Branding>(
-  (ref) => PlaceholderContent.hostModel.branding,
-);
-
-/// Provider für das aktuell geladene HostModel (dynamisch, mit Fallback)
-final hostModelProvider = StateProvider<Host>(
-  (ref) => PlaceholderContent.hostModel,
-);
-
-void updateBrandingOnCollectionChange(dynamic ref, int newCollectionId) async {
-  // Versuche Branding aus Hive zu laden
-  final box = await Hive.openBox('hostInfoBox');
-  final hostModel = box.get(newCollectionId.toString());
-  if (hostModel != null && hostModel.branding != null) {
-    ref.read(brandingProvider.notifier).state = hostModel.branding;
-  } else {
-    ref.read(brandingProvider.notifier).state =
-        PlaceholderContent.hostModel.branding;
-  }
-}
-
-void updateHostModelOnCollectionChange(
-    WidgetRef ref, int newCollectionId) async {
-  final box = await Hive.openBox('hostInfoBox');
-  final hostModel = box.get(newCollectionId.toString());
-  if (hostModel != null) {
-    ref.read(hostModelProvider.notifier).state = hostModel;
-  } else {
-    ref.read(hostModelProvider.notifier).state = PlaceholderContent.hostModel;
-  }
-}
-
 /*
 // Vorbereitung für SnackBar-Integration
 // Du kannst bei .setError() (oder .loadCollection() etc.) künftig direkt SnackBarEvent dispatchen:
@@ -102,26 +66,6 @@ void updateHostModelOnCollectionChange(
 ref.read(snackbarManagerProvider).showByKey('host_data_fetch_failed');
 
 */
-
-// Listener für Collection-Wechsel (z. B. im main() oder in einem Initializer-Widget aufrufen)
-void listenToCollectionIdChanges(WidgetRef ref) {
-  ref.listen<int>(collectionIdProvider, (previous, next) async {
-    if (previous != next) {
-      // Dynamisches Branding-Update bei CollectionId-Wechsel
-      try {
-        final host = await TenantLoaderService.loadHostModel(next.toString());
-        ref.read(brandingProvider.notifier).state = host.branding;
-        ref.read(hostModelProvider.notifier).state = host;
-      } catch (e) {
-        // Fallback auf Placeholder-Branding und HostModel
-        ref.read(brandingProvider.notifier).state =
-            PlaceholderContent.hostModel.branding;
-        ref.read(hostModelProvider.notifier).state =
-            PlaceholderContent.hostModel;
-      }
-    }
-  });
-}
 
 /// Dokumentation:
 /// Diese Funktion sollte beim App-Start (z. B. in main.dart oder app.dart) einmalig aufgerufen werden.

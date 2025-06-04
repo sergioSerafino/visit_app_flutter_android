@@ -51,11 +51,9 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   ListTile(
                     leading: const Icon(Icons.replay_outlined),
                     title: const Text("Onboarding erneut starten"),
-                    subtitle: onboardingDone
-                        ? const Text(
-                            "Wird beim nächsten Start erneut gezeigt.",
-                          )
-                        : const Text("Wird aktuell sowieso gezeigt."),
+                    subtitle: const Text(
+                      "Kann beim nächsten Start erneut durchlaufen werden.",
+                    ),
                     onTap: () async {
                       logDebug("Option: Onboarding zurücksetzen");
                       await ref
@@ -71,6 +69,11 @@ class PreferencesBottomSheet extends ConsumerWidget {
                         'showOnboardingRestartedSnackbar',
                         true,
                       );
+
+                      // Zeige sofort eine Bestätigungs-Snackbar
+                      ref
+                          .read(snackbarManagerProvider.notifier)
+                          .showByKey('onboarding_reset');
 
                       Navigator.of(context).pop();
                     },
@@ -101,6 +104,20 @@ class PreferencesBottomSheet extends ConsumerWidget {
                             .showByKey('not_implemented');
                       }
                     },
+                  ),
+
+                  const SizedBox(height: 18),
+                  Container(
+                    height: 1,
+                    color: Theme.of(context).dividerColor,
+                    margin: const EdgeInsets.symmetric(vertical: 0),
+                  ),
+                  const SizedBox(height: 8),
+                  const ListTile(
+                    leading: Icon(Icons.light_mode),
+                    title: Text('Daymode-Funktion'),
+                    subtitle:
+                        Text('Passe die Farben der App dem Tagesverlauf an.'),
                   ),
 
                   const SizedBox(height: 18),

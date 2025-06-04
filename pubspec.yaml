@@ -101,6 +101,8 @@ flutter:
     - lib/tenants/collection_1469653179/assets/
     - lib/tenants/collection_1481054140/assets/
 
+    - assets/placeholders/host_model.json
+    - assets/placeholders/podcast_collection.json
   # Um Assets zu Ihrer Anwendung hinzuzufügen, fügen Sie einen assets-Abschnitt wie folgt hinzu:
   # assets:
   #   - images/a_dot_burr.jpeg

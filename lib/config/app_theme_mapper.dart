@@ -6,6 +6,8 @@ import '../../domain/models/branding_model.dart';
 
 class AppThemeMapper {
   static ThemeData fromBranding(Branding? branding) {
+    debugPrint('[DEBUG] AppThemeMapper.fromBranding: ' +
+        (branding?.toString() ?? 'null'));
     final primary = _parseHexColor(branding?.primaryColorHex) ??
         const Color(0xFFCCCCCC); // neutral hellgrau
     final secondary = _parseHexColor(branding?.secondaryColorHex) ??

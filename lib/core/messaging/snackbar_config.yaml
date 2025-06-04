@@ -136,9 +136,8 @@ snackbar_events:
     type: success
   # Handlungszweck "Onboarding neu gestartet"
   onboarding_restarted:
-    duration: short
-    # icon: "🔄"
-    icon: "refresh"
+    duration: long
+    icon: "repeat" # Emoji-Enum statt String
     message_key: onboarding_restarted
     type: info
   # Handlungszweck "Host-Info gespeichert"
@@ -238,3 +237,10 @@ snackbar_events:
     icon: "info"
     message_key: collection_id_info
     type: info
+  # Handlungszweck "Onboarding zurückgesetzt"
+  onboarding_reset:
+    duration: long
+    icon: "repeat"
+    message_key: onboarding_reset
+    type: success
+    delay: 3000

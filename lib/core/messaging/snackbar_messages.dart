@@ -79,4 +79,7 @@ const Map<String, String> snackbarMessages = {
   'settings_cache_cleared': 'Cache erfolgreich gelöscht.',
   // Zeigt die aktuell geladene Collection-ID an
   'collection_id_info': 'Aktive Collection-ID: {id}',
+  // Handlungszweck "Onboarding zurückgesetzt"
+  'onboarding_reset':
+      'Das Onboarding wird beim nächsten App-Start erneut angezeigt.',
 };

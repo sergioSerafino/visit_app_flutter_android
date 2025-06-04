@@ -37,21 +37,34 @@ class _PodcastAppState extends ConsumerState<PodcastApp> {
     await PlaceholderLoaderService.init();
     // 2.  Persistierte collectionId laden (warten, bis geladen)
     await ref.read(collectionIdProvider.notifier).load();
-    // 3.  Branding für initiale collectionId laden und setzen
     final initialCollectionId = ref.read(collectionIdProvider);
+    logDebug(
+        '[DEBUG] AppStart: collectionId = ' + initialCollectionId.toString(),
+        tag: LogTag.ui);
     try {
-      final initialHost = await TenantLoaderService.loadHostModel(initialCollectionId.toString());
-      ref.read(theme_prov.brandingProvider.notifier).setBranding(initialHost.branding);
+      final initialHost = await TenantLoaderService.loadHostModel(
+          initialCollectionId.toString());
+      logDebug('[DEBUG] AppStart: loaded HostModel = ' + initialHost.toString(),
+          tag: LogTag.ui);
+      logDebug(
+          '[DEBUG] AppStart: loaded Branding = ' +
+              initialHost.branding.toString(),
+          tag: LogTag.ui);
+      ref
+          .read(theme_prov.brandingProvider.notifier)
+          .setBranding(initialHost.branding);
       ref.read(hostModelProvider.notifier).state = initialHost;
     } catch (e) {
-      ref.read(theme_prov.brandingProvider.notifier).setBranding(PlaceholderContent.hostModel.branding);
+      logDebug('[DEBUG] AppStart: Fallback auf Placeholder-Branding',
+          tag: LogTag.ui);
+      ref
+          .read(theme_prov.brandingProvider.notifier)
+          .setBranding(PlaceholderContent.hostModel.branding);
       ref.read(hostModelProvider.notifier).state = PlaceholderContent.hostModel;
     }
     setState(() {
       _initialized = true;
     });
-    // 4.  Branding-Listener für spätere collectionId-Wechsel aktivieren
-    listenToCollectionIdChanges(ref);
   }
 
   @override

@@ -44,9 +44,25 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ),
           ),
           Stack(
-            alignment:
-                Alignment.bottomCenter, // Zentriert die Buttons und Indikatoren
+            alignment: Alignment.bottomCenter,
             children: [
+              // Skip-Button direkt vor den Indikatoren, nicht als Positioned im Stack
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.landingRoute,
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: const Text('Überspringen',
+                        style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+              ),
               // Die Indikatoren bleiben immer mittig
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -69,15 +85,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   }),
                 ),
               ),
-
               // Die Buttons erscheinen oben auf den Indikatoren, wenn sie sichtbar sind
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
                   mainAxisAlignment: _currentPage < 2
-                      ? MainAxisAlignment
-                          .spaceBetween // "Next" links, "..." bleibt rechts
-                      : MainAxisAlignment.end, // Nur "Start" rechts
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
                   children: [
                     // Links der Row, den "Next"-Button anzeigen, wenn wir nicht auf der letzten Seite sind
                     if (_currentPage < 2)

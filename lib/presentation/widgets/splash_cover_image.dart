@@ -1,8 +1,8 @@
 // lib/presentation/widgets/splash_cover_image.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../application/providers/collection_provider.dart';
-import '../../core/utils/tenant_asset_loader.dart';
+import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import 'package:empty_flutter_template/core/utils/tenant_asset_loader.dart';
 
 class SplashCoverImage extends ConsumerStatefulWidget {
   final String? imageUrl;

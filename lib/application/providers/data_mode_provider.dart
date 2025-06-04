@@ -42,7 +42,6 @@ void toggleDataSource(WidgetRef ref) {
   // ignore: avoid_print
   print(
       '[toggleDataSource] Triggere Branding/Host-Reload für CollectionId: $collectionId');
-  collection_prov.listenToCollectionIdChanges(ref);
 }
 
 ///

@@ -36,6 +36,18 @@ void initState() {
 }
 ```
 
+## Verhalten beim Laden und Platzhalter-Branding
+
+- Beim App-Start wird zunächst das Platzhalter-Branding geladen (grau), solange das eigentliche Branding noch nicht geladen ist.
+- Sobald das Branding für die aktuelle `collectionId` erfolgreich geladen wurde, wird das Theme dynamisch aktualisiert und das korrekte Branding angezeigt.
+- Wird `_initialized = false` gelassen oder `_loaded()` nicht aufgerufen, bleibt die App im Platzhalterzustand und zeigt dauerhaft das neutrale Branding.
+- Erst wenn `_initialized = true` gesetzt ist (z. B. nach erfolgreichem Laden in `_initApp()`), wird das Branding für die gesetzte `collectionId` übernommen.
+- Dieses Verhalten ist nützlich für Splash-Screens, Ladeanzeigen oder gezieltes Testen des Platzhalter-Brandings.
+- Für ein konsistentes Nutzererlebnis sollte nach erfolgreichem Laden immer `_initialized = true` gesetzt werden, damit das Branding korrekt angezeigt wird.
+
+**Debug-Tipp:**
+- Im Debug-Modus siehst du im Log, ob das Platzhalter-Branding oder das echte Branding geladen wurde (siehe `[DEBUG] TenantLoaderService`-Ausgaben).
+
 ## Test-Szenarien
 - Wechsel der CollectionId im Admin-Panel → UI passt Branding sofort an
 - Ungültige CollectionId → Fallback-Branding wird angezeigt, Snackbar informiert
@@ -93,6 +105,17 @@ homeHeader(
 ### Fehlerquellen
 - Unlesbarkeit entsteht, wenn z.B. `onPrimary` auf hellem Hintergrund verwendet wird. Immer prüfen, ob der Hintergrund zur on*-Farbe passt!
 - Bei neuen Brandings immer mit hellen und dunklen Farbkombinationen testen.
+
+## Best Practice: Kein UI-Flackern beim Laden von Seiten
+
+- **LandingPage und andere Seiten, die asynchrone Daten benötigen, sollten erst dann gerendert werden, wenn die benötigten Daten (z. B. Collection, Branding) vollständig geladen sind.**
+- Zeige während des Ladens keine eigenen Loading-Indikatoren oder leere Layouts auf der Zielseite, sondern halte den Nutzer auf SplashScreen/LaunchScreen oder einer dedizierten Ladeansicht.
+- Erst wenn die Daten erfolgreich geladen sind, wird die eigentliche Seite (z. B. LandingPage) angezeigt. Das verhindert Flackern, Layout-Sprünge und gestapelte Widgets.
+- Beispiel-Implementierung siehe `presentation/pages/landing_page.dart` und die Navigation/Logik in `presentation/pages/splash_page.dart`.
+- **Vorteil:** Die Nutzer sehen immer einen ruhigen, konsistenten Übergang und keine unruhigen UI-Artefakte.
+
+**Tipp:**
+- Nutze für die Navigation nach dem Laden ein `await` auf den Provider-Future und prüfe in der Zielseite, ob die Daten wirklich da sind (z. B. mit `isSuccess`).
 
 ## Siehe auch
 - `lib/config/app_theme_mapper.dart` für die Kontrastlogik

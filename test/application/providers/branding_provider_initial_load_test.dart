@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/application/providers/theme_provider.dart' as theme_prov;
+import 'package:empty_flutter_template/application/providers/theme_provider.dart'
+    as theme_prov;
 import 'package:empty_flutter_template/core/services/collection_id_storage.dart';
 
 class FakeCollectionIdStorage extends CollectionIdStorage {
@@ -19,7 +20,8 @@ void main() {
       fakeStorage = FakeCollectionIdStorage();
     });
 
-    test('lädt Branding für persistierte collectionId beim Initialisieren', () async {
+    test('lädt Branding für persistierte collectionId beim Initialisieren',
+        () async {
       // Simuliere persistierte collectionId
       fakeStorage._id = 1469653179;
       final container = ProviderContainer(
@@ -35,7 +37,9 @@ void main() {
       // (je nach Testdaten ggf. anpassen)
     });
 
-    test('fällt auf Platzhalter zurück, wenn keine collectionId persistiert ist', () async {
+    test(
+        'fällt auf Platzhalter zurück, wenn keine collectionId persistiert ist',
+        () async {
       fakeStorage._id = null;
       final container = ProviderContainer(
         overrides: [

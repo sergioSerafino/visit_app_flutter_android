@@ -1,6 +1,6 @@
 // Podcast Model
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '/../../domain/models/podcast_episode_model.dart';
+import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
 
 part 'podcast_model.freezed.dart';
 part 'podcast_model.g.dart';

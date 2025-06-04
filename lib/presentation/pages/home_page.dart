@@ -2,18 +2,16 @@
 // /presentation/pages/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../application/providers/collection_provider.dart';
-import '../../application/providers/podcast_provider.dart';
-import '../../application/providers/theme_provider.dart';
-import '../../presentation/widgets/home_header.dart';
-import '../../../presentation/pages/podcast_page.dart';
-import '../../../presentation/pages/hosts_page.dart';
-import '../../../presentation/pages/preferences_page.dart';
-import '../../../config/app_routes.dart';
-// import '../../../application/providers/data_mode_provider.dart';
-// import '../../domain/enums/repository_source_type.dart';
+import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import 'package:empty_flutter_template/application/providers/podcast_provider.dart';
+import 'package:empty_flutter_template/application/providers/theme_provider.dart';
+import 'package:empty_flutter_template/presentation/widgets/home_header.dart';
+import 'package:empty_flutter_template/presentation/pages/podcast_page.dart';
+import 'package:empty_flutter_template/presentation/pages/hosts_page.dart';
+import 'package:empty_flutter_template/presentation/pages/preferences_page.dart';
+import 'package:empty_flutter_template/config/app_routes.dart';
+import 'package:empty_flutter_template/core/messaging/snackbar_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/messaging/snackbar_manager.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final bool showMeWelcome;
@@ -148,6 +146,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                         child: Row(
                           children: [
                             Text(
+                              "Light/Dark -Mode",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ), //Theme.of(context).colorScheme.onPrimary),
+                            Spacer(),
+                            Icon(
+                              Icons.light_mode,
+                              color: Colors.white,
+                            ), //Theme.of(context).colorScheme.onPrimary),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: "Über",
+                        child: Row(
+                          children: [
+                            Text(
                               "Über diese App",
                               style: TextStyle(
                                 color: Colors.white,
@@ -173,7 +189,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ), //Theme.of(context).colorScheme.onPrimary),
                             Spacer(),
                             Icon(
-                              Icons.menu,
+                              Icons.settings,
                               color: Colors.white,
                             ), //Theme.of(context).colorScheme.onPrimary),
                           ],
