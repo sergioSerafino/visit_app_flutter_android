@@ -34,6 +34,7 @@ Willkommen im Flutter-Template! Dieses Dokument erklärt, wie du zum Projekt bei
 ---
 
 ## Internet-Links & Ressourcen
+- [Reso-Coder:](https://resocoder.com/2022/04/22/riverpod-2-0-complete-guide-flutter-tutorial/)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 - [Flutter](https://flutter.dev/)
 - [Dart](https://dart.dev/)

@@ -68,5 +68,24 @@ void main() {
       expect(states.last, isA<Idle>());
       await sub.cancel();
     });
+    test('SetSpeed ändert die Geschwindigkeit im Backend und State', () async {
+      when(() => backend.setSpeed(any())).thenAnswer((invocation) async {
+        // Simuliere das Setzen der Geschwindigkeit
+      });
+      when(() => backend.speed).thenReturn(1.5);
+      final bloc = AudioPlayerBloc(backend: backend);
+      final states = <AudioPlayerState>[];
+      final sub = bloc.stream.listen(states.add);
+      // Starte mit Playing-State
+      bloc.emit(
+          Playing(Duration(seconds: 0), Duration(seconds: 30), speed: 1.0));
+      bloc.add(SetSpeed(1.5));
+      await Future.delayed(Duration(milliseconds: 50));
+      // Prüfe, ob der letzte State die neue Geschwindigkeit enthält
+      final last = states.last;
+      expect(last, isA<Playing>());
+      expect((last as Playing).speed, 1.5);
+      await sub.cancel();
+    });
   });
 }

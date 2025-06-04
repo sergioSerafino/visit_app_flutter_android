@@ -15,12 +15,22 @@
 ## ToDo-Liste (Audio-Playback → Download)
 
 ### Audio-Playback (PRIO 1)
+- [x] Refactoring: Events und States im AudioPlayerBloc als `sealed class`/`final class` (Dart 3)
+- [x] Fehlerhandling: ErrorState wird als Snackbar und im UI angezeigt
+- [x] Ladeindikator: LoadingDots im BottomPlayerWidget für Loading-State
+- [x] Accessibility: Semantics-Labels für Transport-Buttons und Slider im Player
+- [x] Tests: Alle State-Wechsel (Idle, Loading, Playing, Paused, Error) und Fehlerfälle abgedeckt
 - [ ] Produktive Integration von just_audio-Backend (kein Mock im Release)
-- [ ] Fehlerhandling: Alle Fehlerfälle (URL, Netzwerk, Backend) robust abfangen und als Snackbar/State anzeigen
 - [ ] UI/UX: Mini-Player in allen States sichtbar und bedienbar, konsistentes Feedback (Snackbar, Ladeindikator)
 - [ ] Automatisierte Widget-/Integrationstests für alle State-Wechsel und Fehlerfälle
 - [ ] Manuelle Tests auf echten Geräten (Android/iOS)
-- [ ] Dokumentation und Lessons Learned ergänzen
+- [ ] Dokumentation und Lessons Learned ergänzen (laufend)
+- [ ] **Neue Features vorbereiten:**
+    - [ ] Speed Control (Abspielgeschwindigkeit)
+    - [ ] Download/Offline-Playback
+    - [ ] Resume (Wiedergabe an letzter Position fortsetzen)
+    - [ ] AirPlay/Cast-Unterstützung
+    - [ ] E2E-Tests für Audio-Playback und Download
 
 ### Download/Offline-Playback (PRIO 2)
 - [ ] Download-Service für Episoden-Audio implementieren
@@ -109,3 +119,19 @@ Eine White-Labeling-App zur Unterstützung einer Podcast-Recording-Dienstleistun
 ## Tipps
 - Halte Anforderungen und Architektur synchron
 - Nutze Copilot Chat für Doku- und Architekturfragen
+
+## Audio-Feature-Checkliste (Stand 06/2025)
+- [x] Audio-Playback (Streaming, Fehlerhandling, UX, Tests)
+- [ ] Speed Control (Abspielgeschwindigkeit wählbar, UI/UX, State, Test)
+- [ ] Download/Offline-Playback (Service, Speicher, Caching, State, Test)
+- [ ] Resume (Wiedergabe an letzter Position, Persistenz, State, Test)
+- [ ] AirPlay/Cast (Events, States, Backend, UI)
+- [ ] E2E-Tests für alle Audio-Features (Playback, Download, Resume, Fehlerfälle)
+- [ ] Accessibility-Tests für alle Audio-Features
+
+## Lessons Learned (Audio-Playback, Stand 06/2025)
+- Die Migration auf Dart 3 sealed/final class für Events und States erhöht die Wartbarkeit und Typsicherheit.
+- Fehler und Ladezustände werden explizit als State modelliert und in der UI angezeigt (Snackbar, LoadingDots).
+- Accessibility wurde durch Semantics-Labels für Buttons und Slider verbessert.
+- Die Testabdeckung umfasst alle State-Wechsel und Fehlerfälle.
+- Die Architektur ist vorbereitet für weitere Audio-Features (Speed, Download, Resume, AirPlay/Cast).

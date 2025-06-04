@@ -48,6 +48,15 @@ final class ErrorState extends AudioPlayerState {
 - Verbesserte Typsicherheit und Exhaustiveness Checking
 - Klare, moderne Dart 3-Architektur
 - Einfacheres Pattern Matching in der UI
+- **Weniger Boilerplate:** Kein Equatable mehr nötig, wenn States/Events unveränderlich sind und Pattern Matching genutzt wird.
+- **Bessere Testbarkeit:** State-Wechsel und Fehlerfälle lassen sich gezielt abdecken.
+
+## Lessons Learned (AudioPlayerBloc, Stand 06/2025)
+- Die Umstellung auf `sealed class`/`final class` für Events und States vereinfacht die Wartung und erhöht die Robustheit.
+- Fehlerzustände (ErrorState) und Ladezustände (Loading) werden explizit als State modelliert und in der UI (z.B. Snackbar, LoadingDots) angezeigt.
+- Accessibility: Transport-Buttons und Slider im Player erhalten Semantics-Labels für Screenreader.
+- Die UI reagiert konsistent auf alle States (Idle, Loading, Playing, Paused, Error) und zeigt immer ein passendes Feedback.
+- Tests wurden angepasst, um alle State-Wechsel und Fehlerfälle abzudecken.
 
 ## Umsetzung
 1. Alle Event- und State-Klassen als `sealed class` bzw. `final class` deklarieren.

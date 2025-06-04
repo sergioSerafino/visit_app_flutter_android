@@ -57,3 +57,12 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
 - Optional: Events und States als `sealed class` (Dart 3) deklarieren, um Exhaustiveness Checking und Pattern Matching zu nutzen.
 - Optional: HydratedBloc für Resume-Features (z. B. Wiedergabeposition) prüfen.
 - Weiter so – die Umsetzung ist auf sehr hohem Niveau und entspricht den fortgeschrittenen BLoC-Standards!
+
+---
+
+## Lessons Learned: AudioPlayerBloc-Refactoring (Dart 3, Stand 06/2025)
+- Die Migration auf `sealed class`/`final class` für Events und States (siehe HowTo) bringt mehr Typsicherheit und bessere Wartbarkeit.
+- Fehlerhandling erfolgt konsistent über eigene ErrorStates und wird in der UI (z.B. Snackbar) angezeigt.
+- Ladeindikatoren (LoadingDots) und Accessibility-Labels verbessern die UX und Barrierefreiheit.
+- Alle State-Wechsel (Idle, Loading, Playing, Paused, Error) werden getestet und sind in der UI sichtbar.
+- Empfehlung: Für neue BLoCs immer Dart 3 sealed/final class nutzen und Pattern Matching in der UI einsetzen.

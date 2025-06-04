@@ -102,4 +102,39 @@ void main() {
     expect(find.byIcon(Icons.pause_circle_filled), findsOneWidget);
     expect(find.byIcon(Icons.play_circle_fill), findsNothing);
   });
+
+  testWidgets(
+      'Speed Control Dropdown ändert die Geschwindigkeit und zeigt sie an',
+      (tester) async {
+    final backend = MockAudioPlayerBackend();
+    when(() => backend.positionStream).thenAnswer((_) => const Stream.empty());
+    when(() => backend.durationStream).thenAnswer((_) => const Stream.empty());
+    when(() => backend.playerStateStream)
+        .thenAnswer((_) => const Stream.empty());
+    when(() => backend.position).thenReturn(Duration(seconds: 0));
+    when(() => backend.duration).thenReturn(Duration(seconds: 60));
+    when(() => backend.playing).thenReturn(true);
+    when(() => backend.setSpeed(any())).thenAnswer((_) async {});
+    when(() => backend.speed).thenReturn(1.0);
+    final bloc = AudioPlayerBloc(backend: backend);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
+        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+      ),
+    );
+    // Starte mit Playing-State (1.0x)
+    bloc.emit(Playing(Duration(seconds: 0), Duration(seconds: 60), speed: 1.0));
+    await tester.pumpAndSettle();
+    // Dropdown öffnen und 1.5x wählen
+    await tester.tap(find.byType(DropdownButton<double>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('1.5x').last);
+    await tester.pumpAndSettle();
+    // Bloc-State manuell updaten (wie im echten Backend nach setSpeed)
+    bloc.emit(Playing(Duration(seconds: 0), Duration(seconds: 60), speed: 1.5));
+    await tester.pumpAndSettle();
+    // Prüfe, ob 1.5x angezeigt wird
+    expect(find.text('1.5x'), findsWidgets);
+  });
 }

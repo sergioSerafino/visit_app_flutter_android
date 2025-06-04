@@ -5,6 +5,9 @@ abstract class IAudioPlayerBackend {
   Future<void> pause();
   Future<void> stop();
   Future<void> seek(Duration position);
+  // --- NEU: Speed Control ---
+  Future<void> setSpeed(double speed);
+  double get speed;
   Stream<Duration> get positionStream;
   Stream<Duration?> get durationStream;
   Stream<dynamic> get playerStateStream;

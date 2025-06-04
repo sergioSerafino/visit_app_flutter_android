@@ -35,6 +35,11 @@ final class UpdatePosition extends AudioPlayerEvent {
 
 final class TogglePlayPause extends AudioPlayerEvent {}
 
+final class SetSpeed extends AudioPlayerEvent {
+  final double speed;
+  SetSpeed(this.speed);
+}
+
 // States
 sealed class AudioPlayerState {}
 
@@ -45,13 +50,15 @@ final class Loading extends AudioPlayerState {}
 final class Playing extends AudioPlayerState {
   final Duration position;
   final Duration duration;
-  Playing(this.position, this.duration);
+  final double speed;
+  Playing(this.position, this.duration, {this.speed = 1.0});
 }
 
 final class Paused extends AudioPlayerState {
   final Duration position;
   final Duration duration;
-  Paused(this.position, this.duration);
+  final double speed;
+  Paused(this.position, this.duration, {this.speed = 1.0});
 }
 
 final class ErrorState extends AudioPlayerState {
@@ -162,6 +169,22 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         emit(Paused(event.position, _duration));
       }
     });
+    on<SetSpeed>((event, emit) async {
+      try {
+        await backend.setSpeed(event.speed);
+        // State aktualisieren, falls Playing oder Paused
+        if (state is Playing) {
+          final s = state as Playing;
+          emit(Playing(s.position, s.duration, speed: event.speed));
+        } else if (state is Paused) {
+          final s = state as Paused;
+          emit(Paused(s.position, s.duration, speed: event.speed));
+        }
+      } catch (e) {
+        emit(ErrorState(
+            'Fehler beim Setzen der Geschwindigkeit: \\${e.toString()}'));
+      }
+    });
   }
 
   @override
@@ -234,6 +257,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
 
 class JustAudioPlayerBackend implements IAudioPlayerBackend {
   AudioPlayer _audioPlayer = AudioPlayer();
+  double _speed = 1.0;
 
   void _resetPlayer() {
     try {
@@ -302,6 +326,18 @@ class JustAudioPlayerBackend implements IAudioPlayerBackend {
   }
 
   @override
+  Future<void> setSpeed(double speed) async {
+    try {
+      await _audioPlayer.setSpeed(speed);
+      _speed = speed;
+    } catch (e, st) {
+      if (kDebugMode)
+        print('[JustAudioPlayerBackend] Fehler bei setSpeed: $e\n$st');
+      rethrow;
+    }
+  }
+
+  @override
   Stream<Duration> get positionStream =>
       _audioPlayer.positionStream.handleError((e, st) {
         if (kDebugMode)
@@ -327,6 +363,8 @@ class JustAudioPlayerBackend implements IAudioPlayerBackend {
   Duration? get duration => _audioPlayer.duration;
   @override
   bool get playing => _audioPlayer.playing;
+  @override
+  double get speed => _speed;
   @override
   void dispose() {
     _audioPlayer.dispose();
