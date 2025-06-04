@@ -158,7 +158,8 @@ class _LaunchScreenState extends State<LaunchScreen>
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white54,
+                            color:
+                                Colors.grey, // Dezentes Grau für bessere Optik
                           ),
                         ),
                       );
