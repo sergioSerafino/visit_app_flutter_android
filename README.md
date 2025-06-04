@@ -37,7 +37,8 @@ Dieses Projekt ist ein modernes, best-practice-orientiertes Flutter-Template mit
 
 **Quellen & Community-Standards:**
 - [Flutter/Dart Style Guide](https://dart.dev/guides/language/effective-dart/style)
-- [Flutter Clean Architecture (Reso Coder)](https://resocoder.com/)
+- [Reso-Coder Tutorials](https://resocoder.com/?s=)
+- [Flutter Clean Architecture (Reso-Coder)](https://resocoder.com/)
 - [Very Good Ventures Best Practices](https://verygood.ventures/)
 - [Flutter.dev Dokumentation](https://docs.flutter.dev/)
 
@@ -296,3 +297,22 @@ Changes not staged for commit:
 4. Optional: Mit `git restore <datei>` kannst du einzelne Änderungen zurücksetzen.
 
 Weitere Infos: [Git Dokumentation](https://git-scm.com/docs/git-status)
+
+---
+
+## Best Practice: Architektur- und Pattern-Review mit externen Ressourcen (z. B. Reso Coder)
+
+Um die Codequalität und Architekturentscheidungen kontinuierlich zu verbessern, empfiehlt sich folgender Workflow:
+
+1. **Recherche und Review:**
+   - Nutze externe Ressourcen wie die [Reso-Coder Tutorials](https://resocoder.com/?s=) gezielt für Architektur- und Pattern-Reviews.
+   - Suche nach relevanten Begriffen (z. B. "BLoC", "Clean Architecture", "Testing") und vergleiche die eigene Implementierung mit den dort empfohlenen Best Practices.
+   - Dokumentiere die wichtigsten Erkenntnisse und Abweichungen direkt in der Projekt-Doku (z. B. in `.documents/bloc_best_practices_2024.md`).
+
+2. **Empfohlener Ablauf:**
+   - **Schritt 1:** Website aufrufen und nach dem gewünschten Pattern/Begriff suchen.
+   - **Schritt 2:** Die eigene Implementierung mit den Best Practices aus den Tutorials vergleichen.
+   - **Schritt 3:** Ergebnisse und Optimierungsvorschläge dokumentieren und ggf. umsetzen.
+   - **Schritt 4:** Lessons Learned und Review-Tabellen in der Doku ergänzen.
+
+---
