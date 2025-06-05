@@ -18,6 +18,7 @@ import '../../../domain/enums/episode_load_state.dart';
 import '../../../core/placeholders/placeholder_loader_service.dart';
 import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
+import '../../../application/providers/current_episode_provider.dart';
 
 class PodcastPage extends ConsumerWidget {
   const PodcastPage({super.key});
@@ -227,6 +228,11 @@ class PodcastPage extends ConsumerWidget {
                                 return EpisodeItemTile(
                                   episode: episode,
                                   onTap: () {
+                                    // Aktuelle Episode global setzen
+                                    ref
+                                        .read(currentEpisodeProvider.notifier)
+                                        .state = episode;
+                                    // KEIN automatisches Play mehr! Navigation zur Detailseite
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

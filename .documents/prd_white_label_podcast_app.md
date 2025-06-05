@@ -135,3 +135,8 @@ Eine White-Labeling-App zur Unterstützung einer Podcast-Recording-Dienstleistun
 - Accessibility wurde durch Semantics-Labels für Buttons und Slider verbessert.
 - Die Testabdeckung umfasst alle State-Wechsel und Fehlerfälle.
 - Die Architektur ist vorbereitet für weitere Audio-Features (Speed, Download, Resume, AirPlay/Cast).
+- **Die Audio-URL (`episodeUrl`) wird ausschließlich aus der iTunes-API übernommen und im Model gespeichert.**
+- **Fehlerquellen:** Leere oder ungültige URLs werden im Bloc abgefangen und führen zu einer Snackbar/Fehlermeldung (ErrorState). Die UI zeigt diese Fehler klar an.
+- **Es gibt keine Fallback-Logik auf RSS oder lokale Quellen für die Audio-URL – die iTunes-URL ist maßgeblich.**
+- **Testabdeckung:** Es existieren Tests für leere, ungültige und produktive URLs. Die Fehlerfälle sind robust abgedeckt.
+- **Best Practice:** Die Übergabe der episodeUrl erfolgt immer explizit beim Tap auf eine Episode. Die Detailseite und der Player verlassen sich auf die im Model gespeicherte URL.

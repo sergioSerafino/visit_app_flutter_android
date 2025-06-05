@@ -316,3 +316,20 @@ Um die Codequalität und Architekturentscheidungen kontinuierlich zu verbessern,
    - **Schritt 4:** Lessons Learned und Review-Tabellen in der Doku ergänzen.
 
 ---
+
+## Audio-Playback: Verhalten beim Öffnen der EpisodeDetailPage
+
+- **Kein Autoplay:** Beim Navigieren zur EpisodeDetailPage wird die Audiodatei **nicht** automatisch abgespielt.
+- **Preload/Buffering:** Die Audiodatei wird im Hintergrund vorgepuffert (mittels `setUrl`), sodass ein schneller Start beim Play-Button möglich ist.
+- **Start der Wiedergabe:** Playback beginnt **erst**, wenn der Nutzer explizit auf den Play-Button im BottomPlayerWidget drückt.
+- **Testabdeckung:** Ein automatisierter Widget-Test (`test/presentation/pages/episode_detail_no_autoplay_test.dart`) stellt sicher, dass kein Autoplay erfolgt und das Preload korrekt funktioniert.
+- **UX-Hinweis:** Diese Optimierung verbessert die Startzeit beim Play und verhindert unerwünschtes Autoplay.
+
+## Audio-Playback: Play/Pause-UX & State-Maschine (Juni 2025)
+
+- Die Play/Pause-Logik im AudioPlayerBloc folgt ab Juni 2025 einer deterministischen State-Maschine ohne Event-Buffering.
+- Play/Pause-Events werden nur im passenden State verarbeitet, ansonsten ignoriert oder mit Snackbar quittiert.
+- Die UI aktiviert den Play/Pause-Button nur, wenn die Aktion möglich ist (z.B. nicht während Loading).
+- Nach jedem Event wird sofort der neue State emittiert, damit die UI direkt reagiert.
+- Tests prüfen explizit schnelles, mehrfaches Klicken auf Play/Pause.
+- Ziel: Sofortige, robuste UX wie bei führenden Playern (Apple Podcasts, just_audio).

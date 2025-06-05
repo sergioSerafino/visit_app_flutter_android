@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/../../../core/logging/logger_config.dart';
+// import '/../../../core/logging/logger_config.dart'; // Entfernt, da nicht mehr benötigt
 // import '/../../presentation/widgets/image_with_banner.dart'; // Wird aktuell nicht genutzt, aber im Original als Fallback kommentiert belassen
 import 'async_ui_helper.dart';
 
@@ -35,11 +35,11 @@ class AsyncValueWidget<T> extends StatelessWidget {
         return data(dataValue);
       },
       loading: () {
-        logDebug("Widget lädt", color: LogColor.green, tag: LogTag.ui);
+        // logDebug("Widget lädt", color: LogColor.green, tag: LogTag.ui);
         return (loading ?? AsyncUIHelper.loading)();
       },
       error: (e, st) {
-        logDebug("Error: $e\n$st", color: LogColor.red, tag: LogTag.error);
+        // logDebug("Error: $e\n$st", color: LogColor.red, tag: LogTag.error);
         // return const ImageWithBanner(imageUrl: imageUrl, label: label); // 💡 Dein eigener Fallback hier
         return (error ?? ((e, st) => AsyncUIHelper.error(e, stackTrace: st)))(
           e,

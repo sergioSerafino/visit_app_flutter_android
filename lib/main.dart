@@ -33,7 +33,11 @@ Future<void> main() async {
   await Hive.openBox('podcastBox');
 
   runApp(
-      ProviderScope(observers: [ProviderLogger()], child: const PodcastApp()));
+    ProviderScope(
+      observers: [ProviderLogger()],
+      child: PodcastApp(),
+    ),
+  );
 }
 
 // Beispiel Observer

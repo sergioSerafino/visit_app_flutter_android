@@ -73,6 +73,9 @@ void main() {
       // Zeitanzeige vorhanden (z.B. 00:10, -00:50)
       expect(find.textContaining(':'), findsWidgets);
       expect(find.textContaining('-'), findsWidgets);
+      await bloc.close();
+      await tester.pumpWidget(Container());
+      await tester.pumpAndSettle(); // Timer/Marquee cleanup
     },
   );
 }

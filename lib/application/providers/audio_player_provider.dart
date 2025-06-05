@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/services/audio_player_bloc.dart';
 
 final audioPlayerBlocProvider = Provider<AudioPlayerBloc>((ref) {
-  // Hier muss ein echtes Backend übergeben werden
-  return AudioPlayerBloc(backend: JustAudioPlayerBackend());
+  // Für Test: audioplayers-Backend aktivieren
+  return AudioPlayerBloc(backend: AudioPlayersBackend());
 });
 
 /// Provider, der den aktuellen State des AudioPlayerBloc als Stream bereitstellt

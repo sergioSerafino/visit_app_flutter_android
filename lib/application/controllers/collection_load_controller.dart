@@ -9,7 +9,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:empty_flutter_template/domain/enums/collection_load_state.dart';
-import 'package:empty_flutter_template/core/logging/logger_config.dart';
 
 class CollectionLoadController extends StateNotifier<CollectionLoadState> {
   CollectionLoadController(this.ref) : super(CollectionLoadState.initial);
@@ -45,6 +44,7 @@ class CollectionLoadController extends StateNotifier<CollectionLoadState> {
     state = CollectionLoadState.error;
   }
 
-  void _log(String msg) =>
-      logDebug("[CollectionLoad] $msg", tag: LogTag.ui, color: LogColor.cyan);
+  void _log(String msg) {
+    // Logging auskommentiert
+  }
 }

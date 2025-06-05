@@ -8,7 +8,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/enums/episode_load_state.dart';
-import '../../../core/logging/logger_config.dart';
 
 class EpisodeLoadController extends StateNotifier<EpisodeLoadState> {
   EpisodeLoadController(this.ref) : super(EpisodeLoadState.initial);
@@ -22,7 +21,7 @@ class EpisodeLoadController extends StateNotifier<EpisodeLoadState> {
 
   /// Zeige sehr kurz Spinner, dann Platzhalter → dann echte Daten
   Future<void> performEpisodesLoadingSequence() async {
-    logDebug("🔁 Ladeprozess gestartet", tag: LogTag.ui, color: LogColor.green);
+    // logDebug("🔁 Ladeprozess gestartet", tag: LogTag.ui, color: LogColor.green);
 
     state = EpisodeLoadState.loading;
 
@@ -34,11 +33,11 @@ class EpisodeLoadController extends StateNotifier<EpisodeLoadState> {
     await Future.delayed(const Duration(milliseconds: 1000));
     state = EpisodeLoadState.loaded;
 
-    logDebug(
-      "✅ Ladeprozess abgeschlossen",
-      tag: LogTag.ui,
-      color: LogColor.green,
-    );
+    // logDebug(
+    //   "✅ Ladeprozess abgeschlossen",
+    //   tag: LogTag.ui,
+    //   color: LogColor.green,
+    // );
   }
 
   /// Falls z. B. auf Cover getippt wird: Direkt zum echten Daten-Load
@@ -54,7 +53,7 @@ class EpisodeLoadController extends StateNotifier<EpisodeLoadState> {
   }
 
   void _logStateChange(EpisodeLoadState newState) {
-    logDebug('[EpisodeLoad] State: [36m$newState[0m',
-        tag: LogTag.ui, color: LogColor.cyan);
+    // logDebug('[EpisodeLoad] State: [36m$newState[0m',
+    //     tag: LogTag.ui, color: LogColor.cyan);
   }
 }

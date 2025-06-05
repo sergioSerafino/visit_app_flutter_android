@@ -13,6 +13,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
 import '../../application/providers/cast_airplay_provider.dart';
+import '../../application/providers/audio_player_provider.dart';
+import '../../application/providers/current_episode_provider.dart';
+import '../../core/services/audio_player_bloc.dart';
 import '../widgets/cast_airplay_button.dart';
 import '../widgets/cover_image_widget.dart';
 import '../widgets/sticky_info_header.dart';
@@ -43,6 +46,21 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
+    // --- Buffering/Preload der Episode beim Öffnen (ohne Autoplay) ---
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final container = ProviderScope.containerOf(context, listen: false);
+      final audioBloc = container.read(audioPlayerBlocProvider);
+      // --- currentEpisodeProvider setzen, falls noch nicht gesetzt ---
+      final currentEpisode = container.read(currentEpisodeProvider);
+      if (currentEpisode == null ||
+          currentEpisode.trackId != widget.episode.trackId) {
+        container.read(currentEpisodeProvider.notifier).state = widget.episode;
+      }
+      // Statt direktem setUrl: PreloadEvent an Bloc schicken
+      if (widget.episode.episodeUrl.isNotEmpty) {
+        audioBloc.add(PreloadEpisode(widget.episode.episodeUrl));
+      }
+    });
   }
 
   void _onScroll() {
