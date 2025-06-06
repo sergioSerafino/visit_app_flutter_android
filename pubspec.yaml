@@ -55,7 +55,8 @@ dependencies:
   just_audio: ^0.10.3
   lottie: ^3.0.0
   marquee: ^2.3.0
-  rxdart: ^0.28.0
+  rxdart: ^0.27.7
+  audio_service: ^0.18.12
   #flutter_cast_framework: ^0.3.2
 
 dev_dependencies:

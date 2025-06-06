@@ -1,43 +1,38 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:empty_flutter_template/core/services/audio_player_bloc.dart';
-import 'package:empty_flutter_template/core/services/i_audio_player.dart';
 import 'dart:async';
+import 'package:audio_service/audio_service.dart';
 
-class MockAudioPlayerBackend extends Mock implements IAudioPlayerBackend {}
+class MockAudioHandler extends Mock implements AudioHandler {}
 
 void main() {
   setUpAll(() {
     registerFallbackValue(Duration.zero);
   });
   group('AudioPlayerBloc', () {
-    late MockAudioPlayerBackend backend;
+    late MockAudioHandler handler;
     setUp(() {
-      backend = MockAudioPlayerBackend();
-      when(() => backend.positionStream)
-          .thenAnswer((_) => const Stream.empty());
-      when(() => backend.durationStream)
-          .thenAnswer((_) => const Stream.empty());
-      when(() => backend.playerStateStream)
-          .thenAnswer((_) => const Stream.empty());
-      when(() => backend.position).thenReturn(Duration.zero);
-      when(() => backend.duration).thenReturn(Duration(seconds: 30));
-      when(() => backend.playing).thenReturn(true);
-      when(() => backend.dispose()).thenReturn(null);
-      when(() => backend.setUrl(any())).thenAnswer((_) async {});
-      when(() => backend.play()).thenAnswer((_) async {});
-      when(() => backend.pause()).thenAnswer((_) async {});
-      when(() => backend.stop()).thenAnswer((_) async {});
-      when(() => backend.seek(any())).thenAnswer((_) async {});
+      handler = MockAudioHandler();
+      when(() => handler.playbackState)
+          .thenAnswer((_) => const Stream<PlaybackState>.empty());
+      when(() => handler.mediaItem)
+          .thenAnswer((_) => const Stream<MediaItem?>.empty());
+      when(() => handler.play()).thenAnswer((_) async {});
+      when(() => handler.pause()).thenAnswer((_) async {});
+      when(() => handler.stop()).thenAnswer((_) async {});
+      when(() => handler.seek(any())).thenAnswer((_) async {});
+      when(() => handler.setSpeed(any())).thenAnswer((_) async {});
+      when(() => handler.addQueueItem(any())).thenAnswer((_) async {});
     });
     test('Initialzustand ist Idle', () {
-      final bloc = AudioPlayerBloc(backend: backend);
+      final bloc = AudioPlayerBloc(audioHandler: handler);
       expect(bloc.state, isA<Idle>());
     });
     test('PlayEpisode führt zu Loading und dann Playing', () async {
-      when(() => backend.setUrl(any())).thenAnswer((_) async {});
-      when(() => backend.play()).thenAnswer((_) async {});
-      final bloc = AudioPlayerBloc(backend: backend);
+      when(() => handler.setUrl(any())).thenAnswer((_) async {});
+      when(() => handler.play()).thenAnswer((_) async {});
+      final bloc = AudioPlayerBloc(audioHandler: handler);
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
       bloc.add(PlayEpisode('https://audio/test.mp3'));
@@ -47,8 +42,8 @@ void main() {
       await sub.cancel();
     });
     test('Pause aus Playing führt zu Paused', () async {
-      when(() => backend.pause()).thenAnswer((_) async {});
-      final bloc = AudioPlayerBloc(backend: backend);
+      when(() => handler.pause()).thenAnswer((_) async {});
+      final bloc = AudioPlayerBloc(audioHandler: handler);
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
       bloc.emit(Playing(Duration(seconds: 10), Duration(seconds: 30)));
@@ -58,8 +53,8 @@ void main() {
       await sub.cancel();
     });
     test('Stop führt zu Idle', () async {
-      when(() => backend.stop()).thenAnswer((_) async {});
-      final bloc = AudioPlayerBloc(backend: backend);
+      when(() => handler.stop()).thenAnswer((_) async {});
+      final bloc = AudioPlayerBloc(audioHandler: handler);
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
       bloc.emit(Playing(Duration(seconds: 5), Duration(seconds: 30)));
@@ -69,11 +64,11 @@ void main() {
       await sub.cancel();
     });
     test('SetSpeed ändert die Geschwindigkeit im Backend und State', () async {
-      when(() => backend.setSpeed(any())).thenAnswer((invocation) async {
+      when(() => handler.setSpeed(any())).thenAnswer((invocation) async {
         // Simuliere das Setzen der Geschwindigkeit
       });
-      when(() => backend.speed).thenReturn(1.5);
-      final bloc = AudioPlayerBloc(backend: backend);
+      when(() => handler.speed).thenReturn(1.5);
+      final bloc = AudioPlayerBloc(audioHandler: handler);
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
       // Starte mit Playing-State

@@ -4,10 +4,11 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/services/audio_player_bloc.dart';
+import 'audio_handler_provider.dart';
 
 final audioPlayerBlocProvider = Provider<AudioPlayerBloc>((ref) {
-  // Für Test: audioplayers-Backend aktivieren
-  return AudioPlayerBloc(backend: AudioPlayersBackend());
+  final handler = ref.watch(audioHandlerProvider);
+  return AudioPlayerBloc(audioHandler: handler);
 });
 
 /// Provider, der den aktuellen State des AudioPlayerBloc als Stream bereitstellt

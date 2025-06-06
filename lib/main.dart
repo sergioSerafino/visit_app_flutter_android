@@ -22,8 +22,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:audio_service/audio_service.dart';
 
 import 'app.dart';
+import 'core/services/my_audio_handler.dart';
+
+late final AudioHandler audioHandler;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +35,16 @@ Future<void> main() async {
   // 🔐 Hive initialisieren und Box öffnen
   await Hive.initFlutter();
   await Hive.openBox('podcastBox');
+
+  // AudioService + Handler initialisieren
+  audioHandler = await AudioService.init(
+    builder: () => MyAudioHandler(),
+    config: AudioServiceConfig(
+      androidNotificationChannelId: 'dein.channel.id',
+      androidNotificationChannelName: 'Audio Playback',
+      androidNotificationOngoing: true,
+    ),
+  );
 
   runApp(
     ProviderScope(
