@@ -30,3 +30,6 @@ Hier werden weiterführende Dokumentationen abgelegt, z.B.:
 - Dokumente sollten versioniert und gepflegt werden.
 - Für größere Themen Unterordner anlegen (z.B. `decisions/` für ADRs).
 - Die Prinzipien-Matrix (principles_matrix.md) bietet eine zentrale Übersicht und Querverweise.
+- Historisch oder für spätere Nachvollziehbarkeit relevante Inhalte werden im Archiv-Ordner [docs/legacy/](../docs/legacy/) gesichert. Siehe Best-Practice-Abschnitt in .instructions/project_structure_best_practices.md.
+
+Siehe auch [docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md) für die aktuelle Architekturübersicht und Best Practices zum Audio-Streaming-Stack (BLoC, Backend, AudioHandler, Testbarkeit, Provider-Pattern).

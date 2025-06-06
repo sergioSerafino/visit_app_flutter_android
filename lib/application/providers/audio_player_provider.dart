@@ -4,11 +4,11 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/services/audio_player_bloc.dart';
-import 'audio_handler_provider.dart';
 
+// Architektur: Der AudioPlayerBloc erhält das produktive Backend (z.B. JustAudioPlayerBackend).
+// Der audioHandler (audio_service) wird für Systemintegration (z.B. AirPlay/Chromecast) später im Backend angebunden.
 final audioPlayerBlocProvider = Provider<AudioPlayerBloc>((ref) {
-  final handler = ref.watch(audioHandlerProvider);
-  return AudioPlayerBloc(audioHandler: handler);
+  return AudioPlayerBloc(backend: JustAudioPlayerBackend());
 });
 
 /// Provider, der den aktuellen State des AudioPlayerBloc als Stream bereitstellt

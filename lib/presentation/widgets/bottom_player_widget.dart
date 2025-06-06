@@ -149,6 +149,19 @@ class BottomPlayerWidget extends ConsumerWidget {
                 style: theme.textTheme.bodyMedium?.copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
+              // Close-Button im Fehlerfall anzeigen, wenn onClose gesetzt ist
+              if (onClose != null) ...[
+                const SizedBox(height: 16),
+                Semantics(
+                  label: 'Player schließen',
+                  button: true,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: onClose,
+                    tooltip: 'Player schließen',
+                  ),
+                ),
+              ],
             ],
           ),
         ),

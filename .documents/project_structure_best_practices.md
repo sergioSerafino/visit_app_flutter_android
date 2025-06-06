@@ -79,3 +79,4 @@ lib/
 - Diese Struktur eignet sich besonders für Multi-Branding, White-Label-Apps und große Teams.
 - Die Trennung von Models (data) und Entitäten (domain) sowie das Mapping erfolgt wie oben beschrieben.
 - Siehe auch die Best Practices und Prinzipien in diesem Dokument.
+- Für Details zur Audio-Architektur (Trennung AudioHandler/BLoC/Backend, Testbarkeit, Provider) siehe [../docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md).

@@ -20,12 +20,13 @@ void main() {
     'EpisodeDetailPage zeigt Fortschrittsbalken (Slider) und Zeitanzeige korrekt',
     (WidgetTester tester) async {
       final backend = MockAudioPlayerBackend();
+      // Arrange: Backend-State und Streams stubben
       when(() => backend.positionStream)
-          .thenAnswer((_) => const Stream.empty());
+          .thenAnswer((_) => Stream.value(const Duration(seconds: 10)));
       when(() => backend.durationStream)
-          .thenAnswer((_) => const Stream.empty());
+          .thenAnswer((_) => Stream.value(const Duration(seconds: 60)));
       when(() => backend.playerStateStream)
-          .thenAnswer((_) => const Stream.empty());
+          .thenAnswer((_) => Stream.value('playing'));
       when(() => backend.position).thenReturn(const Duration(seconds: 10));
       when(() => backend.duration).thenReturn(const Duration(seconds: 60));
       when(() => backend.playing).thenReturn(true);
@@ -36,6 +37,8 @@ void main() {
       when(() => backend.setUrl(any<String>())).thenAnswer((_) async {});
       when(() => backend.dispose()).thenReturn(null);
       final bloc = AudioPlayerBloc(backend: backend);
+      // Simuliere Playing-State explizit
+      bloc.emit(Playing(Duration(seconds: 10), Duration(seconds: 60)));
 
       final episode = PodcastEpisode(
         wrapperType: 'episode',
@@ -68,11 +71,10 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      // Slider vorhanden
+      // Assert: Slider und Zeitanzeige vorhanden
       expect(find.byType(Slider), findsOneWidget);
-      // Zeitanzeige vorhanden (z.B. 00:10, -00:50)
-      expect(find.textContaining(':'), findsWidgets);
-      expect(find.textContaining('-'), findsWidgets);
+      expect(find.text('00:10'), findsOneWidget); // linke Zeit
+      expect(find.text('-00:50'), findsOneWidget); // rechte Zeit
       await bloc.close();
       await tester.pumpWidget(Container());
       await tester.pumpAndSettle(); // Timer/Marquee cleanup

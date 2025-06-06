@@ -14,6 +14,7 @@ In diesem Ordner werden alle projektspezifischen Anleitungen, HowTos, LLM-Prompt
 - Siehe `.documents/principles_matrix.md` für eine zentrale Übersicht aller Prinzipien und Empfehlungen.
 - Für Architektur und State-Management siehe `.documents/architecture_clean_architecture.md` und `.documents/state_management_riverpod_bloc.md`.
 - Für Produktanforderungen siehe `.documents/prd_white_label_podcast_app.md`.
+- Siehe [../docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md) für die aktuelle, zentrale Übersicht zur Audio-Architektur (Systemintegration, BLoC, Provider, Testbarkeit, Best Practices).
 
 ## Best Practices (GitHub Copilot & Copilot Chat)
 - Nutze `/explain`, `/fix`, `/tests`, `/doc` für schnelle Analysen, Erklärungen und Testgenerierung.

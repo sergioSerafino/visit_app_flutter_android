@@ -66,3 +66,8 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
 - Ladeindikatoren (LoadingDots) und Accessibility-Labels verbessern die UX und Barrierefreiheit.
 - Alle State-Wechsel (Idle, Loading, Playing, Paused, Error) werden getestet und sind in der UI sichtbar.
 - Empfehlung: Für neue BLoCs immer Dart 3 sealed/final class nutzen und Pattern Matching in der UI einsetzen.
+
+---
+
+## Audio-Architekturübersicht 2025
+- Für die aktuelle Audio-Architektur (BLoC, Backend, AudioHandler, Provider, Testbarkeit) siehe [../docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md).

@@ -55,6 +55,20 @@ lib/
 - Testfokus auf UseCases & Services: mit `flutter_test` und `mockito`.
 - Mandantenstruktur strikt trennen: `tenants/<host_id>/assets/`, JSON als Quelle.
 - Routen & Themes dynamisch über Provider bereitstellen.
+- Siehe [../docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md) für die empfohlene Audio-Architektur (BLoC, Backend, AudioHandler, Provider, Testbarkeit).
+
+---
+
+## Best Practice: Umgang mit veralteter Doku und Code-Fragmente
+
+- Alte Doku-Abschnitte und Code-Fragmente werden niemals einfach gelöscht.
+- Vor dem Entfernen wird geprüft, ob die Information vollständig und aktuell in der neuen Architektur/Doku abgedeckt ist.
+- Historisch oder für spätere Nachvollziehbarkeit relevante Inhalte werden in einen Archiv- oder Legacy-Ordner verschoben (z.B. `docs/legacy/`).
+- In der zentralen Doku wird ein Hinweis auf das Archiv gesetzt.
+- Jede Entfernung oder größere Änderung wird im Changelog und/oder in der Doku-Matrix dokumentiert.
+- Unsichere oder noch nicht vollständig migrierte Inhalte werden als „veraltet“ markiert, aber nicht gelöscht.
+- Review und Freigabe vor dem Entfernen größerer Abschnitte (z.B. per Pull Request oder explizite Freigabe).
+- Automatisierte TODO- und Doku-Scans helfen, offene Aufgaben und Migrationshinweise zentral zu erfassen.
 
 ---
 

@@ -11,6 +11,8 @@ Für eine robuste Audio-Streaming- und Wiedergabe-Funktion in Flutter kombiniere
 
 ## 2. AudioHandler: Background-Audio mit audio_service
 
+Stelle mir den gesamten Inhalt des PDFs insgesamt ungekürzt und nicht mit dem "Hinweis: Der vollständige Text (...)" "komplett wie im pdf" als *.md -download bereit!
+
 ```dart
 class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   final _player = AudioPlayer();

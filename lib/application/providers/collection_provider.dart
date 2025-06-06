@@ -33,7 +33,7 @@ class CollectionIdNotifier extends StateNotifier<int> {
   final CollectionIdStorage storage;
   // Beispiele für Default-CollectionIds:
   // 1814331727, 1590516386, 1469653179, 1481054140, 1765742605, 9876543210
-  CollectionIdNotifier(this.storage) : super(1469653179) {
+  CollectionIdNotifier(this.storage) : super(1590516386) {
     _load(); // Deaktiviert für harten Testwert
   }
 

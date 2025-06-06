@@ -24,6 +24,7 @@
 - Beispiel: Ein StateNotifier/ChangeNotifier-ViewModel übernimmt die UI-Logik und wird per Provider eingebunden
 - Die Layer-Struktur (Domain, Data, Application, Presentation) bleibt erhalten
 - Siehe Clean Architecture-Doku und Prinzipien-Matrix für Details
+- Siehe [../docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md) für ein vollständiges Beispiel zur Integration von Audio-Streaming, BLoC, Provider und Testbarkeit.
 
 ## Beispiel: MVVM (ViewModel) mit ChangeNotifier/StateNotifier
 
