@@ -68,6 +68,13 @@ final class PreloadEpisode extends AudioPlayerEvent {
   PreloadEpisode(this.url);
 }
 
+final class SetVolume extends AudioPlayerEvent {
+  final double volume;
+  SetVolume(this.volume);
+}
+
+final class _AutoResumeFailed extends AudioPlayerEvent {}
+
 // States
 sealed class AudioPlayerState {}
 
@@ -136,6 +143,26 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   bool _isBusy = false; // Blockiert parallele Play/Pause-Operationen
   bool _pendingToggle =
       false; // Merkt sich, ob während busy ein TogglePlayPause gewünscht wurde
+  int _autoResumeAttempts = 0;
+  Timer? _autoResumeTimer;
+
+  void _triggerAutoResume({Duration? position}) {
+    if (_currentUrl == null || _currentUrl!.isEmpty) return;
+    if (_autoResumeAttempts >= 3) {
+      add(_AutoResumeFailed());
+      _autoResumeAttempts = 0;
+      return;
+    }
+    _autoResumeAttempts++;
+    _autoResumeTimer?.cancel();
+    _autoResumeTimer = Timer(const Duration(seconds: 2), () {
+      if (kDebugMode)
+        logDebug(
+            '[AudioPlayerBloc] Automatischer Resume-Versuch ($_autoResumeAttempts) für $_currentUrl');
+      add(PlayEpisode(_currentUrl!));
+    });
+  }
+
   // Die busy-Flag verhindert, dass TogglePlayPause mehrfach verarbeitet wird, solange eine Play- oder Pause-Operation läuft.
   // Damit wird garantiert, dass jeder Klick deterministisch verarbeitet wird und die Audio-Steuerung exakt auf jeden Klick reagiert.
 
@@ -145,7 +172,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     on<PlayEpisode>((event, emit) async {
       if (kDebugMode)
         logDebug(
-            '[AudioPlayerBloc] Event: PlayEpisode(${event.url}) - State: $state');
+            '[AudioPlayerBloc] Event: PlayEpisode(\u001b[${event.url}) - State: $state');
       if (event.url.isEmpty || event.url.trim().isEmpty) {
         emit(ErrorState('Keine gültige Audio-URL übergeben.'));
         if (kDebugMode)
@@ -157,12 +184,21 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         logDebug('[AudioPlayerBloc] PlayEpisode mit URL: ${event.url}');
       final isSameUrl = _currentUrl == event.url;
       final isActive = state is Playing || state is Paused;
+      if (!isSameUrl) {
+        // Wenn eine neue Episode geladen wird, vorher alles zurücksetzen
+        _currentUrl = null;
+        _duration = Duration.zero;
+      }
       if (isSameUrl && isActive) {
         await _safePlayWithRetry(emit);
         emit(Playing(backend.position, backend.duration ?? Duration.zero,
             speed: backend.speed));
         if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Playing (Resume)');
         _listenToPosition();
+        // --- Reset nur, wenn Playing-State wirklich erreicht wurde ---
+        if (backend.playing) {
+          _autoResumeAttempts = 0; // Reset nach erfolgreichem Resume
+        }
         return;
       }
       // Play nur aus Idle, Paused oder ErrorState zulassen
@@ -200,6 +236,10 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
             }
           }
         });
+        // --- Reset nur, wenn Playing-State wirklich erreicht wurde ---
+        if (backend.playing) {
+          _autoResumeAttempts = 0; // Reset nach erfolgreichem Start
+        }
       } catch (e, st) {
         emit(ErrorState('Fehler beim Starten des Streams: \\${e.toString()}'));
         if (kDebugMode) logDebug('[AudioPlayerBloc] Fehler beim Play: $e\n$st');
@@ -230,7 +270,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       _durationSub?.cancel();
       _durationSub = null;
       _duration = Duration.zero;
-      _currentUrl = null;
+      // _currentUrl NICHT mehr auf null setzen!
       emit(Idle());
       if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Idle');
     });
@@ -434,11 +474,37 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         if (kDebugMode) logDebug('[AudioPlayerBloc] Fehler beim Preload: $e');
       }
     });
+    on<SetVolume>((event, emit) async {
+      try {
+        await backend.setVolume(event.volume);
+        // State aktualisieren, falls Playing oder Paused
+        if (state is Playing) {
+          final s = state as Playing;
+          emit(Playing(s.position, s.duration, speed: s.speed));
+          if (kDebugMode)
+            logDebug('[AudioPlayerBloc] emit: Playing (SetVolume)');
+        } else if (state is Paused) {
+          final s = state as Paused;
+          emit(Paused(s.position, s.duration, speed: s.speed));
+          if (kDebugMode)
+            logDebug('[AudioPlayerBloc] emit: Paused (SetVolume)');
+        }
+      } catch (e) {
+        emit(
+            ErrorState('Fehler beim Setzen der Lautstärke: [${e.toString()}'));
+        if (kDebugMode) logDebug('[AudioPlayerBloc] Fehler bei SetVolume: $e');
+      }
+    });
+    on<_AutoResumeFailed>((event, emit) async {
+      emit(ErrorState(
+          'Wiedergabe konnte nach Abbruch nicht automatisch wiederhergestellt werden.'));
+    });
   }
 
   @override
   Future<void> close() {
     _disposed = true;
+    _autoResumeTimer?.cancel();
     _positionSub?.cancel();
     _playerStateSub?.cancel();
     _durationSub?.cancel();
@@ -462,7 +528,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         if (_lastPosition != null) {
           final diff = roundedPos - _lastPosition!;
           if (diff.inMilliseconds < 0) {
-            log('[AudioPlayerBloc][Watchdog] Warnung: Position springt zurück! alt=${_lastPosition}, neu=$roundedPos');
+            log('[AudioPlayerBloc][Watchdog] Warnung: Position springt zurück! alt=\${_lastPosition}, neu=$roundedPos');
           } else if (diff.inMilliseconds > 50) {
             _lastProgress = now;
           }
@@ -473,6 +539,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
             now.difference(_lastProgress!).inSeconds > 1) {
           log('[AudioPlayerBloc][Watchdog] Fehler: Position hat sich >1s nicht verändert! Restart wird getriggert. Letzte Position: $_lastPosition');
           add(Stop());
+          _triggerAutoResume(position: _lastPosition);
         }
         if (_lastPosition == null ||
             (roundedPos - _lastPosition!).inMilliseconds.abs() > 50) {
@@ -600,12 +667,14 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
 class JustAudioPlayerBackend implements IAudioPlayerBackend {
   AudioPlayer _audioPlayer = AudioPlayer();
   double _speed = 1.0;
+  double _volume = 0.5; // Standard-Lautstärke jetzt 50%
 
   JustAudioPlayerBackend() {
+    _audioPlayer.setVolume(_volume); // Initialwert setzen
     _audioPlayer.playerStateStream.listen((state) {
       if (kDebugMode) {
         logDebug(
-            '[JustAudioPlayerBackend] playerStateStream: processingState=${state.processingState}, playing=${state.playing}');
+            '[JustAudioPlayerBackend] playerStateStream: processingState=[${state.processingState}, playing=${state.playing}');
       }
     }, onError: (e, st) {
       if (kDebugMode) {
@@ -713,6 +782,21 @@ class JustAudioPlayerBackend implements IAudioPlayerBackend {
       rethrow;
     }
   }
+
+  @override
+  Future<void> setVolume(double volume) async {
+    try {
+      await _audioPlayer.setVolume(volume);
+      _volume = volume;
+    } catch (e, st) {
+      if (kDebugMode)
+        logDebug('[JustAudioPlayerBackend] Fehler bei setVolume: $e\n$st');
+      rethrow;
+    }
+  }
+
+  @override
+  double get volume => _volume;
 
   @override
   Stream<Duration> get positionStream => _audioPlayer.positionStream
