@@ -25,7 +25,6 @@
 // MIGRATION-HINWEIS: Diese Datei wurde aus storage_hold/lib/presentation/widgets/bottom_player_widget.dart übernommen und refaktoriert.
 // Tooltips, Button-Layout und zentrale Play/Pause-Logik wurden konsolidiert. Siehe Migrationsmatrix und Review-Checkliste.
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marquee/marquee.dart';
@@ -309,11 +308,11 @@ class BottomPlayerWidget extends ConsumerWidget {
                                 .map((s) => DropdownMenuItem(
                                       value: s,
                                       child: Text(
-                                        '${s}x',
+                                        '${s}x ',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: theme.colorScheme.onSurface
-                                              .withAlpha(180),
+                                              .withAlpha(140),
                                           fontSize: 16,
                                         ),
                                       ),
@@ -326,12 +325,12 @@ class BottomPlayerWidget extends ConsumerWidget {
                             },
                             icon: Icon(Icons.speed,
                                 color:
-                                    theme.colorScheme.onSurface.withAlpha(180),
+                                    theme.colorScheme.onSurface.withAlpha(140),
                                 size: 22),
                             dropdownColor: theme.colorScheme.surface,
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
-                              color: theme.colorScheme.onSurface.withAlpha(180),
+                              color: theme.colorScheme.onSurface.withAlpha(140),
                               fontSize: 16,
                             ),
                             underline: Container(
@@ -352,31 +351,23 @@ class BottomPlayerWidget extends ConsumerWidget {
                 final leftTime = _formatDurationMMSS(position.inMilliseconds);
                 final rightTime = hasValidDuration
                     ? '-${_formatDurationMMSS((duration - position).inMilliseconds)}'
-                    : '--:--';
+                    : '0h 0m 0s';
                 final isSliderEnabled = hasValidDuration;
                 return Row(
                   children: [
-                    // --- Zeitanzeige links ---
                     SizedBox(
-                      width: 64, // mehr Platz für lange Werte
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          leftTime,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'RobotoMono',
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                            color: theme.colorScheme.onSurface.withAlpha(160),
-                          ),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          softWrap: false,
-                          maxLines: 1,
+                      width: 78,
+                      child: Text(
+                        leftTime,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: theme.colorScheme.onSurface.withAlpha(140),
+                          //fontFeatures: const [FontFeature.tabularFigures()],
                         ),
+                        textAlign: TextAlign.left,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    //const SizedBox(width: 4),
                     Expanded(
                       child: Semantics(
                         label: hasValidDuration
@@ -424,114 +415,90 @@ class BottomPlayerWidget extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    // --- Zeitanzeige rechts ---
+                    // const SizedBox(width: 4),
                     SizedBox(
-                      width: 64, // mehr Platz für lange Werte
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          rightTime,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: 'RobotoMono',
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                            color: theme.colorScheme.onSurface.withAlpha(160),
-                          ),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          softWrap: false,
-                          maxLines: 1,
+                      width: 85,
+                      child: Text(
+                        rightTime,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: theme.colorScheme.onSurface.withAlpha(140),
+                          fontFeatures: const [FontFeature.tabularFigures()],
                         ),
+                        textAlign: TextAlign.right,
                       ),
                     ),
                   ],
                 );
               },
             ),
-            Stack(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Die Button-Row bleibt exakt wie bisher
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Semantics(
-                      label: '10 Sekunden zurück',
-                      button: true,
-                      child: IconButton(
-                        icon: Icon(Icons.replay_10,
-                            color: theme.colorScheme.onSurface.withAlpha(140)),
-                        iconSize: 32,
-                        onPressed: () {
-                          final newPos = position - const Duration(seconds: 10);
-                          audioBloc.add(Seek(
-                              newPos > Duration.zero ? newPos : Duration.zero));
-                        },
-                        tooltip: '10 Sekunden zurück',
-                      ),
-                    ),
-                    const SizedBox(width: 32),
-                    Semantics(
-                      label: isPlaying ? 'Pause' : 'Wiedergabe starten',
-                      button: true,
-                      child: IconButton(
-                        key: const Key('player_play_pause_button'),
-                        icon: Icon(
-                          isPlaying
-                              ? Icons.pause_circle_filled
-                              : Icons.play_circle_fill,
-                          color: theme.colorScheme.onSurface.withAlpha(140),
-                          size: 56,
-                        ),
-                        iconSize: 56,
-                        onPressed: isPlayPauseButtonEnabled
-                            ? () {
-                                audioBloc.add(TogglePlayPause());
-                              }
-                            : null,
-                        tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
-                      ),
-                    ),
-                    const SizedBox(width: 32),
-                    Semantics(
-                      label: '10 Sekunden vor',
-                      button: true,
-                      child: IconButton(
-                        icon: Icon(Icons.forward_10,
-                            color: theme.colorScheme.onSurface.withAlpha(140)),
-                        iconSize: 32,
-                        onPressed: () {
-                          final newPos = position + const Duration(seconds: 10);
-                          audioBloc
-                              .add(Seek(newPos < duration ? newPos : duration));
-                        },
-                        tooltip: '10 Sekunden vor',
-                      ),
-                    ),
-                    if (onClose != null)
-                      Semantics(
-                        label: 'Player schließen',
-                        button: true,
-                        child: IconButton(
-                          icon: Icon(Icons.close,
-                              color:
-                                  theme.colorScheme.onSurface.withAlpha(140)),
-                          onPressed: onClose,
-                          tooltip: 'Player schließen',
-                        ),
-                      ),
-                  ],
-                ),
-                // Speaker-Icon und Slider als Overlay ganz rechts, auf gleicher Höhe
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: _VolumeSliderInline(),
+                Semantics(
+                  label: '10 Sekunden zurück',
+                  button: true,
+                  child: IconButton(
+                    icon: Icon(Icons.replay_10,
+                        color: theme.colorScheme.onSurface.withAlpha(140)),
+                    iconSize: 32,
+                    onPressed: () {
+                      final newPos = position - const Duration(seconds: 10);
+                      audioBloc.add(Seek(
+                          newPos > Duration.zero ? newPos : Duration.zero));
+                    },
+                    tooltip: '10 Sekunden zurück',
                   ),
                 ),
+                const SizedBox(width: 32),
+                Semantics(
+                  label: isPlaying ? 'Pause' : 'Wiedergabe starten',
+                  button: true,
+                  child: IconButton(
+                    key: const Key('player_play_pause_button'),
+                    icon: Icon(
+                      isPlaying
+                          ? Icons.pause_circle_filled
+                          : Icons.play_circle_fill,
+                      color: theme.colorScheme.onSurface.withAlpha(140),
+                      size: 56,
+                    ),
+                    iconSize: 56,
+                    onPressed: isPlayPauseButtonEnabled
+                        ? () {
+                            audioBloc.add(TogglePlayPause());
+                          }
+                        : null,
+                    tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
+                  ),
+                ),
+                const SizedBox(width: 32),
+                Semantics(
+                  label: '10 Sekunden vor',
+                  button: true,
+                  child: IconButton(
+                    icon: Icon(Icons.forward_10,
+                        color: theme.colorScheme.onSurface.withAlpha(140)),
+                    iconSize: 32,
+                    onPressed: () {
+                      final newPos = position + const Duration(seconds: 10);
+                      audioBloc
+                          .add(Seek(newPos < duration ? newPos : duration));
+                    },
+                    tooltip: '10 Sekunden vor',
+                  ),
+                ),
+                if (onClose != null)
+                  Semantics(
+                    label: 'Player schließen',
+                    button: true,
+                    child: IconButton(
+                      icon: Icon(Icons.close,
+                          color: theme.colorScheme.onSurface.withAlpha(140)),
+                      onPressed: onClose,
+                      tooltip: 'Player schließen',
+                    ),
+                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -546,97 +513,8 @@ class BottomPlayerWidget extends ConsumerWidget {
     final hours = (totalSeconds ~/ 3600);
     final minutes = ((totalSeconds % 3600) ~/ 60);
     final seconds = totalSeconds % 60;
-    if (hours > 0) {
-      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    } else {
-      return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-    }
-  }
-}
-
-// --- Widget für Lautstärke-Slider ---
-class _VolumeSliderInline extends ConsumerStatefulWidget {
-  const _VolumeSliderInline({Key? key}) : super(key: key);
-  @override
-  ConsumerState<_VolumeSliderInline> createState() =>
-      _VolumeSliderInlineState();
-}
-
-class _VolumeSliderInlineState extends ConsumerState<_VolumeSliderInline> {
-  bool _showSlider = false;
-  double? _lastVolume;
-  Timer? _hideTimer;
-
-  void _showTempSlider() {
-    setState(() => _showSlider = true);
-    _hideTimer?.cancel();
-    _hideTimer = Timer(const Duration(seconds: 2), () {
-      setState(() => _showSlider = false);
-    });
-  }
-
-  @override
-  void dispose() {
-    _hideTimer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final audioBloc = ref.watch(audioPlayerBlocProvider);
-    final backend = audioBloc.backend;
-    double volume = 0.5;
-    try {
-      volume = backend.volume;
-    } catch (_) {
-      volume = 0.5;
-    }
-    _lastVolume ??= volume;
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: [
-        IconButton(
-          icon: Icon(Icons.volume_up,
-              size: 22,
-              color: Theme.of(context).colorScheme.onSurface.withAlpha(140)),
-          tooltip: 'Lautstärke',
-          onPressed: _showTempSlider,
-        ),
-        if (_showSlider)
-          Positioned(
-            right: 0,
-            bottom: 36,
-            child: Transform.rotate(
-              angle: -1.5708, // -90 Grad in Radiant
-              child: Container(
-                width: 90,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(140),
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: Slider(
-                  value: _lastVolume!,
-                  min: 0.0,
-                  max: 1.0,
-                  divisions: 20,
-                  label: '${(_lastVolume! * 100).round()}%',
-                  onChanged: (v) {
-                    setState(() => _lastVolume = v);
-                    audioBloc.add(SetVolume(v));
-                    _showTempSlider(); // Timer reset
-                  },
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
+    return '${hours.toString()}h '
+        '${minutes.toString().padLeft(2, '0')}m '
+        '${seconds.toString().padLeft(2, '0')}s';
   }
 }
