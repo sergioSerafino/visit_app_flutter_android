@@ -11,7 +11,6 @@ Widget welcomeHeader(String hostName,
   return Container(
     // kein Hintergrund!
     child: RichText(
-      textAlign: TextAlign.start,
       text: TextSpan(
         style: TextStyle(
             fontSize: 24,

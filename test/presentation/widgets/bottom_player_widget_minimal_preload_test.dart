@@ -30,7 +30,7 @@ void main() {
       episodeUrl: 'https://audio/test.mp3',
       trackTimeMillis: 60000,
       episodeFileExtension: 'mp3',
-      releaseDate: DateTime(2024, 1, 1),
+      releaseDate: DateTime(2024, 1),
     );
     await tester.pumpWidget(
       ProviderScope(
@@ -38,12 +38,12 @@ void main() {
           audioPlayerStateProvider.overrideWith((ref) => controller.stream),
           currentEpisodeProvider.overrideWith((ref) => testEpisode),
         ],
-        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+        child: const MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
       ),
     );
     await tester.pump();
     // Paused-State mit position=0 (Preload-Overlay)
-    controller.add(Paused(Duration.zero, Duration(seconds: 60)));
+    controller.add(Paused(Duration.zero, const Duration(seconds: 60)));
     await tester.pump();
     await controller.close();
     await tester.pump();

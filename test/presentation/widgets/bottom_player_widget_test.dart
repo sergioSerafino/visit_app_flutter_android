@@ -60,7 +60,7 @@ void main() {
         episodeUrl: 'https://audio/test.mp3',
         trackTimeMillis: 60000,
         episodeFileExtension: 'mp3',
-        releaseDate: DateTime(2024, 1, 1),
+        releaseDate: DateTime(2024, 1),
       );
 
       await tester.pumpWidget(
@@ -83,7 +83,7 @@ void main() {
       await tester.tap(find.byIcon(Icons.play_circle_fill));
       await tester.pumpAndSettle();
       // Simuliere Playing-State mit echter Episode
-      bloc.emit(Playing(Duration(seconds: 0), Duration(seconds: 60)));
+      bloc.emit(Playing(const Duration(), const Duration(seconds: 60)));
       await tester.pumpAndSettle();
       expect(find.byIcon(Icons.pause_circle_filled), findsOneWidget);
       // Fehlerfall simulieren
@@ -129,14 +129,14 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
-        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+        child: const MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
       ),
     );
     // Initial: Idle
     expect(find.byIcon(Icons.play_circle_fill), findsOneWidget);
     expect(find.byIcon(Icons.pause_circle_filled), findsNothing);
     // Wechsel zu Playing
-    bloc.emit(Playing(Duration(seconds: 5), Duration(seconds: 60)));
+    bloc.emit(Playing(const Duration(seconds: 5), const Duration(seconds: 60)));
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.pause_circle_filled), findsOneWidget);
     expect(find.byIcon(Icons.play_circle_fill), findsNothing);
@@ -166,7 +166,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
-        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+        child: const MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
       ),
     );
     await tester.pumpAndSettle();
@@ -201,7 +201,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
-        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+        child: const MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
       ),
     );
     await tester.pumpAndSettle();

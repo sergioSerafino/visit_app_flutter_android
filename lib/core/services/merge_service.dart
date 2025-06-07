@@ -107,7 +107,6 @@ class MergeService {
       content: HostContent.empty(), // ggf. erweitern
       primaryGenreName: podcast.primaryGenreName,
       authTokenRequired: localData.authTokenRequired ?? false,
-      debugOnly: null,
       lastUpdated: DateTime.now(),
     );
 

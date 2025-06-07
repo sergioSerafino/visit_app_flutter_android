@@ -3,14 +3,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/onboarding_status_provider.dart';
-import 'package:empty_flutter_template/presentation/widgets/splash_cover_image.dart';
-import 'package:empty_flutter_template/presentation/pages/onboarding_page.dart';
-import 'package:empty_flutter_template/presentation/pages/home_page.dart';
-import 'package:empty_flutter_template/presentation/pages/landing_page.dart';
-import 'package:empty_flutter_template/core/utils/tenant_asset_loader.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/application/providers/podcast_provider.dart';
+import '../../application/providers/onboarding_status_provider.dart';
+import '../widgets/splash_cover_image.dart';
+import 'onboarding_page.dart';
+import 'home_page.dart';
+import 'landing_page.dart';
+import '../../core/utils/tenant_asset_loader.dart';
+import '../../application/providers/collection_provider.dart';
+import '../../application/providers/podcast_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
@@ -101,7 +101,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           children: [
             // Bild zentriert
             Align(
-              alignment: Alignment.center,
               child: SizedBox(
                 width: imageSize,
                 height: imageSize,

@@ -9,7 +9,7 @@ void main() {
     // Nicht verfügbar
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(body: CastAirPlayButton(isAvailable: false)),
+        home: Scaffold(body: CastAirPlayButton()),
       ),
     );
     expect(find.byIcon(Icons.cast), findsOneWidget);
@@ -22,7 +22,6 @@ void main() {
         home: Scaffold(
           body: CastAirPlayButton(
             isAvailable: true,
-            isConnected: false,
             onPressed: () {},
           ),
         ),

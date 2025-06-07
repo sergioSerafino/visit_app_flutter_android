@@ -21,7 +21,7 @@ void main() {
       when(() => backend.playerStateStream)
           .thenAnswer((_) => const Stream.empty());
       when(() => backend.position).thenReturn(Duration.zero);
-      when(() => backend.duration).thenReturn(Duration(seconds: 30));
+      when(() => backend.duration).thenReturn(const Duration(seconds: 30));
       when(() => backend.playing).thenReturn(true);
       when(() => backend.dispose()).thenReturn(null);
       when(() => backend.setUrl(any())).thenAnswer((_) async {});
@@ -41,7 +41,7 @@ void main() {
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
       bloc.add(PlayEpisode('https://audio/test.mp3'));
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       expect(states.first, isA<Loading>());
       expect(states.last, isA<Playing>());
       await sub.cancel();
@@ -51,9 +51,10 @@ void main() {
       final bloc = AudioPlayerBloc(backend: backend);
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
-      bloc.emit(Playing(Duration(seconds: 10), Duration(seconds: 30)));
+      bloc.emit(
+          Playing(const Duration(seconds: 10), const Duration(seconds: 30)));
       bloc.add(Pause());
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       expect(states.last, isA<Paused>());
       await sub.cancel();
     });
@@ -62,9 +63,10 @@ void main() {
       final bloc = AudioPlayerBloc(backend: backend);
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
-      bloc.emit(Playing(Duration(seconds: 5), Duration(seconds: 30)));
+      bloc.emit(
+          Playing(const Duration(seconds: 5), const Duration(seconds: 30)));
       bloc.add(Stop());
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       expect(states.last, isA<Idle>());
       await sub.cancel();
     });
@@ -72,11 +74,12 @@ void main() {
       when(() => backend.setVolume(any())).thenAnswer((_) async {});
       when(() => backend.volume).thenReturn(0.5);
       final bloc = AudioPlayerBloc(backend: backend);
-      bloc.emit(Playing(Duration(seconds: 5), Duration(seconds: 30)));
+      bloc.emit(
+          Playing(const Duration(seconds: 5), const Duration(seconds: 30)));
       final states = <AudioPlayerState>[];
       final sub = bloc.stream.listen(states.add);
       bloc.add(SetVolume(0.5));
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
       verify(() => backend.setVolume(0.5)).called(1);
       expect(states.last, isA<Playing>());
       await sub.cancel();

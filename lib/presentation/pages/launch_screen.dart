@@ -121,12 +121,11 @@ class _LaunchScreenState extends State<LaunchScreen>
       backgroundColor: Colors.white,
       body: AnimatedOpacity(
         opacity: _opacity,
-        duration: const Duration(milliseconds: 0),
+        duration: const Duration(),
         child: Stack(
           children: [
             // Hero-Splashbild zentriert
             Align(
-              alignment: Alignment.center,
               child: Hero(
                 tag: 'splashImage',
                 child: SizedBox(

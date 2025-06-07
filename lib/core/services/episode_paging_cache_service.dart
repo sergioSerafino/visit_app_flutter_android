@@ -11,7 +11,6 @@ class EpisodePagingCacheService {
   final _generic = GenericPagingCacheService<PodcastEpisode>(
     boxName: _boxName,
     fromJson: PodcastEpisode.fromJson,
-    defaultTtl: defaultTtl,
   );
 
   Future<void> savePage(

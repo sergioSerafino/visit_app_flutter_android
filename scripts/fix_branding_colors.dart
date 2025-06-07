@@ -27,7 +27,8 @@ void main() async {
         !_isValidHex(sec)) {
       branding['secondaryColorHex'] = placeholderSecondary;
       json['branding'] = branding;
-      await file.writeAsString(JsonEncoder.withIndent('  ').convert(json));
+      await file
+          .writeAsString(const JsonEncoder.withIndent('  ').convert(json));
       print(
           '✔️  secondaryColorHex in ${file.path} gesetzt auf $placeholderSecondary');
       fixed++;

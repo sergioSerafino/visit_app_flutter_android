@@ -165,7 +165,6 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
                           // Cover-Bild zentriert
                           Align(
-                            alignment: Alignment.center,
                             child: Container(
                               margin: const EdgeInsets.only(
                                 top: 32,
@@ -185,7 +184,6 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               child: CoverImageWidget(
                                 imageUrl: widget.episode.artworkUrl600,
                                 scaleFactor: 0.5,
-                                showLabel: false,
                               ),
                             ),
                           ),

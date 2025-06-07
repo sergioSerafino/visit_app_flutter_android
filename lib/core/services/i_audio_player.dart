@@ -8,6 +8,7 @@ abstract class IAudioPlayerBackend {
   // --- NEU: Speed Control ---
   Future<void> setSpeed(double speed);
   double get speed;
+  Stream<double> get speedStream;
   // --- NEU: Lautstärke-Kontrolle ---
   Future<void> setVolume(double volume);
   double get volume;

@@ -6,7 +6,7 @@
 // Hinweise: Testdaten, Fallback-Logik und Performance beachten.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import 'collection_provider.dart';
 import '../../core/services/episode_paging_cache_service.dart';
 import '../../domain/models/podcast_episode_model.dart';
 
@@ -30,7 +30,6 @@ class EpisodePagingState {
         currentPage: 0,
         isLoading: false,
         hasMore: true,
-        error: null,
       );
 
   EpisodePagingState copyWith({
@@ -74,7 +73,7 @@ class EpisodePagingNotifier extends StateNotifier<EpisodePagingState> {
     Future<List<PodcastEpisode>> Function(int page, int pageSize) fetchPage,
   ) async {
     if (state.isLoading) return;
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
     try {
       List<PodcastEpisode>? episodes;
       if (await cacheService.isPageFresh(collectionId, pageIndex)) {
@@ -101,7 +100,6 @@ class EpisodePagingNotifier extends StateNotifier<EpisodePagingState> {
         currentPage: pageIndex,
         isLoading: false,
         hasMore: episodes.length == pageSize,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());

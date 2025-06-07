@@ -27,7 +27,7 @@ void main() {
       final mockRss = MockRssService();
       final mockPlaceholder = MockPlaceholderLoaderService();
       when(mockPlaceholder.loadLocalJsonData(1590516386)).thenAnswer(
-        (_) async => LocalJsonData(
+        (_) async => const LocalJsonData(
           collectionId: 1590516386,
           title: 'Opalia Talk',
           description: 'Der Podcast rund um Opalia',
@@ -69,7 +69,7 @@ void main() {
         ),
       );
       when(mockRss.fetchRssData(any)).thenAnswer(
-        (_) async => RssData(
+        (_) async => const RssData(
           title: 'Opalia Talk',
           description: 'Podcast rund um Opalia',
           imageUrl: 'https://example.com/logo_opalia.png',

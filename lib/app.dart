@@ -38,17 +38,14 @@ class _PodcastAppState extends ConsumerState<PodcastApp> {
     // 2.  Persistierte collectionId laden (warten, bis geladen)
     await ref.read(collectionIdProvider.notifier).load();
     final initialCollectionId = ref.read(collectionIdProvider);
-    logDebug(
-        '[DEBUG] AppStart: collectionId = ' + initialCollectionId.toString(),
+    logDebug('[DEBUG] AppStart: collectionId = $initialCollectionId',
         tag: LogTag.ui);
     try {
       final initialHost = await TenantLoaderService.loadHostModel(
           initialCollectionId.toString());
-      logDebug('[DEBUG] AppStart: loaded HostModel = ' + initialHost.toString(),
+      logDebug('[DEBUG] AppStart: loaded HostModel = $initialHost',
           tag: LogTag.ui);
-      logDebug(
-          '[DEBUG] AppStart: loaded Branding = ' +
-              initialHost.branding.toString(),
+      logDebug('[DEBUG] AppStart: loaded Branding = ${initialHost.branding}',
           tag: LogTag.ui);
       ref
           .read(theme_prov.brandingProvider.notifier)
@@ -122,10 +119,7 @@ class _BrandingListenerState extends ConsumerState<_BrandingListener> {
       final host =
           await TenantLoaderService.loadHostModel(collectionId.toString());
       logDebug(
-          'HostModel geladen: \nHostName: ' +
-              host.hostName +
-              '\nBranding: ' +
-              host.branding.toString(),
+          'HostModel geladen: \nHostName: ${host.hostName}\nBranding: ${host.branding}',
           tag: LogTag.ui);
       ref.read(theme_prov.brandingProvider.notifier).setBranding(host.branding);
       ref.read(hostModelProvider.notifier).state = host;

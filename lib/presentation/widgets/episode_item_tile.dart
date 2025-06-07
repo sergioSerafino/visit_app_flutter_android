@@ -20,7 +20,6 @@ class EpisodeItemTile extends StatelessWidget {
           border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Cover-Bild
             ClipRRect(
@@ -126,7 +125,7 @@ class EpisodeItemTile extends StatelessWidget {
     return Container(
       width: 85,
       height: 85,
-      color: theme.colorScheme.surfaceVariant,
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Icon(Icons.music_note,
           size: 50, color: theme.colorScheme.primary.withAlpha(180)),
     );

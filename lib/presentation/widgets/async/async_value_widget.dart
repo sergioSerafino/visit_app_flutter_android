@@ -9,12 +9,12 @@ import 'async_ui_helper.dart';
 
 class AsyncValueWidget<T> extends StatelessWidget {
   const AsyncValueWidget({
-    Key? key,
+    super.key,
     required this.value,
     required this.data,
     this.loading,
     this.error,
-  }) : super(key: key);
+  });
 
   final AsyncValue<T> value;
 

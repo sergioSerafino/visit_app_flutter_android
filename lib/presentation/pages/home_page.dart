@@ -2,15 +2,15 @@
 // /presentation/pages/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/application/providers/podcast_provider.dart';
-import 'package:empty_flutter_template/application/providers/theme_provider.dart';
-import 'package:empty_flutter_template/presentation/widgets/home_header.dart';
-import 'package:empty_flutter_template/presentation/pages/podcast_page.dart';
-import 'package:empty_flutter_template/presentation/pages/hosts_page.dart';
-import 'package:empty_flutter_template/presentation/pages/preferences_page.dart';
-import 'package:empty_flutter_template/config/app_routes.dart';
-import 'package:empty_flutter_template/core/messaging/snackbar_manager.dart';
+import '../../application/providers/collection_provider.dart';
+import '../../application/providers/podcast_provider.dart';
+import '../../application/providers/theme_provider.dart';
+import '../widgets/home_header.dart';
+import 'podcast_page.dart';
+import 'hosts_page.dart';
+import 'preferences_page.dart';
+import '../../config/app_routes.dart';
+import '../../core/messaging/snackbar_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -119,7 +119,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         IconThemeData(color: theme.colorScheme.onPrimary),
                   ),
                   child: PopupMenuButton<String>(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.menu,
                       color: Colors.white,
                     ),
@@ -141,7 +141,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       }
                     },
                     itemBuilder: (BuildContext context) => [
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: "Über",
                         child: Row(
                           children: [
@@ -159,7 +159,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
                       ),
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: "Einstellungen",
                         child: Row(
                           children: [
@@ -177,7 +177,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
                       ),
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         value: "Über",
                         child: Row(
                           children: [

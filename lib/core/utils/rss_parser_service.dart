@@ -123,9 +123,7 @@ class RssParserService {
       for (final part in parts) {
         current = current?.findElements(part).firstOrNull;
       }
-      return current != null
-          ? current.text.trim()
-          : null; // Nullprüfung hinzugefügt
+      return current?.text.trim(); // Nullprüfung hinzugefügt
     } catch (_) {
       return null;
     }

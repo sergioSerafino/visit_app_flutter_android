@@ -6,10 +6,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/config/app_theme_mapper.dart';
-import 'package:empty_flutter_template/domain/models/branding_model.dart';
-import 'package:empty_flutter_template/config/tenant_branding_service.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import '../../config/app_theme_mapper.dart';
+import '../../domain/models/branding_model.dart';
+import '../../config/tenant_branding_service.dart';
+import 'collection_provider.dart';
 
 // final brandingProvider = StateProvider<Branding?>((ref) => null);
 
@@ -23,8 +23,7 @@ class BrandingNotifier extends StateNotifier<Branding> {
 
   /// Optionale Methode, um Branding manuell zu ändern
   void setBranding(Branding newBranding) {
-    debugPrint(
-        '[DEBUG] BrandingNotifier.setBranding: ' + newBranding.toString());
+    debugPrint('[DEBUG] BrandingNotifier.setBranding: $newBranding');
     state = newBranding;
   }
 

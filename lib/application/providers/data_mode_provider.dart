@@ -2,11 +2,9 @@
 // - dataSourceProvider - toggleDataSource() : API oder Mock
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/theme_provider.dart'
-    as theme_prov;
-import 'package:empty_flutter_template/application/providers/collection_provider.dart'
-    as collection_prov;
-import 'package:empty_flutter_template/application/providers/feature_flags_provider.dart';
+import 'theme_provider.dart' as theme_prov;
+import 'collection_provider.dart' as collection_prov;
+import 'feature_flags_provider.dart';
 import '../../domain/enums/repository_source_type.dart';
 import '../controllers/should_load_controller.dart';
 import 'podcast_provider.dart';

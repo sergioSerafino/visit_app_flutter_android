@@ -34,7 +34,7 @@ void main() {
         ownerEmail: rssMeta.contactEmail,
       );
       // Simuliere LocalJsonData
-      final localData = LocalJsonData(
+      final localData = const LocalJsonData(
         collectionId: 1590516386,
         title: 'Opalia Talk',
         description: 'Beschreibung aus LocalJson',

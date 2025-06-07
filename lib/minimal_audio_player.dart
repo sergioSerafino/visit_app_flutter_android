@@ -3,7 +3,7 @@ import 'package:just_audio/just_audio.dart';
 
 /// Minimaler Audio-Player für einen einzelnen Stream (ohne Bloc, ohne Riverpod)
 class MinimalAudioPlayerPage extends StatefulWidget {
-  const MinimalAudioPlayerPage({Key? key}) : super(key: key);
+  const MinimalAudioPlayerPage({super.key});
 
   @override
   State<MinimalAudioPlayerPage> createState() => _MinimalAudioPlayerPageState();

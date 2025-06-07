@@ -1,8 +1,8 @@
 // PodcastCollection Model
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
-import 'package:empty_flutter_template/domain/models/podcast_model.dart';
+import 'podcast_episode_model.dart';
+import 'podcast_model.dart';
 
 part 'podcast_collection_model.freezed.dart';
 part 'podcast_collection_model.g.dart';

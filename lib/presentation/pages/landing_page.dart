@@ -3,16 +3,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/application/providers/onboarding_status_provider.dart';
-import 'package:empty_flutter_template/application/providers/podcast_provider.dart';
-import 'package:empty_flutter_template/config/app_routes.dart';
-import 'package:empty_flutter_template/presentation/pages/preferences_page.dart';
-import 'package:empty_flutter_template/presentation/widgets/button_icon_navigation.dart';
-import 'package:empty_flutter_template/presentation/widgets/cover_image_widget.dart';
-import 'package:empty_flutter_template/presentation/widgets/welcome_header.dart';
-import 'package:empty_flutter_template/core/messaging/snackbar_manager.dart';
-import 'package:empty_flutter_template/domain/common/api_response.dart';
+import '../../application/providers/collection_provider.dart';
+import '../../application/providers/onboarding_status_provider.dart';
+import '../../application/providers/podcast_provider.dart';
+import '../../config/app_routes.dart';
+import 'preferences_page.dart';
+import '../widgets/button_icon_navigation.dart';
+import '../widgets/cover_image_widget.dart';
+import '../widgets/welcome_header.dart';
+import '../../core/messaging/snackbar_manager.dart';
+import '../../domain/common/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
@@ -66,7 +66,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            padding: const EdgeInsets.symmetric(vertical: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -105,7 +105,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       final podcast = collection.podcasts.firstOrNull;
                       return Center(
                         child: CoverImageWidget(
-                          scaleFactor: 0.95,
                           showLabel: false,
                           imageUrl: podcast?.artworkUrl600 ?? "",
                         ),

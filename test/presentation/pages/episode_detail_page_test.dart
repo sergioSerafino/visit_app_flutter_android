@@ -40,7 +40,8 @@ void main() {
       when(() => backend.dispose()).thenReturn(null);
       final bloc = AudioPlayerBloc(backend: backend);
       // Simuliere Playing-State explizit
-      bloc.emit(Playing(Duration(seconds: 10), Duration(seconds: 60)));
+      bloc.emit(
+          Playing(const Duration(seconds: 10), const Duration(seconds: 60)));
 
       final episode = PodcastEpisode(
         wrapperType: 'episode',
@@ -60,7 +61,8 @@ void main() {
             audioPlayerBlocProvider.overrideWithValue(bloc),
             audioPlayerStateProvider.overrideWith(
               (ref) => Stream.value(
-                Playing(Duration(seconds: 10), Duration(seconds: 60)),
+                Playing(
+                    const Duration(seconds: 10), const Duration(seconds: 60)),
               ),
             ),
           ],

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:empty_flutter_template/application/providers/collection_provider.dart';
 import 'package:empty_flutter_template/application/providers/theme_provider.dart'
     as theme_prov;
-import 'package:mockito/mockito.dart';
 import 'package:empty_flutter_template/core/services/collection_id_storage.dart';
 
 class FakeCollectionIdStorage extends CollectionIdStorage {

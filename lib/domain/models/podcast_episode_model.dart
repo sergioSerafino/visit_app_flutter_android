@@ -40,10 +40,6 @@ class PodcastEpisode with _$PodcastEpisode {
       episodeFileExtension: json['episodeFileExtension'] ?? 'mp3',
       releaseDate:
           DateTime.tryParse(json['releaseDate'] ?? '') ?? DateTime.now(),
-
-      // Lokale Felder sind beim API-Mapping natürlich leer
-      downloadedAt: null, // später befüllen
-      localId: null, // später befüllen
     );
   }
 
@@ -54,6 +50,7 @@ class PodcastEpisode with _$PodcastEpisode {
     return 0;
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'wrapperType': wrapperType,

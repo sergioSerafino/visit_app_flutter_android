@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/enums/collection_load_state.dart';
 import '../controllers/collection_load_controller.dart';
 import '../../core/placeholders/placeholder_content.dart';
-import 'package:hive/hive.dart';
 import '../../core/services/collection_id_storage.dart';
 import '../../domain/models/host_model.dart';
 

@@ -35,7 +35,7 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       observers: [ProviderLogger()],
-      child: PodcastApp(),
+      child: const PodcastApp(),
     ),
   );
 }

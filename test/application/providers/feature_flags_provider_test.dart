@@ -35,7 +35,7 @@ class TestCollectionIdStorage implements CollectionIdStorage {
 }
 
 class TestCollectionIdNotifier extends CollectionIdNotifier {
-  TestCollectionIdNotifier(CollectionIdStorage storage) : super(storage) {
+  TestCollectionIdNotifier(super.storage) {
     state = 123;
   }
 }
@@ -69,7 +69,7 @@ void main() {
     });
     test('Lädt Flags aus Cache, wenn frisch', () async {
       final fakeCache = FakeCacheService();
-      final testFlags = FeatureFlags(showPortfolioTab: true);
+      final testFlags = const FeatureFlags(showPortfolioTab: true);
       fakeCache.setFresh(true);
       fakeCache.setFlags(testFlags);
       final testStorage = TestCollectionIdStorage();
@@ -93,7 +93,7 @@ void main() {
           completer.complete();
         }
       }, fireImmediately: true);
-      await completer.future.timeout(Duration(seconds: 1));
+      await completer.future.timeout(const Duration(seconds: 1));
       expect(latestFlags.showPortfolioTab, true);
       sub.close();
     });

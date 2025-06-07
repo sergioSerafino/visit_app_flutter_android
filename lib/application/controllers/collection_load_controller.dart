@@ -8,7 +8,7 @@
 // Weitere Hinweise: Die Architektur erlaubt flexible Erweiterung um weitere Ladezustände und Fehlerbehandlung und unterstützt Clean-Architektur-Prinzipien. Siehe ADR-003 für Teststrategie und Lessons Learned.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/domain/enums/collection_load_state.dart';
+import '../../domain/enums/collection_load_state.dart';
 
 class CollectionLoadController extends StateNotifier<CollectionLoadState> {
   CollectionLoadController(this.ref) : super(CollectionLoadState.initial);

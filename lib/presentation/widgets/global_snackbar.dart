@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/theme_provider.dart'
-    as theme_prov;
-import 'package:empty_flutter_template/core/messaging/snackbar_event.dart';
-import 'package:empty_flutter_template/core/messaging/snackbar_manager.dart';
-import 'package:empty_flutter_template/domain/models/branding_model.dart';
+import '../../application/providers/theme_provider.dart' as theme_prov;
+import '../../core/messaging/snackbar_event.dart';
+import '../../core/messaging/snackbar_manager.dart';
+import '../../domain/models/branding_model.dart';
 
 // Zeigt Snackbars aus zentralem Stream/Notifier
 // UI-Komponente, evtl. als „GlobalLayer“ oder über app.dart
@@ -28,7 +27,6 @@ class GlobalSnackbarListener extends ConsumerWidget {
             messenger.showSnackBar(
               SnackBar(
                 content: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Immer ein Icon/Emoji-Container links anzeigen (mit Fallback)
                     Padding(

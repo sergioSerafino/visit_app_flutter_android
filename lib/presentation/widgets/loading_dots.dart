@@ -6,10 +6,10 @@ class LoadingDots extends StatefulWidget {
   final Duration duration;
   final Color color;
   const LoadingDots({
-    Key? key,
+    super.key,
     this.duration = const Duration(milliseconds: 300),
     this.color = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   State<LoadingDots> createState() => _LoadingDotsState();

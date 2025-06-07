@@ -15,7 +15,7 @@ class ButtonIconNavigation extends StatelessWidget {
   final Color? color;
 
   const ButtonIconNavigation({
-    Key? key,
+    super.key,
     this.icon,
     this.customIcon,
     required this.label,
@@ -25,7 +25,7 @@ class ButtonIconNavigation extends StatelessWidget {
     this.iconPosition = IconPosition.left,
     this.alignment = MainAxisAlignment.center,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,10 @@ class ButtonIconNavigation extends StatelessWidget {
     );
 
     Widget? leadingIcon;
-    if (icon != null)
+    if (icon != null) {
       leadingIcon = Icon(icon,
           size: 20, color: Colors.white); // Icon immer weiß überschreiben
+    }
     if (customIcon != null) leadingIcon = customIcon;
 
     List<Widget> children;

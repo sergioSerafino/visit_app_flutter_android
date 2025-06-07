@@ -20,11 +20,8 @@ class Branding with _$Branding {
 
   static Branding empty() {
     return const Branding(
-      primaryColorHex: null,
       secondaryColorHex: null,
-      headerImageUrl: null,
       themeMode: "system",
-      logoUrl: null,
     );
   }
 }

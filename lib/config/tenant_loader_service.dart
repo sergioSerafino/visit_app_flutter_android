@@ -16,12 +16,10 @@ class TenantLoaderService {
         'lib/tenants/$tenant/host_model.json',
       );
       final host = Host.fromJson(jsonDecode(json));
-      logDebug(
-          '[DEBUG] TenantLoaderService: HostModel geladen: ' + host.toString(),
+      logDebug('[DEBUG] TenantLoaderService: HostModel geladen: $host',
           tag: LogTag.ui);
       logDebug(
-          '[DEBUG] TenantLoaderService: Branding geladen: ' +
-              host.branding.toString(),
+          '[DEBUG] TenantLoaderService: Branding geladen: ${host.branding}',
           tag: LogTag.ui);
       return host;
     } catch (_) {
@@ -32,13 +30,10 @@ class TenantLoaderService {
         'lib/tenants/common/host_model.json',
       );
       final host = Host.fromJson(jsonDecode(fallback));
-      logDebug(
-          '[DEBUG] TenantLoaderService: Fallback-HostModel geladen: ' +
-              host.toString(),
+      logDebug('[DEBUG] TenantLoaderService: Fallback-HostModel geladen: $host',
           tag: LogTag.ui);
       logDebug(
-          '[DEBUG] TenantLoaderService: Fallback-Branding geladen: ' +
-              host.branding.toString(),
+          '[DEBUG] TenantLoaderService: Fallback-Branding geladen: ${host.branding}',
           tag: LogTag.ui);
       return host;
     }

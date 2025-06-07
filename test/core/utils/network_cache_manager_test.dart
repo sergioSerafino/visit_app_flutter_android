@@ -21,12 +21,13 @@ void main() {
       const resourceKey = 'test_resource';
       when(
         mockStorage.get(resourceKey),
-      ).thenAnswer((_) async => DateTime.now().subtract(Duration(days: 2)));
+      ).thenAnswer(
+          (_) async => DateTime.now().subtract(const Duration(days: 2)));
 
       // Act
       final isExpired = await cacheManager.isResourceExpired(
         resourceKey,
-        Duration(days: 1),
+        const Duration(days: 1),
       );
 
       // Assert

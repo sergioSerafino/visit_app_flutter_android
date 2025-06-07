@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/core/messaging/snackbar_manager.dart';
+import '../../core/messaging/snackbar_manager.dart';
 
 class DemoSnackbarButton extends ConsumerWidget {
   const DemoSnackbarButton({super.key});

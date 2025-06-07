@@ -12,7 +12,7 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
 
   Future<void> _init() async {
     final session = await AudioSession.instance;
-    await session.configure(AudioSessionConfiguration.speech());
+    await session.configure(const AudioSessionConfiguration.speech());
     // Streams und Status-Weiterleitung (z.B. playbackState) hier einrichten
   }
 
@@ -43,9 +43,9 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   @override
   Future<void> setRepeatMode(AudioServiceRepeatMode mode) {
     LoopMode loopMode;
-    if (mode == AudioServiceRepeatMode.one)
+    if (mode == AudioServiceRepeatMode.one) {
       loopMode = LoopMode.one;
-    else if (mode == AudioServiceRepeatMode.all)
+    } else if (mode == AudioServiceRepeatMode.all)
       loopMode = LoopMode.all;
     else
       loopMode = LoopMode.off;

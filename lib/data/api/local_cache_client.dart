@@ -7,7 +7,6 @@
 
 import 'dart:convert';
 import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/podcast_collection_model.dart';
 import '../../domain/models/podcast_episode_model.dart';

@@ -45,7 +45,6 @@ class PlaceholderContent {
           },
         ),
         content: const HostContent(bio: "", mission: "", rss: "", links: []),
-        authTokenRequired: false,
         debugOnly: true,
         lastUpdated: DateTime.now(),
       );

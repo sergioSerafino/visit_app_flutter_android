@@ -19,7 +19,7 @@ final podcastRepositoryProvider = Provider<PodcastRepository>((ref) {
 
   return mode == RepositorySourceType.api
       ? ApiPodcastRepository(apiClient: apiClient, cacheClient: cacheClient)
-      : MockPodcastRepository(fakeDelay: const Duration(milliseconds: 0));
+      : MockPodcastRepository(fakeDelay: const Duration());
 });
 
 // Die folgenden Imports wurden entfernt, da sie aktuell nicht genutzt werden:

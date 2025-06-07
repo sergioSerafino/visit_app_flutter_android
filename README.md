@@ -353,6 +353,46 @@ Siehe auch: [docs/audio_player_best_practices_2025.md](docs/audio_player_best_pr
 
 ---
 
+## Synchronisation von just_audio-Backend und Flutter-UI (Speed/Volume)
+
+**Problem:**
+- Die nativen Streams von just_audio (z.B. speedStream, volumeStream) liefern nicht auf allen Plattformen oder in allen Versionen zuverlässig Events.
+- Die Flutter-UI (Dropdown, Slider etc.) muss aber immer sofort und reaktiv den aktuellen Wert anzeigen, auch wenn dieser asynchron oder verzögert gesetzt wird.
+
+**Lösung (Best Practice):**
+- Nach jedem erfolgreichen Setzen eines Wertes (z.B. setSpeed, setVolume) wird der aktuelle Wert explizit in einen eigenen StreamController gepusht (z.B. _speedController.add(_speed)).
+- Die UI (z.B. per StreamBuilder) hört auf diesen Stream und erhält so IMMER ein Event, auch wenn just_audio intern keinen Stream-Event liefert.
+- Das gilt analog für Lautstärke (volume):
+  - Nach setVolume() -> _volumeController.add(_volume)
+
+**Lessons Learned:**
+- Verlasse dich nicht ausschließlich auf die nativen Streams von just_audio, sondern ergänze eigene Streams für alle UI-relevanten Werte.
+- So bleibt die UI immer synchron mit dem Backend, unabhängig von Plattform, Player-Status oder Race-Conditions.
+
+**Beispiel für Speed:**
+```dart
+Future<void> setSpeed(double speed) async {
+  await _audioPlayer.setSpeed(speed);
+  _speed = speed;
+  _speedController.add(_speed); // Manuelles Event für die UI
+}
+```
+**Beispiel für Volume (analog umsetzen!):**
+```dart
+Future<void> setVolume(double volume) async {
+  await _audioPlayer.setVolume(volume);
+  _volume = volume;
+  _volumeController.add(_volume); // Manuelles Event für die UI
+}
+```
+
+**Siehe auch:**
+- bottom_player_speed_dropdown.dart
+- Volume-Fader-Widget
+- Doku-Kommentare in lib/core/services/audio_player_bloc.dart
+
+---
+
 ## Archivierte/Legacy-Dokumentation
 
 Die Inhalte aus `docs/legacy/` wurden in diese zentrale Dokumentation übernommen:

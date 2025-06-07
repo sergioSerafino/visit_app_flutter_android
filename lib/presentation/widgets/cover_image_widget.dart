@@ -10,12 +10,12 @@ class CoverImageWidget extends StatelessWidget {
   final bool showLabel;
 
   const CoverImageWidget({
-    Key? key,
+    super.key,
     this.imageUrl,
     this.assetPath,
     this.scaleFactor = 0.95,
     this.showLabel = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +84,8 @@ class CoverImageWidget extends StatelessWidget {
                   color: Colors.grey[300], //theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   fontSize: iconSize * 0.25,
-                  shadows: [
-                    const Shadow(
+                  shadows: const [
+                    Shadow(
                       blurRadius: 4,
                       color: Colors.black45,
                       offset: Offset(1, 1),

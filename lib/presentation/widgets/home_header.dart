@@ -11,14 +11,13 @@ Widget homeHeader(String hostName,
   return Container(
     color: backgroundColor ?? theme?.colorScheme.primary,
     child: RichText(
-      textAlign: TextAlign.start,
       text: TextSpan(
         style: TextStyle(
             fontSize: 24, color: textColor ?? theme?.colorScheme.onPrimary),
         children: [
           const TextSpan(text: 'Visit'),
           TextSpan(
-            text: "\n" + formattedHost,
+            text: "\n$formattedHost",
             style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

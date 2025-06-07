@@ -56,7 +56,8 @@ class BottomPlayerProgressBar extends StatelessWidget {
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 activeTrackColor: theme.colorScheme.primary.withAlpha(140),
-                inactiveTrackColor: theme.colorScheme.surfaceContainerHighest.withAlpha(140),
+                inactiveTrackColor:
+                    theme.colorScheme.surfaceContainerHighest.withAlpha(140),
                 thumbColor: theme.colorScheme.primary.withAlpha(180),
                 overlayColor: theme.colorScheme.primary.withAlpha(32),
                 trackHeight: 14,

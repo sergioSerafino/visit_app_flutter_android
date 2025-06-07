@@ -53,7 +53,6 @@ class RssService {
       localization: const LocalizationConfig(),
       content: const HostContent(),
       primaryGenreName: primaryGenreName as String?,
-      authTokenRequired: false,
       debugOnly: false,
       lastUpdated: DateTime.now(),
     );

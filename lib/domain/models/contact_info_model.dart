@@ -18,9 +18,7 @@ class ContactInfo with _$ContactInfo {
 
   static ContactInfo empty() {
     return const ContactInfo(
-      email: null,
       websiteUrl: null,
-      impressumUrl: null,
       socialLinks: {},
     );
   }

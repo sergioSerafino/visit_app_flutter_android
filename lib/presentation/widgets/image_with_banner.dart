@@ -49,7 +49,7 @@ class ImageWithBanner extends StatelessWidget {
               ),
               child: Text(
                 label.toUpperCase(), // Automatisch in Capslock
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   // color: theme.colorScheme.onSurface,
                   fontSize: 10,

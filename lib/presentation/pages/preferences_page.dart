@@ -36,11 +36,11 @@ class PreferencesBottomSheet extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.settings,
-                          color: const Color.fromARGB(180, 0, 0, 0),
+                          color: Color.fromARGB(180, 0, 0, 0),
                           size: 28,
                         ),
                       ),
@@ -93,7 +93,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   Container(
                     height: 1,
                     color: Theme.of(context).dividerColor,
-                    margin: const EdgeInsets.symmetric(vertical: 0),
+                    margin: const EdgeInsets.symmetric(),
                   ),
                   const SizedBox(height: 8),
                   ListTile(
@@ -124,7 +124,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   Container(
                     height: 1,
                     color: Theme.of(context).dividerColor,
-                    margin: const EdgeInsets.symmetric(vertical: 0),
+                    margin: const EdgeInsets.symmetric(),
                   ),
                   const SizedBox(height: 8),
                   ListTile(
@@ -143,7 +143,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   Container(
                     height: 1,
                     color: Theme.of(context).dividerColor,
-                    margin: const EdgeInsets.symmetric(vertical: 0),
+                    margin: const EdgeInsets.symmetric(),
                   ),
                   const SizedBox(height: 8),
                   ListTile(
@@ -179,7 +179,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                   Container(
                     height: 1,
                     color: Theme.of(context).dividerColor,
-                    margin: const EdgeInsets.symmetric(vertical: 0),
+                    margin: const EdgeInsets.symmetric(),
                   ),
                   const SizedBox(height: 8),
 
@@ -290,8 +290,9 @@ class PreferencesBottomSheet extends ConsumerWidget {
                           keyboardType: TextInputType.number,
                           validator: (text) {
                             if (text.isEmpty) return "Bitte gib eine ID ein";
-                            if (int.tryParse(text) == null)
+                            if (int.tryParse(text) == null) {
                               return "Nur Zahlen erlaubt";
+                            }
                             return null;
                           },
                           initialValue:
@@ -321,7 +322,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
   }
 }
 
-toggleDataSource(WidgetRef ref) {
+void toggleDataSource(WidgetRef ref) {
   final isApiMode = ref.read(dataSourceProvider) == RepositorySourceType.api;
   ref.read(dataSourceProvider.notifier).state =
       isApiMode ? RepositorySourceType.local : RepositorySourceType.api;

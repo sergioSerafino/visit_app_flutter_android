@@ -25,7 +25,7 @@ void main() {
     when(() => backend.durationStream).thenAnswer((_) => const Stream.empty());
     when(() => backend.playerStateStream)
         .thenAnswer((_) => const Stream.empty());
-    when(() => backend.position).thenReturn(const Duration(seconds: 0));
+    when(() => backend.position).thenReturn(const Duration());
     when(() => backend.duration).thenReturn(const Duration(seconds: 60));
     when(() => backend.playing).thenReturn(false);
     when(() => backend.seek(any<Duration>())).thenAnswer((_) async {});

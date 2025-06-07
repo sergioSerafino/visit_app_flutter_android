@@ -1,8 +1,8 @@
 // lib/presentation/widgets/splash_cover_image.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/core/utils/tenant_asset_loader.dart';
+import '../../application/providers/collection_provider.dart';
+import '../../core/utils/tenant_asset_loader.dart';
 
 class SplashCoverImage extends ConsumerStatefulWidget {
   final String? imageUrl;
@@ -13,14 +13,14 @@ class SplashCoverImage extends ConsumerStatefulWidget {
   final bool forceAssetPath;
 
   const SplashCoverImage({
-    Key? key,
+    super.key,
     this.imageUrl,
     this.assetPath,
     this.duration = const Duration(milliseconds: 1200),
     this.scaleFactor = 0.5,
     this.showLabel = false,
     this.forceAssetPath = false,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<SplashCoverImage> createState() => _SplashCoverImageState();

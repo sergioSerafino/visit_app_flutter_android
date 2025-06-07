@@ -41,7 +41,6 @@ class Host with _$Host {
       localization: LocalizationConfig.empty(),
       content: HostContent.empty(),
       primaryGenreName: '',
-      authTokenRequired: false,
       debugOnly: false,
       lastUpdated: DateTime.now(),
     );
