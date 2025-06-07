@@ -25,6 +25,7 @@
 // MIGRATION-HINWEIS: Diese Datei wurde aus storage_hold/lib/presentation/widgets/bottom_player_widget.dart übernommen und refaktoriert.
 // Tooltips, Button-Layout und zentrale Play/Pause-Logik wurden konsolidiert. Siehe Migrationsmatrix und Review-Checkliste.
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marquee/marquee.dart';
@@ -435,70 +436,91 @@ class BottomPlayerWidget extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Semantics(
-                  label: '10 Sekunden zurück',
-                  button: true,
-                  child: IconButton(
-                    icon: Icon(Icons.replay_10,
-                        color: theme.colorScheme.onSurface.withAlpha(140)),
-                    iconSize: 32,
-                    onPressed: () {
-                      final newPos = position - const Duration(seconds: 10);
-                      audioBloc.add(Seek(
-                          newPos > Duration.zero ? newPos : Duration.zero));
-                    },
-                    tooltip: '10 Sekunden zurück',
-                  ),
-                ),
-                const SizedBox(width: 32),
-                Semantics(
-                  label: isPlaying ? 'Pause' : 'Wiedergabe starten',
-                  button: true,
-                  child: IconButton(
-                    key: const Key('player_play_pause_button'),
-                    icon: Icon(
-                      isPlaying
-                          ? Icons.pause_circle_filled
-                          : Icons.play_circle_fill,
-                      color: theme.colorScheme.onSurface.withAlpha(140),
-                      size: 56,
-                    ),
-                    iconSize: 56,
-                    onPressed: isPlayPauseButtonEnabled
-                        ? () {
-                            audioBloc.add(TogglePlayPause());
-                          }
-                        : null,
-                    tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
-                  ),
-                ),
-                const SizedBox(width: 32),
-                Semantics(
-                  label: '10 Sekunden vor',
-                  button: true,
-                  child: IconButton(
-                    icon: Icon(Icons.forward_10,
-                        color: theme.colorScheme.onSurface.withAlpha(140)),
-                    iconSize: 32,
-                    onPressed: () {
-                      final newPos = position + const Duration(seconds: 10);
-                      audioBloc
-                          .add(Seek(newPos < duration ? newPos : duration));
-                    },
-                    tooltip: '10 Sekunden vor',
-                  ),
-                ),
-                if (onClose != null)
-                  Semantics(
-                    label: 'Player schließen',
-                    button: true,
-                    child: IconButton(
-                      icon: Icon(Icons.close,
+                // Linker Stack: Reset-Button
+                Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.refresh,
                           color: theme.colorScheme.onSurface.withAlpha(140)),
-                      onPressed: onClose,
-                      tooltip: 'Player schließen',
+                      iconSize: 24,
+                      tooltip: 'Player zurücksetzen',
+                      onPressed: () {
+                        audioBloc.add(Stop());
+                      },
                     ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                // Zentrale Transport-Buttons (unverändert)
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Semantics(
+                        label: '10 Sekunden zurück',
+                        button: true,
+                        child: IconButton(
+                          icon: Icon(Icons.replay_10,
+                              color:
+                                  theme.colorScheme.onSurface.withAlpha(140)),
+                          iconSize: 32,
+                          onPressed: () {
+                            final newPos =
+                                position - const Duration(seconds: 10);
+                            audioBloc.add(Seek(newPos > Duration.zero
+                                ? newPos
+                                : Duration.zero));
+                          },
+                          tooltip: '10 Sekunden zurück',
+                        ),
+                      ),
+                      const SizedBox(width: 32),
+                      Semantics(
+                        label: isPlaying ? 'Pause' : 'Wiedergabe starten',
+                        button: true,
+                        child: IconButton(
+                          key: const Key('player_play_pause_button'),
+                          icon: Icon(
+                            isPlaying
+                                ? Icons.pause_circle_filled
+                                : Icons.play_circle_fill,
+                            color: theme.colorScheme.onSurface.withAlpha(140),
+                            size: 56,
+                          ),
+                          iconSize: 56,
+                          onPressed: isPlayPauseButtonEnabled
+                              ? () {
+                                  audioBloc.add(TogglePlayPause());
+                                }
+                              : null,
+                          tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
+                        ),
+                      ),
+                      const SizedBox(width: 32),
+                      Semantics(
+                        label: '10 Sekunden vor',
+                        button: true,
+                        child: IconButton(
+                          icon: Icon(Icons.forward_10,
+                              color:
+                                  theme.colorScheme.onSurface.withAlpha(140)),
+                          iconSize: 32,
+                          onPressed: () {
+                            final newPos =
+                                position + const Duration(seconds: 10);
+                            audioBloc.add(
+                                Seek(newPos < duration ? newPos : duration));
+                          },
+                          tooltip: '10 Sekunden vor',
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                const SizedBox(width: 8),
+                // Rechter Stack: Lautstärke-Button mit Overlay
+                _VolumeOverlayButton(audioBloc: audioBloc, theme: theme),
               ],
             ),
             const SizedBox(height: 8),
@@ -516,5 +538,121 @@ class BottomPlayerWidget extends ConsumerWidget {
     return '${hours.toString()}h '
         '${minutes.toString().padLeft(2, '0')}m '
         '${seconds.toString().padLeft(2, '0')}s';
+  }
+}
+
+class _VolumeOverlayButton extends StatefulWidget {
+  final dynamic audioBloc;
+  final ThemeData theme;
+  const _VolumeOverlayButton({required this.audioBloc, required this.theme});
+
+  @override
+  State<_VolumeOverlayButton> createState() => _VolumeOverlayButtonState();
+}
+
+class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
+  bool _showSlider = false;
+  double _currentVolume = 0.7;
+  OverlayEntry? _overlayEntry;
+  Timer? _autoCloseTimer;
+
+  void _toggleSlider() {
+    if (_showSlider) {
+      _removeOverlay();
+    } else {
+      _showOverlay();
+    }
+    setState(() {
+      _showSlider = !_showSlider;
+    });
+  }
+
+  void _showOverlay() {
+    final overlay = Overlay.of(context);
+    RenderBox box = context.findRenderObject() as RenderBox;
+    final buttonOffset = box.localToGlobal(Offset.zero);
+    final buttonSize = box.size;
+    _overlayEntry = OverlayEntry(
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: _removeOverlay,
+        child: Stack(
+          children: [
+            Positioned(
+              left: buttonOffset.dx + buttonSize.width / 2 - 24,
+              top: buttonOffset.dy - 150,
+              child: MouseRegion(
+                onEnter: (_) => _cancelAutoClose(),
+                onExit: (_) => _startAutoClose(),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(12),
+                  color: widget.theme.colorScheme.surface,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                    width: 48,
+                    height: 140,
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Slider(
+                        value: _currentVolume,
+                        min: 0.0,
+                        max: 1.0,
+                        onChanged: (v) {
+                          setState(() => _currentVolume = v);
+                          widget.audioBloc.add(SetVolume(v));
+                          _cancelAutoClose();
+                          _startAutoClose();
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    overlay.insert(_overlayEntry!);
+    _startAutoClose();
+  }
+
+  void _removeOverlay() {
+    _autoCloseTimer?.cancel();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    if (_showSlider) {
+      setState(() {
+        _showSlider = false;
+      });
+    }
+  }
+
+  void _startAutoClose() {
+    _autoCloseTimer?.cancel();
+    _autoCloseTimer = Timer(const Duration(milliseconds: 1800), _removeOverlay);
+  }
+
+  void _cancelAutoClose() {
+    _autoCloseTimer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _removeOverlay();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.volume_up,
+          color: widget.theme.colorScheme.onSurface.withAlpha(140)),
+      iconSize: 24,
+      tooltip: 'Lautstärke',
+      onPressed: _toggleSlider,
+    );
   }
 }
