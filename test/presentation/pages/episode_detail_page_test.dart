@@ -8,10 +8,12 @@ import 'package:empty_flutter_template/application/providers/audio_player_provid
 import 'package:empty_flutter_template/application/providers/cast_airplay_provider.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
+import '../../test_hive_init.dart';
 
 class MockAudioPlayerBackend extends Mock implements IAudioPlayerBackend {}
 
 void main() {
+  setupHiveForTests();
   setUpAll(() {
     registerFallbackValue(Duration.zero);
   });

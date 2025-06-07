@@ -31,6 +31,7 @@
     - [ ] Resume (Wiedergabe an letzter Position fortsetzen)
     - [ ] AirPlay/Cast-Unterstützung
     - [ ] E2E-Tests für Audio-Playback und Download
+    - [ ] **Lautstärke-Kontrolle im BottomPlayerWidget**
 
 ### Download/Offline-Playback (PRIO 2)
 - [ ] Download-Service für Episoden-Audio implementieren
@@ -128,6 +129,7 @@ Eine White-Labeling-App zur Unterstützung einer Podcast-Recording-Dienstleistun
 - [ ] AirPlay/Cast (Events, States, Backend, UI)
 - [ ] E2E-Tests für alle Audio-Features (Playback, Download, Resume, Fehlerfälle)
 - [ ] Accessibility-Tests für alle Audio-Features
+- [ ] **Lautstärke-Kontrolle im BottomPlayerWidget**
 
 ## Lessons Learned (Audio-Playback, Stand 06/2025)
 - Die Migration auf Dart 3 sealed/final class für Events und States erhöht die Wartbarkeit und Typsicherheit.
@@ -140,3 +142,9 @@ Eine White-Labeling-App zur Unterstützung einer Podcast-Recording-Dienstleistun
 - **Es gibt keine Fallback-Logik auf RSS oder lokale Quellen für die Audio-URL – die iTunes-URL ist maßgeblich.**
 - **Testabdeckung:** Es existieren Tests für leere, ungültige und produktive URLs. Die Fehlerfälle sind robust abgedeckt.
 - **Best Practice:** Die Übergabe der episodeUrl erfolgt immer explizit beim Tap auf eine Episode. Die Detailseite und der Player verlassen sich auf die im Model gespeicherte URL.
+
+## Entscheidungsprotokoll (07.06.2025)
+- Die produktive Integration des just_audio-Backends und die Entfernung aller Mocks im Release-Build sind als nächster Meilenstein festgelegt.
+- Die Lautstärke-Kontrolle wird als rudimentäres Feature im BottomPlayerWidget ergänzt und getestet.
+- Die Backend-/AudioHandler-Architektur bleibt erweiterbar für Speed Control, Download/Offline, Resume und AirPlay/Cast.
+- Nach Abschluss dieser Schritte erfolgt ein erneuter Review und die Priorisierung der MVP-Features für den nächsten Sprint.

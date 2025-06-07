@@ -37,3 +37,10 @@ In diesem Ordner werden alle projektspezifischen Anleitungen, HowTos, LLM-Prompt
 - Nach jedem return-Statement im Widget-Baum folgt eine Leerzeile (siehe Beispiel in lib/main.dart).
 - Kommentare im Code sollen Stil, Praxisbezug und Sprache des Templates aufgreifen (siehe Abschnitt "Kommentar- und Dokumentationsstil").
 - Weitere Style-Konventionen siehe analysis_options.yaml.
+
+## Doku-Pflege & Querverweise (Stand: 07.06.2025)
+- Nach jedem neuen Feature, Refactoring oder Test-Update sind alle relevanten Anleitungen, HowTos und die Doku-Matrix (`.instructions/doku_matrix.md`) zu aktualisieren.
+- Lessons Learned und Best Practices werden laufend ergänzt und in die Matrix aufgenommen.
+- Die Matrix ist der zentrale Einstiegspunkt für alle Doku- und HowTo-Dateien.
+- Querverweise auf zentrale Architektur-, Test- und Best-Practice-Dokumente (z.B. `docs/audio_architektur_2025.md`, `docs/audio_player_best_practices_2025.md`, `.documents/decisions/adr-003-teststrategie.md`) sind aktuell zu halten.
+- Siehe auch die Pflegehinweise in `.documents/README.md` und den Lessons-Learned-Abschnitten der zentralen Doku.

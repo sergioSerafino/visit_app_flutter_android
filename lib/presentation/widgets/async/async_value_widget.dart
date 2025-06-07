@@ -31,16 +31,12 @@ class AsyncValueWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return value.when(
       data: (dataValue) {
-        // logDebug("Data loaded: $dataValue");
         return data(dataValue);
       },
       loading: () {
-        // logDebug("Widget lädt", color: LogColor.green, tag: LogTag.ui);
         return (loading ?? AsyncUIHelper.loading)();
       },
       error: (e, st) {
-        // logDebug("Error: $e\n$st", color: LogColor.red, tag: LogTag.error);
-        // return const ImageWithBanner(imageUrl: imageUrl, label: label); // 💡 Dein eigener Fallback hier
         return (error ?? ((e, st) => AsyncUIHelper.error(e, stackTrace: st)))(
           e,
           st,

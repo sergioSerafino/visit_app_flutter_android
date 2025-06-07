@@ -50,14 +50,16 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final container = ProviderScope.containerOf(context, listen: false);
       final audioBloc = container.read(audioPlayerBlocProvider);
-      // --- currentEpisodeProvider setzen, falls noch nicht gesetzt ---
       final currentEpisode = container.read(currentEpisodeProvider);
+      final currentAudioUrl = audioBloc.currentUrl;
+      // --- currentEpisodeProvider setzen, falls noch nicht gesetzt ---
       if (currentEpisode == null ||
           currentEpisode.trackId != widget.episode.trackId) {
         container.read(currentEpisodeProvider.notifier).state = widget.episode;
       }
-      // Statt direktem setUrl: PreloadEvent an Bloc schicken
-      if (widget.episode.episodeUrl.isNotEmpty) {
+      // Preload NUR wenn die URL sich geändert hat (sonst bleibt Position erhalten)
+      if (widget.episode.episodeUrl.isNotEmpty &&
+          currentAudioUrl != widget.episode.episodeUrl) {
         audioBloc.add(PreloadEpisode(widget.episode.episodeUrl));
       }
     });
@@ -251,9 +253,10 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 icon: Icon(
                                   Icons.star_border_outlined,
                                   size: 32, // wie Download-Icon
-                                  color: Theme.of(context)
+                                  color: /*Theme.of(context)
                                       .colorScheme
-                                      .primary, // wie Download-Icon
+                                      .primary,*/
+                                      Colors.grey[500], // wie Download-Icon
                                 ),
                                 tooltip: 'Favorisieren',
                                 onPressed: () {
@@ -266,7 +269,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 icon: Icon(
                                   Icons.download,
                                   size: 32,
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: //Theme.of(context).colorScheme.primary,
+                                      Colors.grey[500],
                                 ),
                                 tooltip: 'Download',
                                 onPressed: () {
@@ -297,7 +301,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                       }
                                     : null,
                                 iconColor:
-                                    Theme.of(context).colorScheme.primary,
+                                    //Theme.of(context).colorScheme.primary,
+                                    Colors.grey[500],
                                 iconSize: 32,
                               ),
                             ],
@@ -373,11 +378,14 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
   // Hilfsfunktion für die Episoden-Dauer (für StickyInfoHeader)
   String _formatDuration(int millis) {
-    final seconds = (millis / 1000).round();
-    final minutes = (seconds / 60).floor();
-    final remainingSeconds = seconds % 60;
-    // Für StickyInfoHeader: Format 'Xm YYs'
-    return '${minutes}m ${remainingSeconds.toString().padLeft(2, '0')}s';
+    final totalSeconds = (millis / 1000).round();
+    final hours = (totalSeconds ~/ 3600);
+    final minutes = ((totalSeconds % 3600) ~/ 60);
+    final seconds = totalSeconds % 60;
+    // Für StickyInfoHeader: Format '0h 00m 00s'
+    return '${hours}h '
+        '${minutes.toString().padLeft(2, '0')}m '
+        '${seconds.toString().padLeft(2, '0')}s';
   }
 
   String formatReleaseDate(DateTime date) {

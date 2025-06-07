@@ -38,6 +38,11 @@ Diese Matrix bietet eine zentrale Übersicht aller wichtigen Doku-, HowTo- und E
 - Querverweise sind Empfehlungen für vertiefende oder verwandte Themen.
 - Bitte bei neuen HowTos/ADRs immer hier ergänzen!
 
+**Pflegehinweis (Stand: 07.06.2025):**
+- Nach jedem neuen HowTo, Lessons Learned oder Refactoring ist diese Matrix zu aktualisieren.
+- Querverweise und Einträge zu neuen oder geänderten Doku-Dateien sind verpflichtend.
+- Die Matrix bleibt der zentrale Einstiegspunkt für alle Doku- und HowTo-Dateien.
+
 ---
 
 ## Hinweis zu ADRs (Architecture Decision Records)

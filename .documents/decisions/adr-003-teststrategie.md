@@ -39,7 +39,11 @@ Im Rahmen der Migration des Projekts `storage_hold` in das Zielprojekt wurde ein
 - HowTos (z. B. `howto_merge_caching.md`, `howto_feature_flags.md`)
 - PRD (`.documents/prd_white_label_podcast_app.md`)
 - Review- und Migrationsmatrix (`.instructions/`)
+- Audio-Architektur & Best Practices: `docs/audio_architektur_2025.md`, `docs/audio_player_best_practices_2025.md`
 
 ---
+
+**Hinweis zur Doku-Pflege (Stand: 07.06.2025):**
+Alle neuen Erkenntnisse, Lessons Learned und Teststrategien sind nach jedem Feature, Refactoring oder Review konsequent in die Doku-Matrix und die zentralen Doku-Dateien einzupflegen. Die Pflegepflicht und Querverweise sind verbindlich.
 
 *Letztes Update: 31.05.2025 – Teststrategie und Lessons Learned aus der Migration als ADR dokumentiert.*

@@ -31,7 +31,7 @@ class CoverImageWidget extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceVariant,
+          color: Colors.grey[500],
           borderRadius: BorderRadius.circular(12),
         ),
         clipBehavior: Clip.antiAlias,
@@ -69,7 +69,7 @@ class CoverImageWidget extends StatelessWidget {
           child: Icon(
             Icons.podcasts,
             size: iconSize,
-            color: theme.colorScheme.primary.withAlpha(180),
+            color: Colors.grey[500],
           ),
         ),
         if (showLabel)
@@ -81,7 +81,7 @@ class CoverImageWidget extends StatelessWidget {
               child: Text(
                 'Podcast',
                 style: TextStyle(
-                  color: theme.colorScheme.onSurface,
+                  color: Colors.grey[300], //theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   fontSize: iconSize * 0.25,
                   shadows: [

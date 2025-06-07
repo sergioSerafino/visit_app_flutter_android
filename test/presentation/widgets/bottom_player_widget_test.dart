@@ -9,10 +9,13 @@ import 'package:empty_flutter_template/core/services/i_audio_player.dart';
 import 'package:empty_flutter_template/application/providers/audio_player_provider.dart';
 import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
 import 'package:empty_flutter_template/application/providers/current_episode_provider.dart';
+import '../../test_hive_init.dart';
 
 class MockAudioPlayerBackend extends Mock implements IAudioPlayerBackend {}
 
 void main() {
+  setupHiveForTests();
+
   setUpAll(() {
     registerFallbackValue(Duration.zero);
   });
@@ -137,5 +140,92 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byIcon(Icons.pause_circle_filled), findsOneWidget);
     expect(find.byIcon(Icons.play_circle_fill), findsNothing);
+  });
+
+  testWidgets('BottomPlayerWidget: Lautstärke-Slider sendet SetVolume',
+      (tester) async {
+    final mockBackend = MockAudioPlayerBackend();
+    when(() => mockBackend.play()).thenAnswer((_) async {});
+    when(() => mockBackend.pause()).thenAnswer((_) async {});
+    when(() => mockBackend.stop()).thenAnswer((_) async {});
+    when(() => mockBackend.seek(any())).thenAnswer((_) async {});
+    when(() => mockBackend.setSpeed(any())).thenAnswer((_) async {});
+    when(() => mockBackend.setVolume(any())).thenAnswer((_) async {});
+    when(() => mockBackend.position).thenReturn(Duration.zero);
+    when(() => mockBackend.duration).thenReturn(const Duration(seconds: 60));
+    when(() => mockBackend.speed).thenReturn(1.0);
+    when(() => mockBackend.volume).thenReturn(0.7);
+    when(() => mockBackend.playing).thenReturn(false);
+    when(() => mockBackend.positionStream)
+        .thenAnswer((_) => Stream.fromIterable([Duration.zero]));
+    when(() => mockBackend.durationStream)
+        .thenAnswer((_) => Stream.fromIterable([const Duration(seconds: 60)]));
+    when(() => mockBackend.playerStateStream)
+        .thenAnswer((_) => Stream.fromIterable(['paused']));
+    final bloc = AudioPlayerBloc(backend: mockBackend);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
+        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    // Finde den Slider (Lautstärke)
+    final sliderFinder = find.byType(Slider).last;
+    expect(sliderFinder, findsOneWidget);
+    await tester.drag(sliderFinder, const Offset(100, 0));
+    await tester.pumpAndSettle();
+    verify(() => mockBackend.setVolume(any())).called(greaterThan(0));
+  });
+
+  testWidgets(
+      'Slider bleibt bei Resume aus Pause stabil und springt nicht auf 0',
+      (tester) async {
+    final mockBackend = MockAudioPlayerBackend();
+    when(() => mockBackend.play()).thenAnswer((_) async {});
+    when(() => mockBackend.pause()).thenAnswer((_) async {});
+    when(() => mockBackend.stop()).thenAnswer((_) async {});
+    when(() => mockBackend.seek(any())).thenAnswer((_) async {});
+    when(() => mockBackend.setSpeed(any())).thenAnswer((_) async {});
+    when(() => mockBackend.position).thenReturn(const Duration(seconds: 10));
+    when(() => mockBackend.duration).thenReturn(const Duration(seconds: 60));
+    when(() => mockBackend.speed).thenReturn(1.0);
+    when(() => mockBackend.playing).thenReturn(false);
+    when(() => mockBackend.positionStream)
+        .thenAnswer((_) => Stream.fromIterable([const Duration(seconds: 10)]));
+    when(() => mockBackend.durationStream)
+        .thenAnswer((_) => Stream.fromIterable([const Duration(seconds: 60)]));
+    when(() => mockBackend.playerStateStream)
+        .thenAnswer((_) => Stream.fromIterable(['paused']));
+    final bloc = AudioPlayerBloc(backend: mockBackend);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
+        child: MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    // Setze auf Paused bei 10s
+    bloc.emit(Paused(const Duration(seconds: 10), const Duration(seconds: 60)));
+    await tester.pumpAndSettle();
+    // Simuliere Resume: erst Loading, dann Playing
+    bloc.emit(Loading());
+    await tester.pumpAndSettle();
+    // Slider bleibt auf 10s
+    final sliderFinder = find.byType(Slider).first;
+    final sliderWidget = tester.widget<Slider>(sliderFinder);
+    expect(sliderWidget.value, 10.0);
+    // Jetzt Playing bei 10s
+    bloc.emit(
+        Playing(const Duration(seconds: 10), const Duration(seconds: 60)));
+    await tester.pumpAndSettle();
+    final sliderWidget2 = tester.widget<Slider>(sliderFinder);
+    expect(sliderWidget2.value, 10.0);
+    // Simuliere Fortschritt: 12s
+    bloc.emit(
+        Playing(const Duration(seconds: 12), const Duration(seconds: 60)));
+    await tester.pumpAndSettle();
+    final sliderWidget3 = tester.widget<Slider>(sliderFinder);
+    expect(sliderWidget3.value, 12.0);
   });
 }

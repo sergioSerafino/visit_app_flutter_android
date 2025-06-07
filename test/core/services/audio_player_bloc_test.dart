@@ -68,5 +68,18 @@ void main() {
       expect(states.last, isA<Idle>());
       await sub.cancel();
     });
+    test('SetVolume ruft Backend und bleibt im State', () async {
+      when(() => backend.setVolume(any())).thenAnswer((_) async {});
+      when(() => backend.volume).thenReturn(0.5);
+      final bloc = AudioPlayerBloc(backend: backend);
+      bloc.emit(Playing(Duration(seconds: 5), Duration(seconds: 30)));
+      final states = <AudioPlayerState>[];
+      final sub = bloc.stream.listen(states.add);
+      bloc.add(SetVolume(0.5));
+      await Future.delayed(Duration(milliseconds: 50));
+      verify(() => backend.setVolume(0.5)).called(1);
+      expect(states.last, isA<Playing>());
+      await sub.cancel();
+    });
   });
 }

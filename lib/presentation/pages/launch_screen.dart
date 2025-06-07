@@ -111,7 +111,7 @@ class _LaunchScreenState extends State<LaunchScreen>
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
-    const double imageSize = 200;
+    const double imageSize = 275;
     final double imageTop = screenHeight / 2 - imageSize / 2;
     final double textTop = imageTop + imageSize + 40;
     final double textLeft = screenWidth * 0.25;

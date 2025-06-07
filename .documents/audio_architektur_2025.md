@@ -124,22 +124,6 @@ void main() {
 
 ---
 
-## 8. Architektur-Entscheidung & Ziel (Stand Juni 2025)
-
-**Wichtige Erkenntnis aus PRD und Projektzielen:**
-
-- Die App-Logik (Play, Pause, Seek, Fehlerhandling etc.) wird vorrangig über das Backend (`IAudioPlayerBackend`, z.B. `JustAudioPlayerBackend`) und den `AudioPlayerBloc` abgebildet.
-- Der `audioHandler` (audio_service) ist für die Systemintegration (z.B. Hintergrundwiedergabe, Lockscreen, Headset, AirPlay/Chromecast) zuständig und wird später angebunden.
-- Die Architektur muss so gestaltet sein, dass das Backend später an den `audioHandler` angebunden werden kann, um systemweite Player-Features (z.B. AirPlay/Chromecast) zu ermöglichen.
-- Die UI und der BLoC kommunizieren ausschließlich mit dem Backend, nie direkt mit dem `audioHandler`.
-- Diese Trennung garantiert Testbarkeit, Erweiterbarkeit und eine saubere Clean Architecture.
-
-**Ziel:**
-- Zuerst: Fokus auf ein robustes, testbares Backend und BLoC für die Audio-Logik.
-- Später: Anbindung des Backends an den `audioHandler` für Systemintegration und Features wie AirPlay/Chromecast.
-
----
-
 **Quellen:**  
 - [just_audio](https://pub.dev/packages/just_audio)
 - [audio_service](https://pub.dev/packages/audio_service)

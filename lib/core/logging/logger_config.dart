@@ -1,7 +1,8 @@
 // Migration aus storage_hold, Stand 30.05.2025
 // Logging-Tools
 // import 'dart:developer' as developer;
-import 'package:flutter/material.dart' show debugPrint;
+import 'package:flutter/material.dart'
+    show debugPrint, Color, Colors, ColorScheme;
 import 'package:intl/intl.dart';
 
 const bool enableDebugLogging = bool.fromEnvironment(
@@ -177,3 +178,23 @@ logDebug("Button clicked!", color: LogColor.magenta, tag: LogTag.ui);
 logDebug("Loading data from local storage...", color: LogColor.yellow, tag: LogTag.data);
 
 */
+
+/// Gibt eine Flutter-Color für einen LogColor zurück (zukunftssicher, kein Color.red etc.)
+Color logColorToMaterialColor(LogColor color, {ColorScheme? colorScheme}) {
+  switch (color) {
+    case LogColor.red:
+      return colorScheme?.error ?? Colors.red;
+    case LogColor.green:
+      return colorScheme?.secondary ?? Colors.green;
+    case LogColor.yellow:
+      return colorScheme?.tertiary ?? Colors.amber;
+    case LogColor.blue:
+      return colorScheme?.primary ?? Colors.blue;
+    case LogColor.magenta:
+      return Colors.purple;
+    case LogColor.cyan:
+      return Colors.cyan;
+    case LogColor.white:
+      return Colors.white;
+  }
+}

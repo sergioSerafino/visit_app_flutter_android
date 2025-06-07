@@ -7,8 +7,10 @@ import 'package:empty_flutter_template/core/services/audio_player_bloc.dart';
 import 'package:empty_flutter_template/application/providers/audio_player_provider.dart';
 import 'package:empty_flutter_template/application/providers/current_episode_provider.dart';
 import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
+import '../../test_hive_init.dart';
 
 void main() {
+  setupHiveForTests();
   tearDown(() async {
     final binding = TestWidgetsFlutterBinding.ensureInitialized();
     await binding.runAsync(() async {

@@ -193,4 +193,14 @@ Siehe auch: Kommentar und Docstring in `bottom_player_widget_test.dart` und `bot
 
 ---
 
+## 7. Doku-Pflege & Querverweise (Stand: 07.06.2025)
+
+- Diese Datei wird nach jedem neuen Feature, Refactoring oder Test-Update aktualisiert.
+- Lessons Learned und Best Practices werden laufend ergänzt und in die Doku-Matrix (`.instructions/doku_matrix.md`) aufgenommen.
+- Für alle neuen Audio-Features, UX-Entscheidungen und Teststrategien ist ein Abgleich mit der zentralen Architekturübersicht (`docs/audio_architektur_2025.md`) und der Teststrategie (`.documents/decisions/adr-003-teststrategie.md`) verpflichtend.
+- Querverweise auf `.documents/README.md`, `.instructions/README.md`, `.documents/bloc_best_practices_2024.md`, `.documents/project_structure_best_practices.md` und `.documents/state_management_riverpod_bloc.md` sind aktuell zu halten.
+- Legacy- und Migrationshinweise werden im Archiv-Ordner `docs/legacy/` dokumentiert und in der Hauptdoku verlinkt.
+
+---
+
 Diese Zusammenfassung basiert auf den aktuellen Doku- und Community-Quellen (Stand Juni 2025) und kann als Grundlage für die weitere Entwicklung und Dokumentation des Audio-Players dienen.

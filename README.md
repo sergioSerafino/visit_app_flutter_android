@@ -255,6 +255,7 @@ git tag v1.0.0
 git tag prod-2024-06-01
 git tag -a after-refactor -m "Nach Refactoring"
 git push --tags
+git log -3 --oneline
 ```
 
 #### 📌 Hinweise
@@ -349,5 +350,60 @@ Siehe auch: [docs/audio_player_best_practices_2025.md](docs/audio_player_best_pr
 - [audio_player_best_practices_2025.md](docs/audio_player_best_practices_2025.md)
 - [audio_architektur_2025.md](docs/audio_architektur_2025.md)
 - [bloc_best_practices_2024.md](.documents/bloc_best_practices_2024.md)
+
+---
+
+## Archivierte/Legacy-Dokumentation
+
+Die Inhalte aus `docs/legacy/` wurden in diese zentrale Dokumentation übernommen:
+
+> Hier werden veraltete, aber historisch oder für spätere Nachvollziehbarkeit relevante Doku-Abschnitte und Code-Fragmente abgelegt.
+> - Vor dem endgültigen Entfernen aus dem Projekt werden Inhalte hier gesichert.
+> - In der zentralen Doku wird auf diesen Ordner verwiesen.
+> - Jede Migration oder größere Änderung wird im Changelog und/oder in der Doku-Matrix dokumentiert.
+> 
+> **Hinweis:**
+> Bitte prüfe vor dem Löschen, ob die Information vollständig und aktuell in der neuen Architektur/Doku abgedeckt ist.
+
+Der Ordner `docs/legacy/` kann nach erfolgreicher Migration entfernt werden.
+
+---
+
+## ToDo: AirPlay/Chromecast-Erweiterung (Juni 2025)
+
+**Ausgangslage & Architektur-Empfehlung:**
+
+- Die aktuelle Audio-Architektur basiert auf einer klaren Trennung von Systemintegration (`AudioHandler`/`audio_service`) und App-Logik (`IAudioPlayerBackend`, z.B. `JustAudioPlayerBackend`).
+- Der `AudioPlayerBloc` vermittelt zwischen UI und Backend und ist über Provider flexibel erweiterbar.
+- Die UI und der BLoC sind unabhängig von der konkreten Backend-Implementierung und konsumieren nu das Interface.
+r
+**Empfehlung für AirPlay/Chromecast:**
+
+1. **Neues Backend anlegen:**
+   - Implementiere ein neues Backend (z.B. `AirPlayAudioBackend`, `CastAudioBackend`), das das Interface `IAudioPlayerBackend` erfüllt.
+   - Nutze passende Pakete (z.B. [airplay](https://pub.dev/packages/airplay), [cast](https://pub.dev/packages/cast)) für die jeweilige Plattform.
+2. **AudioHandler erweitern:**
+   - Ergänze die Systemintegration in `MyAudioHandler` um AirPlay/Cast-spezifische Logik (Session-Management, Device Discovery, etc.), falls Lockscreen/Headset/Notification auch für diese Backends benötigt werden.
+3. **Provider anpassen:**
+   - Im Provider kann je nach Plattform oder User-Wahl das passende Backend injiziert werden.
+   - Beispiel:
+     ```dart
+     final audioPlayerBlocProvider = Provider<AudioPlayerBloc>((ref) {
+       // return AudioPlayerBloc(backend: AirPlayAudioBackend());
+       // return AudioPlayerBloc(backend: CastAudioBackend());
+       return AudioPlayerBloc(backend: JustAudioPlayerBackend());
+     });
+     ```
+4. **UI bleibt unverändert:**
+   - Die UI und der BLoC müssen nicht angepasst werden, da sie nur das Interface kennen.
+
+**Fazit:**
+- Die Architektur ist bereits optimal vorbereitet für AirPlay/Cast.
+- Es genügt, ein neues Backend nach dem Vorbild von `JustAudioPlayerBackend` zu implementieren und im Provider zu verwenden.
+- Die Systemintegration (z.B. Lockscreen, Headset, Notification) kann über den `AudioHandler` erweitert werden.
+
+**Optional:**
+- Für AirPlay/Cast-Status im UI kann das Interface um entsprechende Streams/Properties erweitert werden.
+- Für plattformübergreifende Features (z.B. Multiroom) kann das Backend flexibel erweitert werden.
 
 ---
