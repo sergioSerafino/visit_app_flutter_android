@@ -552,9 +552,10 @@ class _VolumeOverlayButton extends StatefulWidget {
 
 class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
   bool _showSlider = false;
-  double _currentVolume = 0.7;
+  double _currentVolume = 0.5; // Standardwert jetzt 50 %
   OverlayEntry? _overlayEntry;
   Timer? _autoCloseTimer;
+  Timer? _debounceTimer; // Für Debounce der Lautstärke
 
   void _toggleSlider() {
     if (_showSlider) {
@@ -568,6 +569,20 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
   }
 
   void _showOverlay() {
+    // 1. Aktuellen Wert vom Backend holen (sofort, synchron)
+    double backendVolume;
+    try {
+      backendVolume = widget.audioBloc.backend.volume;
+      // Debug-Ausgabe für Analyse
+      debugPrint('[VolumeOverlay] Backend-Volume beim Öffnen: ' +
+          backendVolume.toString());
+    } catch (e) {
+      backendVolume = 0.5;
+      debugPrint('[VolumeOverlay] Fehler beim Lesen des Backend-Volume: $e');
+    }
+    setState(() {
+      _currentVolume = backendVolume;
+    });
     final overlay = Overlay.of(context);
     RenderBox box = context.findRenderObject() as RenderBox;
     final buttonOffset = box.localToGlobal(Offset.zero);
@@ -579,8 +594,8 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
         child: Stack(
           children: [
             Positioned(
-              left: buttonOffset.dx + buttonSize.width / 2 - 24,
-              top: buttonOffset.dy - 150,
+              left: buttonOffset.dx + buttonSize.width / 2 - 32, // Breiter
+              top: buttonOffset.dy - 170, // Höher
               child: MouseRegion(
                 onEnter: (_) => _cancelAutoClose(),
                 onExit: (_) => _startAutoClose(),
@@ -590,21 +605,28 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                   color: widget.theme.colorScheme.surface,
                   child: Container(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                    width: 48,
-                    height: 140,
+                        EdgeInsets.zero, // Kein Padding, volle Touch-Fläche
+                    width: 72, // Noch etwas breiter
+                    height: 240, // Deutlich höher für bessere Bedienung
                     child: RotatedBox(
                       quarterTurns: -1,
-                      child: Slider(
-                        value: _currentVolume,
-                        min: 0.0,
-                        max: 1.0,
-                        onChanged: (v) {
-                          setState(() => _currentVolume = v);
-                          widget.audioBloc.add(SetVolume(v));
-                          _cancelAutoClose();
-                          _startAutoClose();
-                        },
+                      child: SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 16),
+                          trackHeight: 10,
+                        ),
+                        child: Slider(
+                          value: _currentVolume,
+                          min: 0.0,
+                          max: 1.0,
+                          onChanged: (v) {
+                            setState(() => _currentVolume = v);
+                            _debounceSetVolume(v);
+                            _cancelAutoClose();
+                            _startAutoClose();
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -619,8 +641,16 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
     _startAutoClose();
   }
 
+  void _debounceSetVolume(double v) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 150), () {
+      widget.audioBloc.add(SetVolume(v));
+    });
+  }
+
   void _removeOverlay() {
     _autoCloseTimer?.cancel();
+    _debounceTimer?.cancel();
     _overlayEntry?.remove();
     _overlayEntry = null;
     if (_showSlider) {
