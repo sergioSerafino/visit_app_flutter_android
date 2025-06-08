@@ -5,7 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../presentation/widgets/global_snackbar.dart';
-import '../../application/providers/provides_a_snackbar_event.dart';
 import '../../config/app_routes.dart';
 import 'application/providers/collection_provider.dart' hide brandingProvider;
 import 'application/providers/theme_provider.dart' as theme_prov;

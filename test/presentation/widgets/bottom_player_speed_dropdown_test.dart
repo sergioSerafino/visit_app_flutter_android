@@ -94,9 +94,8 @@ void main() {
   testWidgets('SpeedDropdown synchronisiert sich mit Bloc-State bei Playing',
       (tester) async {
     final mockBloc = MockAudioPlayerBloc();
-    final playingState = Playing(
-        const Duration(seconds: 0), const Duration(seconds: 60),
-        speed: 1.5);
+    final playingState =
+        Playing(const Duration(), const Duration(seconds: 60), speed: 1.5);
     when(() => mockBloc.stream).thenAnswer((_) => Stream.value(playingState));
     when(() => mockBloc.state).thenReturn(playingState);
     double selectedSpeed = 1.0;

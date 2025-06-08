@@ -67,7 +67,7 @@ void main() {
         episodeUrl: 'https://audio/test.mp3',
         trackTimeMillis: 60000,
         episodeFileExtension: 'mp3',
-        releaseDate: DateTime(2024, 1),
+        releaseDate: DateTime(2024),
       );
 
       await tester.pumpWidget(
@@ -151,7 +151,7 @@ void main() {
     final volumeButtonFinder = find.byTooltip('Lautstärke');
     expect(volumeButtonFinder, findsOneWidget);
     await tester.tap(volumeButtonFinder);
-    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
     // Finde den Slider im Overlay
     final sliderFinder = find.byType(Slider).last;
     expect(sliderFinder, findsOneWidget);
@@ -242,7 +242,7 @@ void main() {
     final volumeButtonFinder = find.byTooltip('Lautstärke');
     expect(volumeButtonFinder, findsOneWidget);
     await tester.tap(volumeButtonFinder);
-    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
     // Finde den Slider im Overlay
     final sliderFinder = find.byType(Slider).last;
     expect(sliderFinder, findsOneWidget);
@@ -257,6 +257,58 @@ void main() {
     expect(sliderWidget2.value, 0.8,
         reason: 'Slider muss synchron auf externes Volume-Update reagieren');
     // Overlay schließen
+    await tester.pumpWidget(Container());
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets(
+      'BottomPlayerWidget: Reset-Button setzt Player auf Idle und Progressbar auf 0',
+      (tester) async {
+    final mockBackend = MockAudioPlayerBackend();
+    stubAllBackendMethods(mockBackend);
+    final bloc = AudioPlayerBloc(backend: mockBackend);
+    final testEpisode = PodcastEpisode(
+      wrapperType: 'episode',
+      trackId: 1,
+      trackName: 'Test Episode',
+      artworkUrl600: '',
+      description: 'Testbeschreibung',
+      episodeUrl: 'https://audio/test.mp3',
+      trackTimeMillis: 60000,
+      episodeFileExtension: 'mp3',
+      releaseDate: DateTime(2024),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          audioPlayerBlocProvider.overrideWithValue(bloc),
+          currentEpisodeProvider.overrideWith((ref) => testEpisode),
+        ],
+        child: const MaterialApp(home: Scaffold(body: BottomPlayerWidget())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    // Simuliere Playing-State mit Fortschritt
+    bloc.emit(
+        Playing(const Duration(seconds: 12), const Duration(seconds: 60)));
+    await tester.pumpAndSettle();
+    // Reset-Button finden
+    final resetButtonFinder = find.byIcon(Icons.refresh);
+    expect(resetButtonFinder, findsOneWidget);
+    final resetButton = tester.widget<IconButton>(resetButtonFinder);
+    expect(resetButton.onPressed, isNotNull);
+    // Klick auf Reset
+    await tester.tap(resetButtonFinder);
+    await tester.pumpAndSettle();
+    // Nach Reset: Idle-State, Progressbar auf 0
+    expect(bloc.state, isA<Idle>());
+    final sliderFinder = find.byType(Slider).first;
+    final sliderWidget = tester.widget<Slider>(sliderFinder);
+    expect(sliderWidget.value, 0.0,
+        reason: 'Progressbar muss nach Reset auf 0 stehen');
+    // Play/Pause-Button ist wieder sichtbar
+    expect(find.byKey(const Key('player_play_pause_button')), findsOneWidget);
+    // Cleanup: Widget-Baum abräumen, damit alle Timer/Animationen beendet werden
     await tester.pumpWidget(Container());
     await tester.pumpAndSettle();
   });

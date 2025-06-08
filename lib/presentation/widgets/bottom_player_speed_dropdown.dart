@@ -76,8 +76,9 @@ class _BottomPlayerSpeedDropdownState
           });
         }
         final theme = Theme.of(context);
-        return ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 100),
+        // Statt ConstrainedBox: flexiblere Breite, um Overflows zu vermeiden
+        return SizedBox(
+          width: 120, // etwas breiter, damit alle Werte und das Icon passen
           child: Semantics(
             label: 'Abspielgeschwindigkeit wählen',
             child: DropdownButton<double>(

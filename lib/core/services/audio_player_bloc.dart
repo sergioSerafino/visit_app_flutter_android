@@ -12,7 +12,6 @@ import '../logging/logger_config.dart';
 import 'i_audio_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:meta/meta.dart';
 
 /// ---
 /// PRODUCTION: Audio-Streaming Stabilität & Fehlerbehandlung (Juni 2025)
@@ -309,7 +308,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       _durationSub = null;
       _duration = Duration.zero;
       _lastKnownPosition = Duration.zero;
-      currentUrl = null;
+      // currentUrl = null; // Entfernt: URL bleibt erhalten!
       emit(Idle());
       if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Idle');
     });
@@ -568,7 +567,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
               speed: s.speed, volume: event.volume));
         } else if (state is Paused) {
           final s = state as Paused;
-          emit(Paused(s.position, s.duration, speed: s.speed, volume: event.volume));
+          emit(Paused(s.position, s.duration,
+              speed: s.speed, volume: event.volume));
         } else if (state is Idle) {
           emit(Idle(volume: event.volume));
         } else if (state is Loading) {

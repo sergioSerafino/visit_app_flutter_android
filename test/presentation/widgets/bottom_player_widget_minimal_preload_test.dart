@@ -30,7 +30,7 @@ void main() {
       episodeUrl: 'https://audio/test.mp3',
       trackTimeMillis: 60000,
       episodeFileExtension: 'mp3',
-      releaseDate: DateTime(2024, 1),
+      releaseDate: DateTime(2024),
     );
     await tester.pumpWidget(
       ProviderScope(

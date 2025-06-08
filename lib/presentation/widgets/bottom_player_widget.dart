@@ -52,6 +52,10 @@ class BottomPlayerWidget extends ConsumerWidget {
     final currentEpisode = ref.watch(currentEpisodeProvider);
     final hasValidUrl =
         currentEpisode != null && currentEpisode.episodeUrl.isNotEmpty;
+    // Fallback: Nach Reset (Idle-State) bleibt der Play/Pause-Button aktiv,
+    // solange eine gültige Episode im Provider liegt. Sollte der Provider
+    // versehentlich auf null gesetzt werden, kann die UI (z.B. nach Reset)
+    // die letzte Episode wieder in den Provider schreiben.
     final audioStateAsync = ref.watch(audioPlayerStateProvider);
     // ---
     // 1. ErrorState: Widget-Baum ersetzen
@@ -273,9 +277,13 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                             stateVolume = state.volume;
                           }
                           // Nur bei aktivem Stream synchronisieren
-                          if (isActive && !_isDragging && _pendingVolume == null) {
+                          if (isActive &&
+                              !_isDragging &&
+                              _pendingVolume == null) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (mounted) setState(() => _currentVolume = stateVolume);
+                              if (mounted) {
+                                setState(() => _currentVolume = stateVolume);
+                              }
                             });
                           }
                           // NEU: _pendingVolume-Logik für Synchronität nach Drag
@@ -297,7 +305,11 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                               trackHeight: 10,
                             ),
                             child: Slider(
-                              value: (!isActive) ? _currentVolume : (_isDragging ? _currentVolume : stateVolume),
+                              value: (!isActive)
+                                  ? _currentVolume
+                                  : (_isDragging
+                                      ? _currentVolume
+                                      : stateVolume),
                               onChanged: (v) {
                                 setState(() {
                                   _currentVolume = v;

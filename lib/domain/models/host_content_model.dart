@@ -19,6 +19,6 @@ class HostContent with _$HostContent {
       _$HostContentFromJson(json);
 
   static HostContent empty() {
-    return const HostContent(mission: null, links: []);
+    return const HostContent(links: []);
   }
 }

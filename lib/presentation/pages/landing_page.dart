@@ -66,7 +66,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0),
+            padding: const EdgeInsets.symmetric(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -105,7 +105,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                       final podcast = collection.podcasts.firstOrNull;
                       return Center(
                         child: CoverImageWidget(
-                          showLabel: false,
                           imageUrl: podcast?.artworkUrl600 ?? "",
                         ),
                       );

@@ -5,7 +5,6 @@ import 'package:empty_flutter_template/presentation/pages/episode_detail_page.da
 import 'package:empty_flutter_template/core/services/audio_player_bloc.dart';
 import 'package:empty_flutter_template/core/services/i_audio_player.dart';
 import 'package:empty_flutter_template/application/providers/audio_player_provider.dart';
-import 'package:empty_flutter_template/application/providers/cast_airplay_provider.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
 import '../../test_hive_init.dart';

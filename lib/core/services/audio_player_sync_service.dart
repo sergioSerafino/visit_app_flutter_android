@@ -21,6 +21,7 @@ class AudioPlayerSyncService implements IAudioPlayerBackend {
   final _volumeController = StreamController<double>.broadcast();
   @override
   double get volume => _volume;
+  @override
   Stream<double> get volumeStream => _volumeController.stream;
 
   // --- Position ---

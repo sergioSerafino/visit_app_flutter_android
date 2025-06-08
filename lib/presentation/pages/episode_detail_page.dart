@@ -380,10 +380,15 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     final hours = (totalSeconds ~/ 3600);
     final minutes = ((totalSeconds % 3600) ~/ 60);
     final seconds = totalSeconds % 60;
-    // Für StickyInfoHeader: Format '0h 00m 00s'
-    return '${hours}h '
-        '${minutes.toString().padLeft(2, '0')}m '
-        '${seconds.toString().padLeft(2, '0')}s';
+    // Stunden nur anzeigen, wenn >0
+    if (hours > 0) {
+      return '${hours}h '
+          '${minutes.toString().padLeft(2, '0')}m '
+          '${seconds.toString().padLeft(2, '0')}s';
+    } else {
+      return '${minutes}m '
+          '${seconds.toString().padLeft(2, '0')}s';
+    }
   }
 
   String formatReleaseDate(DateTime date) {

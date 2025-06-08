@@ -84,7 +84,7 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
       child: Row(
         children: [
           SizedBox(
-            width: 60,
+            width: 70,
             child: Text(
               leftTime,
               style: TextStyle(
@@ -121,36 +121,40 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
                           : widget.position.inSeconds
                               .clamp(0, widget.duration.inSeconds)
                               .toDouble())
-                      : _position.inSeconds.toDouble(),
+                      : 0.0, // Im Idle/Loading-State immer 0.0
                   max: isSliderEnabled
                       ? widget.duration.inSeconds.toDouble()
                       : 1.0,
                   divisions: isSliderEnabled ? widget.duration.inSeconds : null,
                   label: leftTime,
-                  onChanged: (v) {
-                    setState(() {
-                      _position = Duration(seconds: v.toInt());
-                      _isDragging = true;
-                    });
-                  },
-                  onChangeEnd: (v) {
-                    final newPos = Duration(seconds: v.toInt());
-                    _pendingPosition = newPos;
-                    widget.onSeek(newPos);
-                    if (!isSliderEnabled) {
-                      setState(() {
-                        _isDragging = false;
-                        _pendingPosition = null;
-                        _position = newPos;
-                      });
-                    }
-                  },
+                  onChanged: isSliderEnabled
+                      ? (v) {
+                          setState(() {
+                            _position = Duration(seconds: v.toInt());
+                            _isDragging = true;
+                          });
+                        }
+                      : null, // Im Idle/Loading-State nicht bedienbar
+                  onChangeEnd: isSliderEnabled
+                      ? (v) {
+                          final newPos = Duration(seconds: v.toInt());
+                          _pendingPosition = newPos;
+                          widget.onSeek(newPos);
+                          if (!isSliderEnabled) {
+                            setState(() {
+                              _isDragging = false;
+                              _pendingPosition = null;
+                              _position = newPos;
+                            });
+                          }
+                        }
+                      : null,
                 ),
               ),
             ),
           ),
           SizedBox(
-            width: 70,
+            width: 82,
             child: Text(
               rightTime,
               style: TextStyle(
