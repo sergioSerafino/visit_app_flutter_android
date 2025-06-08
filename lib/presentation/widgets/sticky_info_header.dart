@@ -52,7 +52,7 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withAlpha(140), // dezenter
+                                .withAlpha(100), // dezenter
                           ),
                         ),
                         Text(
@@ -62,7 +62,7 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withAlpha(140), // dezenter
+                                .withAlpha(100), // dezenter
                           ),
                         ),
                       ],
