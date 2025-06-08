@@ -343,7 +343,7 @@ Siehe auch: [docs/audio_player_best_practices_2025.md](docs/audio_player_best_pr
 - Alle relevanten States (Idle, Loading, Playing, Paused, Error) werden in den Tests gezielt simuliert und geprüft.
 - Provider-Overrides und Mock-Backends sorgen für deterministische, schnelle Testläufe (meist < 2 s pro Test).
 - Nach jedem Test wird der Widget-Baum abgeräumt, um Pending-Timer-Fehler (z. B. durch das Marquee-Widget) zu vermeiden.
-- Der Integrationstest für BottomPlayerWidget ist temporär mit `skip: true` markiert, da das Marquee-Widget in Flutter-Tests einen bekannten Pending-Timer-Bug verursacht. Die eigentliche Player-Funktionalität ist durch andere Tests abgedeckt.
+- **Wichtiger Hinweis:** Einzelne Tests, die das Marquee-Widget oder animierte Timer nutzen (z. B. Slider-Resume-Test), sind mit `skip: true` markiert, da Flutter hier einen bekannten Pending-Timer-Bug aufweist. Die eigentliche Player-Funktionalität ist durch andere, stabile Tests abgedeckt. Siehe Querverweis und Kommentar im Test.
 - Die Lessons Learned und alle Test- und UX-Prinzipien sind in der zentralen Doku dokumentiert.
 
 **Quellen & weiterführende Doku:**

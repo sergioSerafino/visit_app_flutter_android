@@ -12,6 +12,7 @@ abstract class IAudioPlayerBackend {
   // --- NEU: Lautstärke-Kontrolle ---
   Future<void> setVolume(double volume);
   double get volume;
+  Stream<double> get volumeStream;
   Stream<Duration> get positionStream;
   Stream<Duration?> get durationStream;
   Stream<dynamic> get playerStateStream;

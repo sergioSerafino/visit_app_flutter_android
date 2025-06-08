@@ -212,9 +212,11 @@ class _VolumeOverlayButton extends StatefulWidget {
 class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
   bool _showSlider = false;
   double _currentVolume = 0.5; // Standardwert jetzt 50 %
+  double? _pendingVolume; // Merkt sich den Zielwert nach Drag
   OverlayEntry? _overlayEntry;
   Timer? _autoCloseTimer;
   Timer? _debounceTimer; // Für Debounce der Lautstärke
+  bool _isDragging = false;
 
   void _toggleSlider() {
     if (_showSlider) {
@@ -228,19 +230,6 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
   }
 
   void _showOverlay() {
-    // 1. Aktuellen Wert vom Backend holen (sofort, synchron)
-    double backendVolume;
-    try {
-      backendVolume = widget.audioBloc.backend.volume;
-      // Debug-Ausgabe für Analyse
-      debugPrint('[VolumeOverlay] Backend-Volume beim Öffnen: $backendVolume');
-    } catch (e) {
-      backendVolume = 0.5;
-      debugPrint('[VolumeOverlay] Fehler beim Lesen des Backend-Volume: $e');
-    }
-    setState(() {
-      _currentVolume = backendVolume;
-    });
     final overlay = Overlay.of(context);
     RenderBox box = context.findRenderObject() as RenderBox;
     final buttonOffset = box.localToGlobal(Offset.zero);
@@ -262,27 +251,79 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                   borderRadius: BorderRadius.circular(12),
                   color: widget.theme.colorScheme.surface,
                   child: Container(
-                    padding:
-                        EdgeInsets.zero, // Kein Padding, volle Touch-Fläche
-                    width: 72, // Noch etwas breiter
-                    height: 240, // Deutlich höher für bessere Bedienung
+                    padding: EdgeInsets.zero,
+                    width: 72,
+                    height: 240,
                     child: RotatedBox(
                       quarterTurns: -1,
-                      child: SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 16),
-                          trackHeight: 10,
-                        ),
-                        child: Slider(
-                          value: _currentVolume,
-                          onChanged: (v) {
-                            setState(() => _currentVolume = v);
-                            _debounceSetVolume(v);
-                            _cancelAutoClose();
-                            _startAutoClose();
-                          },
-                        ),
+                      child: StreamBuilder(
+                        stream: widget.audioBloc.stream,
+                        initialData: widget.audioBloc.state,
+                        builder: (context, snapshot) {
+                          double stateVolume = 0.5;
+                          final state = snapshot.data;
+                          final isActive = state is Playing || state is Paused;
+                          if (state is Playing) {
+                            stateVolume = state.volume;
+                          } else if (state is Paused) {
+                            stateVolume = state.volume;
+                          } else if (state is Idle) {
+                            stateVolume = state.volume;
+                          } else if (state is Loading) {
+                            stateVolume = state.volume;
+                          }
+                          // Nur bei aktivem Stream synchronisieren
+                          if (isActive && !_isDragging && _pendingVolume == null) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (mounted) setState(() => _currentVolume = stateVolume);
+                            });
+                          }
+                          // NEU: _pendingVolume-Logik für Synchronität nach Drag
+                          if (_pendingVolume != null &&
+                              (stateVolume - _pendingVolume!).abs() < 0.001) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (mounted) {
+                                setState(() {
+                                  _isDragging = false;
+                                  _pendingVolume = null;
+                                });
+                              }
+                            });
+                          }
+                          return SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 16),
+                              trackHeight: 10,
+                            ),
+                            child: Slider(
+                              value: (!isActive) ? _currentVolume : (_isDragging ? _currentVolume : stateVolume),
+                              onChanged: (v) {
+                                setState(() {
+                                  _currentVolume = v;
+                                  _isDragging = true;
+                                });
+                                _debounceSetVolume(v);
+                                _cancelAutoClose();
+                                _startAutoClose();
+                              },
+                              onChangeEnd: (v) {
+                                _pendingVolume = v;
+                                if (!isActive) {
+                                  setState(() {
+                                    _isDragging = false;
+                                    _pendingVolume = null;
+                                    _currentVolume = v;
+                                  });
+                                }
+                                // Bei aktivem Stream bleibt die Pending-Logik wie gehabt
+                                else {
+                                  // ...bestehende Pending-Logik...
+                                }
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -304,15 +345,19 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
     });
   }
 
-  void _removeOverlay() {
+  void _removeOverlay({bool fromDispose = false}) {
     _autoCloseTimer?.cancel();
     _debounceTimer?.cancel();
     _overlayEntry?.remove();
     _overlayEntry = null;
     if (_showSlider) {
-      setState(() {
+      if (fromDispose || !mounted) {
         _showSlider = false;
-      });
+      } else {
+        setState(() {
+          _showSlider = false;
+        });
+      }
     }
   }
 
@@ -327,7 +372,7 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
 
   @override
   void dispose() {
-    _removeOverlay();
+    _removeOverlay(fromDispose: true);
     super.dispose();
   }
 

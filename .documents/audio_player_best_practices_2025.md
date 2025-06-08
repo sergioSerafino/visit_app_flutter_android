@@ -110,6 +110,7 @@ await player.play();      // Start
 - Nach jedem State-Wechsel im Test mindestens zwei `pump()` ausführen, um alle Rebuilds sicherzustellen.
 - ProviderScope und Provider-Overrides im Test immer korrekt initialisieren, damit State-Propagation und Event-Dispatch wie in der echten App funktionieren.
 - Debug-Ausgaben nach jedem Schritt helfen, Timing-Probleme und fehlerhafte State-Propagation frühzeitig zu erkennen.
+- **Achtung:** Einzelne Widget-Tests, die das Marquee-Widget oder animierte Timer nutzen (z. B. Slider-Resume-Test), sind mit `skip: true` markiert, da Flutter hier einen bekannten Pending-Timer-Bug aufweist. Die eigentliche Player-Funktionalität ist durch andere, stabile Tests abgedeckt. Siehe Querverweis und Kommentar im Test sowie README.md.
 
 **Beispiel: Deterministischer Widget-Test mit setStateAndPump**
 
@@ -279,3 +280,17 @@ class AudioPlayerSyncService implements IAudioPlayerBackend {
 - Für Accessibility: Streams für Screenreader-Status, Fehler, etc. bereitstellen.
 
 ---
+
+## Best Practice: Lautstärke-Slider bleibt immer reaktiv – auch ohne aktiven Stream
+
+**Learning 08.06.2025:**
+
+Im Idle/Loading-State (also wenn kein aktiver Audio-Stream läuft) darf der Volume-Slider nicht vom Bloc-Stream/StreamBuilder abhängig sein, da sonst nach dem ersten Drag kein neues Build mehr getriggert wird und der Fader "einfriert". Die Lösung ist, den Slider-Wert im Idle/Loading-State immer direkt aus einer lokalen State-Variable (_currentVolume) zu nehmen und die Synchronisierung mit dem Bloc-State nur bei aktivem Stream (Playing/Paused) vorzunehmen. So bleibt der Fader beliebig oft und flüssig bedienbar – unabhängig vom Backend oder Stream.
+
+**Code-Muster:**
+- Im StreamBuilder: Slider-Wert im Idle/Loading-State immer aus _currentVolume, nur bei aktivem Stream synchronisieren.
+- onChanged/onChangeEnd: Immer setState() und _currentVolume setzen.
+- _isDragging im Idle/Loading-State nach jedem Drag sofort zurücksetzen.
+
+**Fazit:**
+Dieses Pattern ist für alle "statischen" Controls in Flutter relevant, die auch ohne Backend-Feedback reaktiv bleiben müssen.

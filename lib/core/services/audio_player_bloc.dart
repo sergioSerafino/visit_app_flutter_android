@@ -78,19 +78,57 @@ final class UpdateSpeed extends AudioPlayerEvent {
   UpdateSpeed(this.speed);
 }
 
+final class UpdateVolume extends AudioPlayerEvent {
+  final double volume;
+  UpdateVolume(this.volume);
+}
+
+final class UpdatePositionEvent extends AudioPlayerEvent {
+  final Duration position;
+  UpdatePositionEvent(this.position);
+}
+
+final class UpdateDurationEvent extends AudioPlayerEvent {
+  final Duration? duration;
+  UpdateDurationEvent(this.duration);
+}
+
 // States
 sealed class AudioPlayerState {}
 
-final class Idle extends AudioPlayerState {}
+final class Idle extends AudioPlayerState {
+  final double volume;
+  Idle({this.volume = 0.5});
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Idle &&
+          runtimeType == other.runtimeType &&
+          volume == other.volume;
+  @override
+  int get hashCode => volume.hashCode;
+}
 
-final class Loading extends AudioPlayerState {}
+final class Loading extends AudioPlayerState {
+  final double volume;
+  Loading({this.volume = 0.5});
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Loading &&
+          runtimeType == other.runtimeType &&
+          volume == other.volume;
+  @override
+  int get hashCode => volume.hashCode;
+}
 
 @immutable
 final class Playing extends AudioPlayerState {
   final Duration position;
   final Duration duration;
   final double speed;
-  Playing(this.position, this.duration, {this.speed = 1.0});
+  final double volume;
+  Playing(this.position, this.duration, {this.speed = 1.0, this.volume = 0.5});
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -98,9 +136,10 @@ final class Playing extends AudioPlayerState {
           runtimeType == other.runtimeType &&
           position == other.position &&
           duration == other.duration &&
-          speed == other.speed;
+          speed == other.speed &&
+          volume == other.volume;
   @override
-  int get hashCode => Object.hash(position, duration, speed);
+  int get hashCode => Object.hash(position, duration, speed, volume);
 }
 
 @immutable
@@ -108,7 +147,8 @@ final class Paused extends AudioPlayerState {
   final Duration position;
   final Duration duration;
   final double speed;
-  Paused(this.position, this.duration, {this.speed = 1.0});
+  final double volume;
+  Paused(this.position, this.duration, {this.speed = 1.0, this.volume = 0.5});
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -116,9 +156,10 @@ final class Paused extends AudioPlayerState {
           runtimeType == other.runtimeType &&
           position == other.position &&
           duration == other.duration &&
-          speed == other.speed;
+          speed == other.speed &&
+          volume == other.volume;
   @override
-  int get hashCode => Object.hash(position, duration, speed);
+  int get hashCode => Object.hash(position, duration, speed, volume);
 }
 
 @immutable
@@ -141,6 +182,9 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   StreamSubscription<dynamic>? _playerStateSub;
   StreamSubscription<Duration?>? _durationSub;
   StreamSubscription<double>? _speedSub;
+  StreamSubscription<double>? _volumeSub;
+  StreamSubscription<Duration>? _positionSubSync;
+  StreamSubscription<Duration?>? _durationSubSync;
   Duration _duration = Duration.zero;
   bool _disposed = false;
   String? _currentUrl; // NEU: Zuletzt abgespielte URL
@@ -186,7 +230,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       if (isSameUrl && isActive) {
         await _safePlayWithRetry(emit);
         emit(Playing(_lastKnownPosition, backend.duration ?? Duration.zero,
-            speed: backend.speed));
+            speed: backend.speed, volume: backend.volume));
         add(UpdateSpeed(backend.speed)); // NEU: Speed-Update nach Resume
         if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Playing (Resume)');
         _listenToPosition();
@@ -214,7 +258,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         }
         _duration = backend.duration ?? Duration.zero;
         _lastKnownPosition = resumePosition;
-        emit(Playing(resumePosition, _duration));
+        emit(Playing(resumePosition, _duration,
+            speed: backend.speed, volume: backend.volume));
         add(UpdateSpeed(backend.speed)); // NEU: Speed-Update nach Play
         if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Playing (Start)');
         await _safePlayWithRetry(emit);
@@ -250,7 +295,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       final pos = this.backend.position;
       _positionSub?.cancel();
       _positionSub = null;
-      emit(Paused(pos, _duration));
+      emit(
+          Paused(pos, _duration, speed: backend.speed, volume: backend.volume));
       if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Paused');
     });
     on<Stop>((event, emit) async {
@@ -304,7 +350,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
             final pos = this.backend.position;
             _positionSub?.cancel();
             _positionSub = null;
-            emit(Paused(pos, _duration));
+            emit(Paused(pos, _duration,
+                speed: backend.speed, volume: backend.volume));
             add(UpdatePosition(pos)); // Sofortiges UI-Feedback
             if (kDebugMode) {
               logDebug('[AudioPlayerBloc] emit: Paused (TogglePlayPause)');
@@ -327,7 +374,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
                   await backend.seek(resumePosition);
                 }
                 _duration = backend.duration ?? Duration.zero;
-                emit(Playing(resumePosition, _duration));
+                emit(Playing(resumePosition, _duration,
+                    speed: backend.speed, volume: backend.volume));
                 add(UpdatePosition(resumePosition)); // Sofortiges UI-Feedback
                 if (kDebugMode) {
                   logDebug('[AudioPlayerBloc] emit: Playing (TogglePlayPause)');
@@ -372,7 +420,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
                 await backend.stop();
                 await _safeSetUrlWithRetry(_currentUrl!, emit);
                 _duration = backend.duration ?? Duration.zero;
-                emit(Playing(Duration.zero, _duration));
+                emit(Playing(Duration.zero, _duration,
+                    speed: backend.speed, volume: backend.volume));
                 if (kDebugMode) {
                   logDebug('[AudioPlayerBloc] emit: Playing (TogglePlayPause)');
                 }
@@ -423,12 +472,14 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       if (event.position != _lastKnownPosition) {
         _lastKnownPosition = event.position;
         if (state is Playing || state is Loading) {
-          emit(Playing(event.position, _duration));
+          emit(Playing(event.position, _duration,
+              speed: backend.speed, volume: backend.volume));
           if (kDebugMode) {
             logDebug('[AudioPlayerBloc] emit: Playing (UpdatePosition)');
           }
         } else if (state is Paused) {
-          emit(Paused(event.position, _duration));
+          emit(Paused(event.position, _duration,
+              speed: backend.speed, volume: backend.volume));
           if (kDebugMode) {
             logDebug('[AudioPlayerBloc] emit: Paused (UpdatePosition)');
           }
@@ -447,13 +498,15 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         add(UpdateSpeed(backend.speed)); // NEU: Speed-Update nach SetSpeed
         if (state is Playing) {
           final s = state as Playing;
-          emit(Playing(s.position, s.duration, speed: backend.speed));
+          emit(Playing(s.position, s.duration,
+              speed: backend.speed, volume: s.volume));
           if (kDebugMode) {
             logDebug('[AudioPlayerBloc] emit: Playing (SetSpeed)');
           }
         } else if (state is Paused) {
           final s = state as Paused;
-          emit(Paused(s.position, s.duration, speed: backend.speed));
+          emit(Paused(s.position, s.duration,
+              speed: backend.speed, volume: s.volume));
           if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Paused (SetSpeed)');
         }
       } catch (e) {
@@ -485,7 +538,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         }
         _duration = this.backend.duration ?? Duration.zero;
         _lastKnownPosition = Duration.zero;
-        emit(Paused(Duration.zero, _duration));
+        emit(Paused(Duration.zero, _duration,
+            speed: backend.speed, volume: backend.volume));
         if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Paused (Preload)');
         _listenToPosition();
         _durationSub?.cancel();
@@ -507,13 +561,20 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     on<SetVolume>((event, emit) async {
       try {
         await backend.setVolume(event.volume);
-        // State bleibt gleich, aber ggf. für UI-Feedback erneut emittieren
+        // State immer neu emittieren, auch wenn Wert identisch ist (neue Instanz!)
         if (state is Playing) {
           final s = state as Playing;
-          emit(Playing(s.position, s.duration, speed: s.speed));
+          emit(Playing(s.position, s.duration,
+              speed: s.speed, volume: event.volume));
         } else if (state is Paused) {
           final s = state as Paused;
-          emit(Paused(s.position, s.duration, speed: s.speed));
+          emit(Paused(s.position, s.duration, speed: s.speed, volume: event.volume));
+        } else if (state is Idle) {
+          emit(Idle(volume: event.volume));
+        } else if (state is Loading) {
+          emit(Loading(volume: event.volume));
+        } else {
+          emit(Idle(volume: event.volume)); // Fallback: Immer neue Instanz
         }
       } catch (e) {
         emit(
@@ -521,27 +582,65 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         if (kDebugMode) logDebug('[AudioPlayerBloc] Fehler bei SetVolume: $e');
       }
     });
+    on<UpdateSpeed>((event, emit) async {
+      // Immer neuen State mit aktuellem Speed emittieren
+      if (state is Playing) {
+        final s = state as Playing;
+        emit(Playing(s.position, s.duration,
+            speed: event.speed, volume: s.volume));
+      } else if (state is Paused) {
+        final s = state as Paused;
+        emit(Paused(s.position, s.duration,
+            speed: event.speed, volume: s.volume));
+      }
+    });
     _speedSub = backend.speedStream.listen((newSpeed) {
       add(UpdateSpeed(newSpeed));
     });
-    on<UpdateSpeed>((event, emit) async {
-      // Nur State aktualisieren, wenn sich der Wert wirklich geändert hat
+    _volumeSub = (backend as dynamic).volumeStream.listen((v) {
+      add(UpdateVolume(v));
+    });
+    _positionSubSync = backend.positionStream.listen((p) {
+      add(UpdatePositionEvent(p));
+    });
+    _durationSubSync = backend.durationStream.listen((d) {
+      add(UpdateDurationEvent(d));
+    });
+    on<UpdateVolume>((event, emit) async {
+      // Immer neuen State mit aktuellem Volume emittieren
       if (state is Playing) {
         final s = state as Playing;
-        if (s.speed != event.speed) {
-          emit(Playing(s.position, s.duration, speed: event.speed));
-          if (kDebugMode)
-            logDebug(
-                '[AudioPlayerBloc] emit: Playing (UpdateSpeed) $event.speed');
-        }
+        emit(Playing(s.position, s.duration,
+            speed: s.speed, volume: event.volume));
       } else if (state is Paused) {
         final s = state as Paused;
-        if (s.speed != event.speed) {
-          emit(Paused(s.position, s.duration, speed: event.speed));
-          if (kDebugMode)
-            logDebug(
-                '[AudioPlayerBloc] emit: Paused (UpdateSpeed) $event.speed');
-        }
+        emit(Paused(s.position, s.duration,
+            speed: s.speed, volume: event.volume));
+      }
+    });
+    on<UpdatePositionEvent>((event, emit) async {
+      // Immer neuen State mit aktueller Position emittieren
+      if (state is Playing) {
+        final s = state as Playing;
+        emit(Playing(event.position, s.duration,
+            speed: s.speed, volume: s.volume));
+      } else if (state is Paused) {
+        final s = state as Paused;
+        emit(Paused(event.position, s.duration,
+            speed: s.speed, volume: s.volume));
+      }
+    });
+    on<UpdateDurationEvent>((event, emit) async {
+      // Immer neuen State mit aktueller Duration emittieren
+      if (event.duration == null) return;
+      if (state is Playing) {
+        final s = state as Playing;
+        emit(Playing(s.position, event.duration!,
+            speed: s.speed, volume: s.volume));
+      } else if (state is Paused) {
+        final s = state as Paused;
+        emit(Paused(s.position, event.duration!,
+            speed: s.speed, volume: s.volume));
       }
     });
   }
@@ -553,6 +652,9 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
     _playerStateSub?.cancel();
     _durationSub?.cancel();
     _speedSub?.cancel();
+    _volumeSub?.cancel();
+    _positionSubSync?.cancel();
+    _durationSubSync?.cancel();
     backend.dispose();
     return super.close();
   }
@@ -717,9 +819,12 @@ class JustAudioPlayerBackend implements IAudioPlayerBackend {
   AudioPlayer _audioPlayer = AudioPlayer();
   double _speed = 1.0;
   final _speedController = StreamController<double>.broadcast();
+  final _volumeController = StreamController<double>.broadcast();
 
   @override
   Stream<double> get speedStream => _speedController.stream;
+  @override
+  Stream<double> get volumeStream => _volumeController.stream;
 
   JustAudioPlayerBackend() {
     _audioPlayer.playerStateStream.listen((state) {
@@ -855,6 +960,7 @@ class JustAudioPlayerBackend implements IAudioPlayerBackend {
   Future<void> setVolume(double volume) async {
     try {
       await _audioPlayer.setVolume(volume);
+      _volumeController.add(volume);
     } catch (e, st) {
       if (kDebugMode) {
         logDebug('[JustAudioPlayerBackend] Fehler bei setVolume: $e\n$st');
@@ -904,6 +1010,7 @@ class JustAudioPlayerBackend implements IAudioPlayerBackend {
     _audioPlayer.dispose();
     _resetPlayer();
     _speedController.close();
+    _volumeController.close();
   }
 }
 
