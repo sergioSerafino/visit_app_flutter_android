@@ -70,9 +70,16 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                         width: 56,
                         height: 56,
                         child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 4,
-                            color: theme.colorScheme.onSurface.withAlpha(140),
+                          child: Semantics(
+                            label: 'Wird geladen…',
+                            button: true,
+                            child: AbsorbPointer(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 4,
+                                color:
+                                    theme.colorScheme.onSurface.withAlpha(140),
+                              ),
+                            ),
                           ),
                         ),
                       )
@@ -80,19 +87,30 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       Semantics(
                         label: isPlaying ? 'Pause' : 'Wiedergabe starten',
                         button: true,
-                        child: IconButton(
-                          key: const Key('player_play_pause_button'),
-                          icon: Icon(
-                            isPlaying
-                                ? Icons.pause_circle_filled
-                                : Icons.play_circle_fill,
-                            color: theme.colorScheme.onSurface.withAlpha(140),
-                            size: 56,
+                        child: SizedBox(
+                          width: 56,
+                          height: 56,
+                          child: Center(
+                            child: IconButton(
+                              key: const Key('player_play_pause_button'),
+                              icon: Icon(
+                                isPlaying
+                                    ? Icons.pause_circle_filled
+                                    : Icons.play_circle_fill,
+                                color:
+                                    theme.colorScheme.onSurface.withAlpha(140),
+                                size: 56,
+                              ),
+                              iconSize: 56,
+                              padding: EdgeInsets.zero,
+                              alignment: Alignment.center,
+                              constraints: const BoxConstraints(),
+                              onPressed:
+                                  isPlayPauseButtonEnabled ? onPlayPause : null,
+                              tooltip:
+                                  isPlaying ? 'Pause' : 'Wiedergabe starten',
+                            ),
                           ),
-                          iconSize: 56,
-                          onPressed:
-                              isPlayPauseButtonEnabled ? onPlayPause : null,
-                          tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
                         ),
                       ),
                     const SizedBox(width: 32),
