@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../application/providers/audio_player_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/services/audio_player_bloc.dart';
 
 /// Dropdown für die Abspielgeschwindigkeit im Audio-Player.
-class BottomPlayerSpeedDropdown extends ConsumerWidget {
+class BottomPlayerSpeedDropdown extends ConsumerStatefulWidget {
   final double currentSpeed;
   final List<double> speedOptions;
   final ValueChanged<double> onSpeedChanged;
@@ -16,24 +17,74 @@ class BottomPlayerSpeedDropdown extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BottomPlayerSpeedDropdown> createState() =>
+      _BottomPlayerSpeedDropdownState();
+}
+
+class _BottomPlayerSpeedDropdownState
+    extends ConsumerState<BottomPlayerSpeedDropdown> {
+  late double _currentSpeed;
+  bool _isDragging = false;
+  double? _pendingSpeed;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSpeed = widget.currentSpeed;
+  }
+
+  void _setSpeed(double speed) {
+    setState(() {
+      _currentSpeed = speed;
+      _isDragging = true;
+      _pendingSpeed = speed;
+    });
+    widget.onSpeedChanged(speed);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final audioBloc = ref.watch(audioPlayerBlocProvider);
-    return StreamBuilder<double>(
-      stream: audioBloc.backend.speedStream,
-      initialData: currentSpeed,
+    return StreamBuilder<AudioPlayerState>(
+      stream: audioBloc.stream,
+      initialData: audioBloc.state,
       builder: (context, snapshot) {
-        final speed = snapshot.data ?? currentSpeed;
-        // DEBUG: Print jedes Event aus dem Stream
-        // ignore: avoid_print
-        print('[BottomPlayerSpeedDropdown] speedStream Event: $speed');
+        final state = snapshot.data;
+        double stateSpeed = widget.currentSpeed;
+        final isActive = state is Playing || state is Paused;
+        if (state is Playing) {
+          stateSpeed = state.speed;
+        } else if (state is Paused) {
+          stateSpeed = state.speed;
+        }
+        // Synchronisiere nur bei aktivem Stream und wenn kein Drag läuft
+        if (isActive && !_isDragging && _pendingSpeed == null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) setState(() => _currentSpeed = stateSpeed);
+          });
+        }
+        // Nach Drag: Wenn der State-Speed dem Pending-Speed entspricht, Drag zurücksetzen
+        if (_pendingSpeed != null &&
+            (stateSpeed - _pendingSpeed!).abs() < 0.001) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _isDragging = false;
+                _pendingSpeed = null;
+              });
+            }
+          });
+        }
         final theme = Theme.of(context);
         return ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 100),
           child: Semantics(
             label: 'Abspielgeschwindigkeit wählen',
             child: DropdownButton<double>(
-              value: speed,
-              items: speedOptions
+              value: (!isActive)
+                  ? _currentSpeed
+                  : (_isDragging ? _currentSpeed : stateSpeed),
+              items: widget.speedOptions
                   .map((s) => DropdownMenuItem(
                         value: s,
                         child: Text(
@@ -48,7 +99,7 @@ class BottomPlayerSpeedDropdown extends ConsumerWidget {
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
-                  onSpeedChanged(value);
+                  _setSpeed(value);
                 }
               },
               icon: Icon(Icons.speed,

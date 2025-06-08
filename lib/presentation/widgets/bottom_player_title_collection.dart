@@ -52,74 +52,65 @@ class BottomPlayerTitleCollection extends StatelessWidget {
             ),
             child: const Icon(Icons.music_note, color: Colors.grey),
           ),
-
         const SizedBox(width: 18),
         // Titel (Marquee) und SpeedDropdown in einer Zeile
         Expanded(
           flex: 2,
           child: Padding(
-            padding: const EdgeInsets.only(
-                top: 16), // Gesamten Block weiter nach unten verschieben
-            child: Column(
+            padding: const EdgeInsets.only(top: 16),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Titel (Marquee) und Collection-Name untereinander
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 22,
-                            child: Marquee(
-                              text: title,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color:
-                                    theme.colorScheme.onSurface.withAlpha(100),
-                              ),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              blankSpace: 24.0,
-                              velocity: 28.0,
-                              pauseAfterRound: const Duration(seconds: 3),
-                              startPadding: 0.0,
-                              accelerationDuration:
-                                  const Duration(milliseconds: 600),
-                              accelerationCurve: Curves.easeIn,
-                              decelerationDuration:
-                                  const Duration(milliseconds: 600),
-                              decelerationCurve: Curves.easeOut,
-                              showFadingOnlyWhenScrolling: true,
-                            ),
+                // Titel (Marquee) und Collection-Name untereinander
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 22,
+                        child: Marquee(
+                          text: title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface.withAlpha(100),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 2, left: 4, right: 4),
-                            child: Text(
-                              collectionName,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color:
-                                    theme.colorScheme.onSurface.withAlpha(120),
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+                          scrollAxis: Axis.horizontal,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          blankSpace: 24.0,
+                          velocity: 28.0,
+                          pauseAfterRound: const Duration(seconds: 3),
+                          startPadding: 0.0,
+                          accelerationDuration:
+                              const Duration(milliseconds: 600),
+                          accelerationCurve: Curves.easeIn,
+                          decelerationDuration:
+                              const Duration(milliseconds: 600),
+                          decelerationCurve: Curves.easeOut,
+                          showFadingOnlyWhenScrolling: true,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 18),
-                    // SpeedDropdown rechts
-                    BottomPlayerSpeedDropdown(
-                      currentSpeed: currentSpeed,
-                      speedOptions: speedOptions,
-                      onSpeedChanged: onSpeedChanged,
-                    ),
-                  ],
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 2, left: 4, right: 4),
+                        child: Text(
+                          collectionName,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withAlpha(120),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 18),
+                // SpeedDropdown rechts
+                BottomPlayerSpeedDropdown(
+                  currentSpeed: currentSpeed,
+                  speedOptions: speedOptions,
+                  onSpeedChanged: onSpeedChanged,
                 ),
               ],
             ),
