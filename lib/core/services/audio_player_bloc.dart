@@ -309,6 +309,7 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       _duration = Duration.zero;
       _lastKnownPosition = Duration.zero;
       // currentUrl = null; // Entfernt: URL bleibt erhalten!
+      add(UpdatePosition(Duration.zero)); // NEU: explizit Position 0 nach Reset
       emit(Idle());
       if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Idle');
     });

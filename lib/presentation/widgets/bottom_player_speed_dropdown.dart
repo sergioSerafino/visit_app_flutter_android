@@ -78,7 +78,8 @@ class _BottomPlayerSpeedDropdownState
         final theme = Theme.of(context);
         // Statt ConstrainedBox: flexiblere Breite, um Overflows zu vermeiden
         return SizedBox(
-          width: 120, // etwas breiter, damit alle Werte und das Icon passen
+          width:
+              double.infinity, // Maximale Breite, damit Dropdown nie overflowed
           child: Semantics(
             label: 'Abspielgeschwindigkeit wählen',
             child: DropdownButton<double>(

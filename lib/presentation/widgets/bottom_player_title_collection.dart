@@ -111,13 +111,15 @@ class BottomPlayerTitleCollection extends StatelessWidget {
                 ),
                 const SizedBox(
                     width: 16), // Mehr Luft zwischen Marquee und SpeedDropdown
-                // SpeedDropdown kompakt und rechtsbündig
-                SizedBox(
-                  width: 60, // Kompakte Breite
-                  child: BottomPlayerSpeedDropdown(
-                    currentSpeed: currentSpeed,
-                    speedOptions: speedOptions,
-                    onSpeedChanged: onSpeedChanged,
+                // SpeedDropdown rechtsbündig, aber mit flexibler Breite
+                IntrinsicWidth(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: BottomPlayerSpeedDropdown(
+                      currentSpeed: currentSpeed,
+                      speedOptions: speedOptions,
+                      onSpeedChanged: onSpeedChanged,
+                    ),
                   ),
                 ),
               ],

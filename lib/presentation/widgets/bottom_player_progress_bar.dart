@@ -54,6 +54,13 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
         _pendingPosition = null;
       });
     }
+    // NEU: Im Idle/Loading-State (hasValidDuration==false) immer auf 0 synchronisieren
+    if (!widget.hasValidDuration && _position != Duration.zero) {
+      setState(() {
+        _position = Duration.zero;
+        _duration = widget.duration;
+      });
+    }
   }
 
   String _formatDurationMMSS(int millis) {

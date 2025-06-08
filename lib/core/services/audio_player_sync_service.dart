@@ -6,107 +6,108 @@ import 'package:just_audio/just_audio.dart';
 import 'i_audio_player.dart';
 
 class AudioPlayerSyncService implements IAudioPlayerBackend {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer audioPlayer;
 
   // --- Speed ---
-  double _speed = 1.0;
-  final _speedController = StreamController<double>.broadcast();
+  double speedValue = 1.0;
+  final speedController = StreamController<double>.broadcast();
   @override
-  double get speed => _speed;
+  double get speed => speedValue;
   @override
-  Stream<double> get speedStream => _speedController.stream;
+  Stream<double> get speedStream => speedController.stream;
 
   // --- Volume ---
-  double _volume = 0.5;
-  final _volumeController = StreamController<double>.broadcast();
+  double volumeValue = 0.5;
+  final volumeController = StreamController<double>.broadcast();
   @override
-  double get volume => _volume;
+  double get volume => volumeValue;
   @override
-  Stream<double> get volumeStream => _volumeController.stream;
+  Stream<double> get volumeStream => volumeController.stream;
 
   // --- Position ---
-  Duration _position = Duration.zero;
-  final _positionController = StreamController<Duration>.broadcast();
+  Duration positionValue = Duration.zero;
+  final positionController = StreamController<Duration>.broadcast();
   @override
-  Duration get position => _position;
+  Duration get position => positionValue;
   @override
-  Stream<Duration> get positionStream => _positionController.stream;
+  Stream<Duration> get positionStream => positionController.stream;
 
   // --- Duration ---
-  Duration? _duration;
-  final _durationController = StreamController<Duration?>.broadcast();
+  Duration? durationValue;
+  final durationController = StreamController<Duration?>.broadcast();
   @override
-  Duration? get duration => _duration;
+  Duration? get duration => durationValue;
   @override
-  Stream<Duration?> get durationStream => _durationController.stream;
+  Stream<Duration?> get durationStream => durationController.stream;
 
   // --- Player State ---
-  final _playerStateController = StreamController<dynamic>.broadcast();
+  final playerStateController = StreamController<dynamic>.broadcast();
   @override
-  Stream<dynamic> get playerStateStream => _playerStateController.stream;
+  Stream<dynamic> get playerStateStream => playerStateController.stream;
   @override
-  bool get playing => _audioPlayer.playing;
+  bool get playing => audioPlayer.playing;
 
   // --- Konstruktor: Streams abonnieren ---
-  AudioPlayerSyncService() {
-    _audioPlayer.speedStream.listen((s) {
-      _speed = s;
-      _speedController.add(s);
+  AudioPlayerSyncService({AudioPlayer? audioPlayer})
+      : audioPlayer = audioPlayer ?? AudioPlayer() {
+    this.audioPlayer.speedStream.listen((s) {
+      speedValue = s;
+      speedController.add(s);
     });
-    _audioPlayer.volumeStream.listen((v) {
-      _volume = v;
-      _volumeController.add(v);
+    this.audioPlayer.volumeStream.listen((v) {
+      volumeValue = v;
+      volumeController.add(v);
     });
-    _audioPlayer.positionStream.listen((p) {
-      _position = p;
-      _positionController.add(p);
+    this.audioPlayer.positionStream.listen((p) {
+      positionValue = p;
+      positionController.add(p);
     });
-    _audioPlayer.durationStream.listen((d) {
-      _duration = d;
-      _durationController.add(d);
+    this.audioPlayer.durationStream.listen((d) {
+      durationValue = d;
+      durationController.add(d);
     });
-    _audioPlayer.playerStateStream.listen((state) {
-      _playerStateController.add(state);
+    this.audioPlayer.playerStateStream.listen((state) {
+      playerStateController.add(state);
     });
   }
 
   // --- Backend-Methoden ---
   @override
-  Future<void> setUrl(String url) => _audioPlayer.setUrl(url);
+  Future<void> setUrl(String url) => audioPlayer.setUrl(url);
   @override
-  Future<void> play() => _audioPlayer.play();
+  Future<void> play() => audioPlayer.play();
   @override
-  Future<void> pause() => _audioPlayer.pause();
+  Future<void> pause() => audioPlayer.pause();
   @override
-  Future<void> stop() => _audioPlayer.stop();
+  Future<void> stop() => audioPlayer.stop();
   @override
   Future<void> seek(Duration position) async {
-    await _audioPlayer.seek(position);
-    _position = position;
-    _positionController.add(position);
+    await audioPlayer.seek(position);
+    positionValue = position;
+    positionController.add(position);
   }
 
   @override
   Future<void> setSpeed(double speed) async {
-    await _audioPlayer.setSpeed(speed);
-    _speed = speed;
-    _speedController.add(speed);
+    await audioPlayer.setSpeed(speed);
+    speedValue = speed;
+    speedController.add(speed);
   }
 
   @override
   Future<void> setVolume(double volume) async {
-    await _audioPlayer.setVolume(volume);
-    _volume = volume;
-    _volumeController.add(volume);
+    await audioPlayer.setVolume(volume);
+    volumeValue = volume;
+    volumeController.add(volume);
   }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
-    _speedController.close();
-    _volumeController.close();
-    _positionController.close();
-    _durationController.close();
-    _playerStateController.close();
+    audioPlayer.dispose();
+    speedController.close();
+    volumeController.close();
+    positionController.close();
+    durationController.close();
+    playerStateController.close();
   }
 }

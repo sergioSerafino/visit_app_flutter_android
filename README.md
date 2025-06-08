@@ -447,3 +447,21 @@ r
 - Für plattformübergreifende Features (z.B. Multiroom) kann das Backend flexibel erweitert werden.
 
 ---
+
+## Best Practices: Testbare AudioPlayer-Synchronisation (Stand 08.06.2025)
+
+**Empfohlenes Test-Muster für AudioPlayerSyncService und UI-Widgets:**
+
+- Jeder Test erzeugt eigene StreamController für speed, volume, position, duration.
+- Die Controller werden im Mock und Service verwendet und im tearDown geschlossen.
+- Die Streams werden im Mock vor der Service-Initialisierung gestubbt.
+- Für Stream-Events wird `expectLater(..., emits(...))` verwendet, um deterministisch auf Werte zu warten.
+- Methoden wie setSpeed, setVolume, seek pushen direkt in die Controller und setzen die Service-Felder.
+- Beispiel siehe: `test/core/services/audio_player_sync_service_test.dart`
+
+**Vorteile:**
+- Keine Race-Conditions oder hängende Tests mehr.
+- Volle Kontrolle über alle Player-Events und deterministische State-Wechsel.
+- Pattern ist auf alle Player-Widgets und BLoC-Tests übertragbar.
+
+---
