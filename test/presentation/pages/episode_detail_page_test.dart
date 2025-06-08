@@ -28,6 +28,8 @@ void main() {
           .thenAnswer((_) => Stream.value(const Duration(seconds: 60)));
       when(() => backend.playerStateStream)
           .thenAnswer((_) => Stream.value('playing'));
+      when(() => backend.speedStream).thenAnswer((_) => Stream.value(1.0));
+      when(() => backend.volumeStream).thenAnswer((_) => Stream.value(0.5));
       when(() => backend.position).thenReturn(const Duration(seconds: 10));
       when(() => backend.duration).thenReturn(const Duration(seconds: 60));
       when(() => backend.playing).thenReturn(true);

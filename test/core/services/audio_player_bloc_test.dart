@@ -20,6 +20,10 @@ void main() {
           .thenAnswer((_) => const Stream.empty());
       when(() => backend.playerStateStream)
           .thenAnswer((_) => const Stream.empty());
+      when(() => backend.speedStream).thenAnswer((_) => Stream.value(1.0));
+      when(() => backend.volumeStream).thenAnswer((_) => Stream.value(0.5));
+      when(() => backend.speed).thenReturn(1.0);
+      when(() => backend.volume).thenReturn(0.5);
       when(() => backend.position).thenReturn(Duration.zero);
       when(() => backend.duration).thenReturn(const Duration(seconds: 30));
       when(() => backend.playing).thenReturn(true);
@@ -53,6 +57,7 @@ void main() {
       final sub = bloc.stream.listen(states.add);
       bloc.emit(
           Playing(const Duration(seconds: 10), const Duration(seconds: 30)));
+      states.add(bloc.state); // Aktuellen State nach emit aufnehmen
       bloc.add(Pause());
       await Future.delayed(const Duration(milliseconds: 50));
       expect(states.last, isA<Paused>());
@@ -65,6 +70,8 @@ void main() {
       final sub = bloc.stream.listen(states.add);
       bloc.emit(
           Playing(const Duration(seconds: 5), const Duration(seconds: 30)));
+      states.add(bloc.state); // Aktuellen State nach emit aufnehmen
+      bloc.stream.listen(states.add);
       bloc.add(Stop());
       await Future.delayed(const Duration(milliseconds: 50));
       expect(states.last, isA<Idle>());
@@ -77,6 +84,7 @@ void main() {
       bloc.emit(
           Playing(const Duration(seconds: 5), const Duration(seconds: 30)));
       final states = <AudioPlayerState>[];
+      states.add(bloc.state); // Initialen State nach emit aufnehmen
       final sub = bloc.stream.listen(states.add);
       bloc.add(SetVolume(0.5));
       await Future.delayed(const Duration(milliseconds: 50));

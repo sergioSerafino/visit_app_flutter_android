@@ -25,6 +25,8 @@ void main() {
     when(() => backend.durationStream).thenAnswer((_) => const Stream.empty());
     when(() => backend.playerStateStream)
         .thenAnswer((_) => const Stream.empty());
+    when(() => backend.speedStream).thenAnswer((_) => Stream.value(1.0));
+    when(() => backend.volumeStream).thenAnswer((_) => Stream.value(0.5));
     when(() => backend.position).thenReturn(const Duration());
     when(() => backend.duration).thenReturn(const Duration(seconds: 60));
     when(() => backend.playing).thenReturn(false);
@@ -34,6 +36,8 @@ void main() {
     when(() => backend.stop()).thenAnswer((_) async {});
     when(() => backend.setUrl(any<String>())).thenAnswer((_) async {});
     when(() => backend.dispose()).thenReturn(null);
+    when(() => backend.speed).thenReturn(1.0);
+    when(() => backend.volume).thenReturn(0.5);
     final bloc = AudioPlayerBloc(backend: backend);
 
     final episode = PodcastEpisode(

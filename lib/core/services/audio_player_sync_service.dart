@@ -47,6 +47,32 @@ class AudioPlayerSyncService implements IAudioPlayerBackend {
   @override
   bool get playing => audioPlayer.playing;
 
+  // --- Buffering/Sync-Status ---
+  bool _isBuffering = false;
+  final _bufferingController = StreamController<bool>.broadcast();
+  Timer? _bufferingTimer;
+  bool get isBuffering => _isBuffering;
+  Stream<bool> get bufferingStream => _bufferingController.stream;
+
+  void _startBufferingTimeout() {
+    _isBuffering = true;
+    _bufferingController.add(true);
+    _bufferingTimer?.cancel();
+    _bufferingTimer = Timer(const Duration(milliseconds: 2500), () {
+      _isBuffering = false;
+      _bufferingController.add(false);
+      // Optional: Fehler-Status setzen oder Retry-Logik
+    });
+  }
+
+  void _stopBuffering() {
+    if (_isBuffering) {
+      _isBuffering = false;
+      _bufferingController.add(false);
+    }
+    _bufferingTimer?.cancel();
+  }
+
   // --- Konstruktor: Streams abonnieren ---
   AudioPlayerSyncService({AudioPlayer? audioPlayer})
       : audioPlayer = audioPlayer ?? AudioPlayer() {
@@ -61,6 +87,7 @@ class AudioPlayerSyncService implements IAudioPlayerBackend {
     this.audioPlayer.positionStream.listen((p) {
       positionValue = p;
       positionController.add(p);
+      _stopBuffering(); // Buffering beenden, sobald Position-Event kommt
     });
     this.audioPlayer.durationStream.listen((d) {
       durationValue = d;
@@ -68,20 +95,30 @@ class AudioPlayerSyncService implements IAudioPlayerBackend {
     });
     this.audioPlayer.playerStateStream.listen((state) {
       playerStateController.add(state);
+      _stopBuffering(); // Buffering beenden, sobald State-Event kommt
     });
   }
 
   // --- Backend-Methoden ---
   @override
-  Future<void> setUrl(String url) => audioPlayer.setUrl(url);
+  Future<void> setUrl(String url) async {
+    _startBufferingTimeout();
+    await audioPlayer.setUrl(url);
+  }
+
   @override
-  Future<void> play() => audioPlayer.play();
+  Future<void> play() async {
+    _startBufferingTimeout();
+    await audioPlayer.play();
+  }
+
   @override
   Future<void> pause() => audioPlayer.pause();
   @override
   Future<void> stop() => audioPlayer.stop();
   @override
   Future<void> seek(Duration position) async {
+    _startBufferingTimeout();
     await audioPlayer.seek(position);
     positionValue = position;
     positionController.add(position);
@@ -109,5 +146,7 @@ class AudioPlayerSyncService implements IAudioPlayerBackend {
     positionController.close();
     durationController.close();
     playerStateController.close();
+    _bufferingController.close();
+    _bufferingTimer?.cancel();
   }
 }

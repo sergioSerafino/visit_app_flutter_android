@@ -294,3 +294,28 @@ Im Idle/Loading-State (also wenn kein aktiver Audio-Stream läuft) darf der Volu
 
 **Fazit:**
 Dieses Pattern ist für alle "statischen" Controls in Flutter relevant, die auch ohne Backend-Feedback reaktiv bleiben müssen.
+
+## Best Practice: Kontrollsperre, Timeout und UI-Feedback bei Buffering/Sync (08.06.2025)
+
+**Problem:**
+- Bei Netzwerkproblemen, Buffering oder Stream-Wechsel kann es vorkommen, dass das Backend (z. B. just_audio) für mehrere Sekunden keine Positions- oder Status-Events liefert.
+- Die UI (ProgressBar, Zeit, Buttons) bleibt dann auf dem letzten bekannten Wert stehen, während das Audio weiterläuft.
+- In der bisherigen Implementierung wurde eine 10-sekündige Timeout-Logik verwendet, nach der die UI wieder aktiviert wird – das ist für moderne Streaming-UX zu lang.
+
+**UX-Standard und Empfehlungen:**
+- Timeout für Kontrollsperre/Buffering auf 2–3 Sekunden reduzieren (statt 10s).
+- Während Buffering/Laden ALLE Transport-Buttons (Play, Pause, Seek, Reset) deaktivieren (optisch und funktional).
+- ProgressBar und Zeitangaben zeigen im Ladezustand einen Loader oder Platzhalter (z. B. „–:–“).
+- Nach Ablauf des Timeouts: Fehleranzeige oder Retry-Option anbieten.
+- UI sofort reaktivieren, sobald ein Event vom Backend kommt (Positions-/Status-Update).
+- Die UI darf nie „einfrieren“, sondern muss immer klar anzeigen, ob sie synchron ist oder auf ein Backend-Event wartet.
+
+**Pattern für AudioPlayerSyncService:**
+- Der SyncService steuert die Timeout-Logik und gibt der UI ein klares Signal, ob sie synchron ist oder auf Backend-Events wartet.
+- Die UI liest den Sync-Status (z. B. isSyncing, isBuffering) aus dem Service und passt Buttons/ProgressBar entsprechend an.
+- Nach jedem Positions-/Status-Event wird die UI sofort wieder aktiviert.
+
+**Fazit:**
+- Kurze, klare Kontrollsperre (2–3s), vollständige Deaktivierung der Buttons, sofortige Reaktivierung bei Backend-Event.
+- Loader/Platzhalter für ProgressBar/Zeit, Fehleranzeige nach Timeout.
+- Siehe auch: README.md und bottom_player_widget.dart für konkrete Umsetzung.

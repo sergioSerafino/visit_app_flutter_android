@@ -35,6 +35,7 @@ import '../../application/providers/current_episode_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../core/services/audio_player_bloc.dart';
+import '../../core/services/audio_player_sync_service.dart';
 import 'bottom_player_progress_bar.dart';
 import 'bottom_player_transport_buttons.dart';
 import 'bottom_player_title_collection.dart';
@@ -52,11 +53,12 @@ class BottomPlayerWidget extends ConsumerWidget {
     final currentEpisode = ref.watch(currentEpisodeProvider);
     final hasValidUrl =
         currentEpisode != null && currentEpisode.episodeUrl.isNotEmpty;
-    // Fallback: Nach Reset (Idle-State) bleibt der Play/Pause-Button aktiv,
-    // solange eine gültige Episode im Provider liegt. Sollte der Provider
-    // versehentlich auf null gesetzt werden, kann die UI (z.B. nach Reset)
-    // die letzte Episode wieder in den Provider schreiben.
     final audioStateAsync = ref.watch(audioPlayerStateProvider);
+    // Buffering/Sync-Status aus dem Service holen
+    final syncService = audioBloc.backend is AudioPlayerSyncService
+        ? audioBloc.backend as AudioPlayerSyncService
+        : null;
+    final isBuffering = syncService?.isBuffering ?? false;
     // ---
     // 1. ErrorState: Widget-Baum ersetzen
     final errorWidget = audioStateAsync.whenOrNull(
@@ -94,14 +96,15 @@ class BottomPlayerWidget extends ConsumerWidget {
         isPaused && position == Duration.zero && hasValidUrl;
     final isLoading = audioState is Loading;
     final isError = audioState is ErrorState;
+    // Buttons und ProgressBar im Buffering deaktivieren
+    final isTransportLocked = isLoading || isBuffering;
     final isPlayPauseButtonEnabled = _isPlayPauseButtonEnabled(
       hasValidUrl: hasValidUrl,
-      isLoading: isLoading,
+      isLoading: isTransportLocked,
       isError: isError,
     );
     final showPreloadOverlay = isPreloadOverlay;
-    final showLoadingOverlay = isLoading;
-
+    final showLoadingOverlay = isLoading || isBuffering;
     // ---
     // 2a. Player-Content als Komposition von Sub-Widgets
     Widget playerContent = SafeArea(
@@ -150,30 +153,45 @@ class BottomPlayerWidget extends ConsumerWidget {
             ],
             // Fortschrittsbalken
             BottomPlayerProgressBar(
-              position: position,
-              duration: duration,
-              hasValidDuration: hasValidDuration,
-              onSeek: (d) => audioBloc.add(Seek(d)),
+              position: (isLoading /* nur echter Loading-State */)
+                  ? Duration.zero
+                  : position,
+              duration: (isLoading /* nur echter Loading-State */)
+                  ? Duration.zero
+                  : duration,
+              hasValidDuration: hasValidDuration && !isLoading,
+              onSeek:
+                  isTransportLocked ? (d) {} : (d) => audioBloc.add(Seek(d)),
             ),
             // Transport-Buttons und Lautstärke
             BottomPlayerTransportButtons(
               isPlaying: isPlaying,
               isPlayPauseButtonEnabled: isPlayPauseButtonEnabled,
+              isLoading: isTransportLocked,
               position: position,
               duration: duration,
-              onPlayPause: () => audioBloc.add(TogglePlayPause()),
-              onReset: () => audioBloc.add(Stop()),
-              onRewind: () {
-                final newPos = position - const Duration(seconds: 10);
-                audioBloc
-                    .add(Seek(newPos > Duration.zero ? newPos : Duration.zero));
-              },
-              onForward: () {
-                final newPos = position + const Duration(seconds: 10);
-                audioBloc.add(Seek(newPos < duration ? newPos : duration));
-              },
-              volumeButton:
-                  _VolumeOverlayButton(audioBloc: audioBloc, theme: theme),
+              onPlayPause: isTransportLocked
+                  ? () {}
+                  : () => audioBloc.add(TogglePlayPause()),
+              onReset: isTransportLocked ? () {} : () => audioBloc.add(Stop()),
+              onRewind: isTransportLocked
+                  ? () {}
+                  : () {
+                      final newPos = position - const Duration(seconds: 10);
+                      audioBloc.add(Seek(
+                          newPos > Duration.zero ? newPos : Duration.zero));
+                    },
+              onForward: isTransportLocked
+                  ? () {}
+                  : () {
+                      final newPos = position + const Duration(seconds: 10);
+                      audioBloc
+                          .add(Seek(newPos < duration ? newPos : duration));
+                    },
+              volumeButton: AbsorbPointer(
+                  absorbing: isTransportLocked,
+                  child:
+                      _VolumeOverlayButton(audioBloc: audioBloc, theme: theme)),
             ),
             // const SizedBox(height: 8),
           ],

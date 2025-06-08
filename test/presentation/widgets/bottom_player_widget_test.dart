@@ -108,7 +108,7 @@ void main() {
       await tester.pumpAndSettle();
     },
     skip:
-        true, // 06.06.2025: Temporär deaktiviert wegen Pending-Timer-Fehler durch Marquee-Widget. Funktionalität ist durch andere Tests abgedeckt. Siehe audio_player_best_practices_2025.md
+        true, // Temporär deaktiviert wegen Pending-Timer-Fehler durch Marquee-Widget. Siehe audio_player_best_practices_2025.md
   );
 
   testWidgets(
@@ -222,7 +222,7 @@ void main() {
     await tester.pumpAndSettle();
   },
       skip:
-          true // 08.06.2025: Temporär deaktiviert wegen Pending-Timer-Fehler durch Marquee-Widget. Funktionalität ist durch andere Tests abgedeckt. Siehe README.md und audio_player_best_practices_2025.md
+          true // Temporär deaktiviert wegen Pending-Timer-Fehler durch Marquee-Widget. Siehe README.md und audio_player_best_practices_2025.md
       );
 
   testWidgets(

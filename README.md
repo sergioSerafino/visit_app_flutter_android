@@ -465,3 +465,15 @@ r
 - Pattern ist auf alle Player-Widgets und BLoC-Tests übertragbar.
 
 ---
+
+## Audio-Player: UX-Standard für Kontrollsperre, Buffering und Synchronisation (08.06.2025)
+
+- Während Buffering, Stream-Wechsel oder fehlender Backend-Events (z. B. nach Play/setUrl) wird die UI für maximal 2–3 Sekunden in einen Ladezustand versetzt (statt 10s wie bisher).
+- In dieser Zeit sind ALLE Transport-Buttons (Play, Pause, Seek, Reset) deaktiviert (optisch und funktional), ProgressBar und Zeitangaben zeigen einen Loader oder Platzhalter (z. B. „–:–“).
+- Nach Ablauf des Timeouts: Fehleranzeige oder Retry-Option.
+- Die UI wird sofort wieder aktiviert, sobald ein Event vom Backend (z. B. just_audio) kommt.
+- Die Timeout- und Kontrollsperren-Logik wird zentral im AudioPlayerSyncService gesteuert und an die UI weitergegeben.
+- Ziel: Keine „eingefrorene“ UI, sondern immer klares Feedback, ob eine Aktion möglich ist oder nicht.
+- Siehe auch: .documents/audio_player_best_practices_2025.md für Details und Codebeispiele.
+
+---
