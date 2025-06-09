@@ -13,6 +13,7 @@ _$BrandingImpl _$$BrandingImplFromJson(Map<String, dynamic> json) =>
       headerImageUrl: json['headerImageUrl'] as String?,
       themeMode: json['themeMode'] as String?,
       logoUrl: json['logoUrl'] as String?,
+      assetLogo: json['assetLogo'] as String?,
     );
 
 Map<String, dynamic> _$$BrandingImplToJson(_$BrandingImpl instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$BrandingImplToJson(_$BrandingImpl instance) =>
       'headerImageUrl': instance.headerImageUrl,
       'themeMode': instance.themeMode,
       'logoUrl': instance.logoUrl,
+      'assetLogo': instance.assetLogo,
     };

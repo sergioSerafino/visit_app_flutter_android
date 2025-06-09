@@ -78,8 +78,8 @@ void main() {
       await tester.pumpAndSettle();
       // Assert: Slider und Zeitanzeige vorhanden
       expect(find.byType(Slider), findsOneWidget);
-      expect(find.text('00:10'), findsOneWidget); // linke Zeit
-      expect(find.text('-00:50'), findsOneWidget); // rechte Zeit
+      expect(find.text('0m 10s'), findsOneWidget); // linke Zeit
+      expect(find.text('-0m 50s'), findsOneWidget); // rechte Zeit
       await bloc.close();
       await tester.pumpWidget(Container());
       await tester.pumpAndSettle(

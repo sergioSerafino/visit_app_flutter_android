@@ -12,8 +12,7 @@ part of 'podcast_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Podcast _$PodcastFromJson(Map<String, dynamic> json) {
   return _Podcast.fromJson(json);
@@ -44,16 +43,15 @@ abstract class $PodcastCopyWith<$Res> {
   factory $PodcastCopyWith(Podcast value, $Res Function(Podcast) then) =
       _$PodcastCopyWithImpl<$Res, Podcast>;
   @useResult
-  $Res call({
-    String wrapperType,
-    int collectionId,
-    String collectionName,
-    String artistName,
-    String primaryGenreName,
-    String artworkUrl600,
-    String? feedUrl,
-    List<PodcastEpisode> episodes,
-  });
+  $Res call(
+      {String wrapperType,
+      int collectionId,
+      String collectionName,
+      String artistName,
+      String primaryGenreName,
+      String artworkUrl600,
+      String? feedUrl,
+      List<PodcastEpisode> episodes});
 }
 
 /// @nodoc
@@ -80,63 +78,59 @@ class _$PodcastCopyWithImpl<$Res, $Val extends Podcast>
     Object? feedUrl = freezed,
     Object? episodes = null,
   }) {
-    return _then(
-      _value.copyWith(
-        wrapperType: null == wrapperType
-            ? _value.wrapperType
-            : wrapperType // ignore: cast_nullable_to_non_nullable
-                as String,
-        collectionId: null == collectionId
-            ? _value.collectionId
-            : collectionId // ignore: cast_nullable_to_non_nullable
-                as int,
-        collectionName: null == collectionName
-            ? _value.collectionName
-            : collectionName // ignore: cast_nullable_to_non_nullable
-                as String,
-        artistName: null == artistName
-            ? _value.artistName
-            : artistName // ignore: cast_nullable_to_non_nullable
-                as String,
-        primaryGenreName: null == primaryGenreName
-            ? _value.primaryGenreName
-            : primaryGenreName // ignore: cast_nullable_to_non_nullable
-                as String,
-        artworkUrl600: null == artworkUrl600
-            ? _value.artworkUrl600
-            : artworkUrl600 // ignore: cast_nullable_to_non_nullable
-                as String,
-        feedUrl: freezed == feedUrl
-            ? _value.feedUrl
-            : feedUrl // ignore: cast_nullable_to_non_nullable
-                as String?,
-        episodes: null == episodes
-            ? _value.episodes
-            : episodes // ignore: cast_nullable_to_non_nullable
-                as List<PodcastEpisode>,
-      ) as $Val,
-    );
+    return _then(_value.copyWith(
+      wrapperType: null == wrapperType
+          ? _value.wrapperType
+          : wrapperType // ignore: cast_nullable_to_non_nullable
+              as String,
+      collectionId: null == collectionId
+          ? _value.collectionId
+          : collectionId // ignore: cast_nullable_to_non_nullable
+              as int,
+      collectionName: null == collectionName
+          ? _value.collectionName
+          : collectionName // ignore: cast_nullable_to_non_nullable
+              as String,
+      artistName: null == artistName
+          ? _value.artistName
+          : artistName // ignore: cast_nullable_to_non_nullable
+              as String,
+      primaryGenreName: null == primaryGenreName
+          ? _value.primaryGenreName
+          : primaryGenreName // ignore: cast_nullable_to_non_nullable
+              as String,
+      artworkUrl600: null == artworkUrl600
+          ? _value.artworkUrl600
+          : artworkUrl600 // ignore: cast_nullable_to_non_nullable
+              as String,
+      feedUrl: freezed == feedUrl
+          ? _value.feedUrl
+          : feedUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      episodes: null == episodes
+          ? _value.episodes
+          : episodes // ignore: cast_nullable_to_non_nullable
+              as List<PodcastEpisode>,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$PodcastImplCopyWith<$Res> implements $PodcastCopyWith<$Res> {
   factory _$$PodcastImplCopyWith(
-    _$PodcastImpl value,
-    $Res Function(_$PodcastImpl) then,
-  ) = __$$PodcastImplCopyWithImpl<$Res>;
+          _$PodcastImpl value, $Res Function(_$PodcastImpl) then) =
+      __$$PodcastImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String wrapperType,
-    int collectionId,
-    String collectionName,
-    String artistName,
-    String primaryGenreName,
-    String artworkUrl600,
-    String? feedUrl,
-    List<PodcastEpisode> episodes,
-  });
+  $Res call(
+      {String wrapperType,
+      int collectionId,
+      String collectionName,
+      String artistName,
+      String primaryGenreName,
+      String artworkUrl600,
+      String? feedUrl,
+      List<PodcastEpisode> episodes});
 }
 
 /// @nodoc
@@ -144,9 +138,8 @@ class __$$PodcastImplCopyWithImpl<$Res>
     extends _$PodcastCopyWithImpl<$Res, _$PodcastImpl>
     implements _$$PodcastImplCopyWith<$Res> {
   __$$PodcastImplCopyWithImpl(
-    _$PodcastImpl _value,
-    $Res Function(_$PodcastImpl) _then,
-  ) : super(_value, _then);
+      _$PodcastImpl _value, $Res Function(_$PodcastImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of Podcast
   /// with the given fields replaced by the non-null parameter values.
@@ -162,58 +155,56 @@ class __$$PodcastImplCopyWithImpl<$Res>
     Object? feedUrl = freezed,
     Object? episodes = null,
   }) {
-    return _then(
-      _$PodcastImpl(
-        wrapperType: null == wrapperType
-            ? _value.wrapperType
-            : wrapperType // ignore: cast_nullable_to_non_nullable
-                as String,
-        collectionId: null == collectionId
-            ? _value.collectionId
-            : collectionId // ignore: cast_nullable_to_non_nullable
-                as int,
-        collectionName: null == collectionName
-            ? _value.collectionName
-            : collectionName // ignore: cast_nullable_to_non_nullable
-                as String,
-        artistName: null == artistName
-            ? _value.artistName
-            : artistName // ignore: cast_nullable_to_non_nullable
-                as String,
-        primaryGenreName: null == primaryGenreName
-            ? _value.primaryGenreName
-            : primaryGenreName // ignore: cast_nullable_to_non_nullable
-                as String,
-        artworkUrl600: null == artworkUrl600
-            ? _value.artworkUrl600
-            : artworkUrl600 // ignore: cast_nullable_to_non_nullable
-                as String,
-        feedUrl: freezed == feedUrl
-            ? _value.feedUrl
-            : feedUrl // ignore: cast_nullable_to_non_nullable
-                as String?,
-        episodes: null == episodes
-            ? _value._episodes
-            : episodes // ignore: cast_nullable_to_non_nullable
-                as List<PodcastEpisode>,
-      ),
-    );
+    return _then(_$PodcastImpl(
+      wrapperType: null == wrapperType
+          ? _value.wrapperType
+          : wrapperType // ignore: cast_nullable_to_non_nullable
+              as String,
+      collectionId: null == collectionId
+          ? _value.collectionId
+          : collectionId // ignore: cast_nullable_to_non_nullable
+              as int,
+      collectionName: null == collectionName
+          ? _value.collectionName
+          : collectionName // ignore: cast_nullable_to_non_nullable
+              as String,
+      artistName: null == artistName
+          ? _value.artistName
+          : artistName // ignore: cast_nullable_to_non_nullable
+              as String,
+      primaryGenreName: null == primaryGenreName
+          ? _value.primaryGenreName
+          : primaryGenreName // ignore: cast_nullable_to_non_nullable
+              as String,
+      artworkUrl600: null == artworkUrl600
+          ? _value.artworkUrl600
+          : artworkUrl600 // ignore: cast_nullable_to_non_nullable
+              as String,
+      feedUrl: freezed == feedUrl
+          ? _value.feedUrl
+          : feedUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      episodes: null == episodes
+          ? _value._episodes
+          : episodes // ignore: cast_nullable_to_non_nullable
+              as List<PodcastEpisode>,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PodcastImpl implements _Podcast {
-  const _$PodcastImpl({
-    required this.wrapperType,
-    required this.collectionId,
-    required this.collectionName,
-    required this.artistName,
-    required this.primaryGenreName,
-    required this.artworkUrl600,
-    this.feedUrl,
-    final List<PodcastEpisode> episodes = const [],
-  }) : _episodes = episodes;
+  const _$PodcastImpl(
+      {required this.wrapperType,
+      required this.collectionId,
+      required this.collectionName,
+      required this.artistName,
+      required this.primaryGenreName,
+      required this.artworkUrl600,
+      this.feedUrl,
+      final List<PodcastEpisode> episodes = const []})
+      : _episodes = episodes;
 
   factory _$PodcastImpl.fromJson(Map<String, dynamic> json) =>
       _$$PodcastImplFromJson(json);
@@ -270,16 +261,15 @@ class _$PodcastImpl implements _Podcast {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-        runtimeType,
-        wrapperType,
-        collectionId,
-        collectionName,
-        artistName,
-        primaryGenreName,
-        artworkUrl600,
-        feedUrl,
-        const DeepCollectionEquality().hash(_episodes),
-      );
+      runtimeType,
+      wrapperType,
+      collectionId,
+      collectionName,
+      artistName,
+      primaryGenreName,
+      artworkUrl600,
+      feedUrl,
+      const DeepCollectionEquality().hash(_episodes));
 
   /// Create a copy of Podcast
   /// with the given fields replaced by the non-null parameter values.
@@ -291,21 +281,22 @@ class _$PodcastImpl implements _Podcast {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PodcastImplToJson(this);
+    return _$$PodcastImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Podcast implements Podcast {
-  const factory _Podcast({
-    required final String wrapperType,
-    required final int collectionId,
-    required final String collectionName,
-    required final String artistName,
-    required final String primaryGenreName,
-    required final String artworkUrl600,
-    final String? feedUrl,
-    final List<PodcastEpisode> episodes,
-  }) = _$PodcastImpl;
+  const factory _Podcast(
+      {required final String wrapperType,
+      required final int collectionId,
+      required final String collectionName,
+      required final String artistName,
+      required final String primaryGenreName,
+      required final String artworkUrl600,
+      final String? feedUrl,
+      final List<PodcastEpisode> episodes}) = _$PodcastImpl;
 
   factory _Podcast.fromJson(Map<String, dynamic> json) = _$PodcastImpl.fromJson;
 

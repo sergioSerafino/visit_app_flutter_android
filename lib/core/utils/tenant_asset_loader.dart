@@ -36,4 +36,24 @@ class TenantAssetLoader {
       return 'lib/tenants/common/assets/$filename';
     }
   }
+
+  /// Gibt den Pfad zum assetLogo (falls vorhanden) im Asset-Ordner des Tenants zurück.
+  /// Wenn assetLogo leer oder null, wird wie bisher logo.png verwendet.
+  String assetLogoPath(String? assetLogo) {
+    if (assetLogo != null && assetLogo.isNotEmpty) {
+      // Wenn assetLogo ein relativer Pfad ist, ergänze ggf. den Tenant-Ordner
+      if (assetLogo.startsWith('/')) {
+        // Absolute Pfade werden direkt verwendet
+        return assetLogo;
+      } else if (collectionId != null) {
+        // Relativer Pfad im Tenant-Ordner
+        return 'lib/tenants/collection_$collectionId/assets/$assetLogo';
+      } else {
+        // Relativer Pfad im Common-Ordner
+        return 'lib/tenants/common/assets/$assetLogo';
+      }
+    }
+    // Fallback: Standard-Logo
+    return imagePath();
+  }
 }

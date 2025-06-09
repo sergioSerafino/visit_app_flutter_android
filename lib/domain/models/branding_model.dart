@@ -13,6 +13,7 @@ class Branding with _$Branding {
     String? headerImageUrl,
     String? themeMode, // "light", "dark", "system"
     String? logoUrl,
+    String? assetLogo,
   }) = _Branding;
 
   factory Branding.fromJson(Map<String, dynamic> json) =>

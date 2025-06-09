@@ -1,14 +1,16 @@
+
+
 {
   "collectionId": 1590516386,
-  "hostName": "Test Host 1",
-  "description": "Beschreibung für Host 1 (Collection 1590516386)",
+  "hostName": "Sabine Guhr-Biermann - Test Host 1",
+  "description": "Als Buchautorin auf dem spirituellen Buchmarkt und eine fest etablierte Größe, bekannt durch das eigene Podcast Format Opalia Talk. Bereits seit 2021 unterhält Sabine ihre Zuhörerschaft auf den Streaming-Platformen regelmäßig durch Ihre episodischen Gespräche mit wechselnden Gästen und vielfältigen Themen.",
   "contact": { "email": "host1@example.com" },
   "branding": {
     "primaryColorHex": "#646464",
     "secondaryColorHex": "#32ABE0",
     "headerImageUrl": "https://example.com/host1-header.png",
-    "themeMode": "light",
-    "logoUrl": "https://example.com/host1-logo.png"
+    "themeMode": "light"
+
   },
   "features": { "showPortfolioTab": true },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },

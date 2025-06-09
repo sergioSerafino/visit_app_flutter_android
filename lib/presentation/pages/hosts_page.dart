@@ -1,188 +1,254 @@
 // pages/hosts_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../application/providers/theme_provider.dart' as theme_prov;
-import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../../application/providers/podcast_provider.dart';
+import '../../core/utils/tenant_asset_loader.dart';
 import '../../domain/common/api_response.dart';
+import '../../application/providers/collection_provider.dart' as coll_prov;
+import '../../application/providers/rss_metadata_provider.dart';
+import '../widgets/host_info_card.dart';
+import '../widgets/splash_cover_image.dart';
 
 class HostsPage extends ConsumerWidget {
   const HostsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Hole das aktuelle Branding und Theme
-    final branding = ref.watch(theme_prov.brandingProvider);
-    final theme = ref.watch(theme_prov.appThemeProvider);
-    // Hole das dynamisch geladene HostModel
     final host = ref.watch(coll_prov.hostModelProvider);
-    final logoUrl = host.branding.logoUrl ?? "";
-    final showPortfolioTab = host.features.showPortfolioTab ?? false;
-    final collectionId = ref.watch(coll_prov.collectionIdProvider);
-    final podcastCollectionAsync =
-        ref.watch(podcastCollectionProvider(collectionId));
-
+    final collectionId = host.collectionId;
+    final podcastCollectionAsync = ref.watch(
+      podcastCollectionProvider(collectionId),
+    );
     return Scaffold(
-      // AppBar entfernt
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Center(
-        child: Card(
-          color: theme.colorScheme.primary.withAlpha(25), // ca. 10% Deckkraft
-          elevation: 4,
-          margin: const EdgeInsets.all(32),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+      body: Column(
+        children: [
+          // Fester Header oder beliebiges Widget
+          // SplashCoverImage als Artwork oben in der Card
+          SplashCoverImage(
+            assetPath: TenantAssetLoader(host.collectionId)
+                .assetLogoPath(host.branding.assetLogo),
+            scaleFactor: 0.5,
+            duration: const Duration(milliseconds: 800),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 0.0, left: 24.0, right: 24.0),
+            child: Text('Lokale Host-Informationen',
+                style: Theme.of(context).textTheme.headlineMedium),
+          ),
+          const SizedBox(height: 8),
+          // Scrollbarer Bereich
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(24),
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: theme.colorScheme.primary,
-                  backgroundImage:
-                      (logoUrl.isNotEmpty) ? NetworkImage(logoUrl) : null,
-                  child: (logoUrl.isEmpty)
-                      ? Icon(Icons.person,
-                          size: 48,
-                          color: theme.colorScheme.primary.withAlpha(180))
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  host.hostName,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  host.description,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Kontakt:  ${host.contact.email}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Primärfarbe: ${branding.primaryColorHex ?? "-"}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sekundärfarbe: ${branding.secondaryColorHex ?? "-"}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.secondary,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                if (showPortfolioTab)
-                  Chip(
-                    label: Text('PortfolioTab aktiviert',
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: theme.colorScheme.onSecondary)),
-                    backgroundColor: theme.colorScheme.secondary.withAlpha(51),
-                  ),
-                if (!showPortfolioTab)
-                  Chip(
-                    label: Text('PortfolioTab deaktiviert',
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: theme.colorScheme.onError)),
-                    backgroundColor: theme.colorScheme.error.withAlpha(51),
-                  ),
-                const SizedBox(height: 16),
-                // Statusanzeige für PodcastCollection
-                Builder(
-                  builder: (context) {
-                    return podcastCollectionAsync.when(
-                      data: (apiResponse) {
-                        if (apiResponse.isSuccess && apiResponse.data != null) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                // Dynamische Host-Felder
+                InfoTile(label: 'Host Name', value: host.hostName),
+
+                //PERFEKT: als HAUPTE SEKTION
+                InfoTile(label: 'Beschreibung', value: host.description),
+                // InfoTile(label: 'CollectionId', value: host.collectionId.toString()),
+                // InfoTile(
+                //     label: 'Primäres Genre', value: host.primaryGenreName ?? '-'),
+
+                // verleichen mit
+                // InfoTile(label: 'Kontakt E-Mail', value: host.contact.email ?? '-'),
+
+                InfoTile(
+                    label: 'Social Links',
+                    value: host.contact.socialLinks?.entries
+                            .map((e) => '${e.key}: ${e.value}')
+                            .join(', ') ??
+                        '-'),
+                InfoTile(
+                    label: 'Website', value: host.contact.websiteUrl ?? '-'),
+
+                InfoTile(
+                    label: 'Impressum',
+                    value: host.contact.impressumUrl ?? '-'),
+                InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
+                InfoTile(label: 'Mission', value: host.content.mission ?? '-'),
+
+                // für Admin
+                // InfoTile(label: 'RSS-Feed', value: host.content.rss ?? '-'),
+
+                // für Admin
+                // InfoTile(
+                //     label: 'PortfolioTab',
+                //     value: (host.features.showPortfolioTab ?? false).toString()),
+
+                // für Admin
+                // InfoTile(
+                //     label: 'Branding Primary',
+                //     value: host.branding.primaryColorHex ?? '-'),
+
+                // für Admin
+                // InfoTile(
+                //     label: 'Branding Secondary',
+                //     value: host.branding.secondaryColorHex ?? '-'),
+
+                InfoTile(
+                    label: 'Branding Logo',
+                    value: host.branding.logoUrl ?? '-'),
+
+                // für Admin
+                // InfoTile(label: 'Theme Mode', value: host.branding.themeMode ?? '-'),
+
+                // für Admin
+                // InfoTile(
+                // label: 'Debug Only', value: host.debugOnly?.toString() ?? '-'),
+
+                //PERFEKT: als 'host.lastUpdated'
+                InfoTile(
+                    label: 'Last Updated',
+                    value: host.lastUpdated?.toIso8601String() ?? '-'),
+                const Divider(height: 32),
+
+                Text('Podcast-/RSS-Informationen',
+                    style: Theme.of(context).textTheme.headlineMedium),
+
+                const SizedBox(height: 12),
+                podcastCollectionAsync.when(
+                  data: (apiResponse) {
+                    if (!apiResponse.isSuccess || apiResponse.data == null) {
+                      return const Text('Keine PodcastCollection geladen');
+                    }
+                    final podcast = apiResponse.data!.podcasts.firstOrNull;
+                    if (podcast == null)
+                      return const Text('Kein Podcast gefunden');
+                    final feedUrl = podcast.feedUrl ?? '';
+                    final rssMetaAsync =
+                        ref.watch(rssMetadataProvider(feedUrl));
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // für dynamische Inline-Ersetzung
+                        InfoTile(
+                            label: 'Podcast Titel',
+                            value: podcast.collectionName),
+
+                        //PERFEKT: als 'hostName' (=='artistName' -> dann speichern)
+                        InfoTile(label: 'Artist', value: podcast.artistName),
+
+                        // InfoTile(label: 'Genre', value: podcast.primaryGenreName),
+
+                        InfoTile(
+                            label: 'Feed URL', value: podcast.feedUrl ?? '-'),
+
+                        InfoTile(label: 'Feed URL (Debug)', value: feedUrl),
+
+                        // für Admin
+                        // InfoTile(
+                        //     label: 'PodcastId',
+                        //     value: podcast.collectionId.toString()),
+
+                        //PERFEKT:
+                        InfoTile(
+                            label: 'Artwork', value: podcast.artworkUrl600),
+
+                        //PERFEKT: als 'numberOfEpisodes' ()
+                        InfoTile(
+                            label: 'Episodenanzahl',
+                            value: podcast.episodes.length.toString()),
+
+                        const Divider(height: 24),
+                        // --- RSS-Metadaten direkt aus Feed (live, nicht gemergt) ---
+                        rssMetaAsync.when(
+                          data: (meta) => meta == null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text('Keine RSS-Metadaten gefunden'),
+                                    Text('Debug: meta == null'),
+                                  ],
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    //PERFEKT: als 'meta.hostName'
+                                    InfoTile(
+                                        label: 'RSS Host Name',
+                                        value: meta.hostName ?? '-'),
+
+                                    //PERFEKT: als 'meta.description'
+                                    InfoTile(
+                                        label: 'RSS Beschreibung',
+                                        value: meta.description ?? '-'),
+
+                                    //PERFEKT: als 'meta.contactEmail'
+                                    InfoTile(
+                                        label: 'Kontakt E-Mail (RSS)',
+                                        value: meta.contactEmail ?? '-'),
+
+                                    //PERFEKT: als 'meta.websiteUrl'
+                                    InfoTile(
+                                        label: 'Website (RSS)',
+                                        value: meta.websiteUrl ?? '-'),
+
+                                    // für Admin als aktuelles RRS-Backup von 'artworkUrl600'
+                                    // InfoTile(
+                                    //     label: 'Logo RSS (hochauflösendes Cover)',
+                                    //     value: meta.logoUrl ?? '-'),
+
+                                    // für Admin
+                                    // InfoTile(
+                                    //     label: 'RSS Sprache',
+                                    //     value: meta.defaultLanguageCode ?? '-'),
+
+                                    //PERFEKT: als 'longPrimaryGenreName'
+                                    InfoTile(
+                                        label: 'Kategorie bei iTunes',
+                                        value:
+                                            meta.longPrimaryGenreName ?? '-'),
+                                  ],
+                                ),
+                          loading: () => const CircularProgressIndicator(),
+                          error: (err, stack) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.cloud_done,
-                                  color:
-                                      theme.colorScheme.primary.withAlpha(180)),
-                              const SizedBox(width: 8),
-                              Text('RSS/Podcast-Daten geladen und gemerged',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.secondary)),
+                              Text('Fehler beim Laden der RSS-Metadaten: $err'),
+                              Text('Debug: $stack'),
                             ],
-                          );
-                        } else if (apiResponse is Error) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.cloud_off,
-                                  color:
-                                      theme.colorScheme.primary.withAlpha(180)),
-                              const SizedBox(width: 8),
-                              Text('RSS/Podcast-Daten NICHT geladen',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.error)),
-                            ],
-                          );
-                        } else {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: theme.colorScheme.secondary),
-                              ),
-                              const SizedBox(width: 8),
-                              Text('Lade RSS/Podcast-Daten...',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: theme.colorScheme.onPrimary)),
-                            ],
-                          );
-                        }
-                      },
-                      loading: () => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: theme.colorScheme.secondary),
                           ),
-                          const SizedBox(width: 8),
-                          Text('Lade RSS/Podcast-Daten...',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onPrimary)),
-                        ],
-                      ),
-                      error: (err, stack) => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.cloud_off,
-                              color: theme.colorScheme.primary.withAlpha(180)),
-                          const SizedBox(width: 8),
-                          Text('Fehler beim Laden der RSS/Podcast-Daten',
-                              style: theme.textTheme.bodySmall
-                                  ?.copyWith(color: theme.colorScheme.error)),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 24),
+                        HostInfoCard(host: host),
+                      ],
                     );
                   },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Text('Fehler beim Laden: $err'),
                 ),
               ],
             ),
           ),
-        ),
+          // Optional: Fester Footer/Player/Widget
+          // MyBottomPlayerWidget(),
+        ],
+      ),
+    );
+  }
+}
+
+class InfoTile extends StatelessWidget {
+  final String label;
+  final String value;
+  const InfoTile({super.key, required this.label, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+              width: 160,
+              child: Text('$label:',
+                  style: Theme.of(context).textTheme.bodyMedium)),
+          Expanded(
+              child: Text(value, style: Theme.of(context).textTheme.bodyLarge)),
+        ],
       ),
     );
   }

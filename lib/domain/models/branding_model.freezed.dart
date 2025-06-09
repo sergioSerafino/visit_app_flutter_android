@@ -26,6 +26,7 @@ mixin _$Branding {
   String? get themeMode =>
       throw _privateConstructorUsedError; // "light", "dark", "system"
   String? get logoUrl => throw _privateConstructorUsedError;
+  String? get assetLogo => throw _privateConstructorUsedError;
 
   /// Serializes this Branding to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,7 +48,8 @@ abstract class $BrandingCopyWith<$Res> {
       String? secondaryColorHex,
       String? headerImageUrl,
       String? themeMode,
-      String? logoUrl});
+      String? logoUrl,
+      String? assetLogo});
 }
 
 /// @nodoc
@@ -70,6 +72,7 @@ class _$BrandingCopyWithImpl<$Res, $Val extends Branding>
     Object? headerImageUrl = freezed,
     Object? themeMode = freezed,
     Object? logoUrl = freezed,
+    Object? assetLogo = freezed,
   }) {
     return _then(_value.copyWith(
       primaryColorHex: freezed == primaryColorHex
@@ -92,6 +95,10 @@ class _$BrandingCopyWithImpl<$Res, $Val extends Branding>
           ? _value.logoUrl
           : logoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      assetLogo: freezed == assetLogo
+          ? _value.assetLogo
+          : assetLogo // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -109,7 +116,8 @@ abstract class _$$BrandingImplCopyWith<$Res>
       String? secondaryColorHex,
       String? headerImageUrl,
       String? themeMode,
-      String? logoUrl});
+      String? logoUrl,
+      String? assetLogo});
 }
 
 /// @nodoc
@@ -130,6 +138,7 @@ class __$$BrandingImplCopyWithImpl<$Res>
     Object? headerImageUrl = freezed,
     Object? themeMode = freezed,
     Object? logoUrl = freezed,
+    Object? assetLogo = freezed,
   }) {
     return _then(_$BrandingImpl(
       primaryColorHex: freezed == primaryColorHex
@@ -152,6 +161,10 @@ class __$$BrandingImplCopyWithImpl<$Res>
           ? _value.logoUrl
           : logoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      assetLogo: freezed == assetLogo
+          ? _value.assetLogo
+          : assetLogo // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -164,7 +177,8 @@ class _$BrandingImpl implements _Branding {
       this.secondaryColorHex,
       this.headerImageUrl,
       this.themeMode,
-      this.logoUrl});
+      this.logoUrl,
+      this.assetLogo});
 
   factory _$BrandingImpl.fromJson(Map<String, dynamic> json) =>
       _$$BrandingImplFromJson(json);
@@ -180,10 +194,12 @@ class _$BrandingImpl implements _Branding {
 // "light", "dark", "system"
   @override
   final String? logoUrl;
+  @override
+  final String? assetLogo;
 
   @override
   String toString() {
-    return 'Branding(primaryColorHex: $primaryColorHex, secondaryColorHex: $secondaryColorHex, headerImageUrl: $headerImageUrl, themeMode: $themeMode, logoUrl: $logoUrl)';
+    return 'Branding(primaryColorHex: $primaryColorHex, secondaryColorHex: $secondaryColorHex, headerImageUrl: $headerImageUrl, themeMode: $themeMode, logoUrl: $logoUrl, assetLogo: $assetLogo)';
   }
 
   @override
@@ -199,13 +215,15 @@ class _$BrandingImpl implements _Branding {
                 other.headerImageUrl == headerImageUrl) &&
             (identical(other.themeMode, themeMode) ||
                 other.themeMode == themeMode) &&
-            (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl));
+            (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl) &&
+            (identical(other.assetLogo, assetLogo) ||
+                other.assetLogo == assetLogo));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, primaryColorHex,
-      secondaryColorHex, headerImageUrl, themeMode, logoUrl);
+      secondaryColorHex, headerImageUrl, themeMode, logoUrl, assetLogo);
 
   /// Create a copy of Branding
   /// with the given fields replaced by the non-null parameter values.
@@ -229,7 +247,8 @@ abstract class _Branding implements Branding {
       final String? secondaryColorHex,
       final String? headerImageUrl,
       final String? themeMode,
-      final String? logoUrl}) = _$BrandingImpl;
+      final String? logoUrl,
+      final String? assetLogo}) = _$BrandingImpl;
 
   factory _Branding.fromJson(Map<String, dynamic> json) =
       _$BrandingImpl.fromJson;
@@ -244,6 +263,8 @@ abstract class _Branding implements Branding {
   String? get themeMode; // "light", "dark", "system"
   @override
   String? get logoUrl;
+  @override
+  String? get assetLogo;
 
   /// Create a copy of Branding
   /// with the given fields replaced by the non-null parameter values.
