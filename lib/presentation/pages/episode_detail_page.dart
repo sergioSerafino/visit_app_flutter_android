@@ -93,6 +93,10 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
   @override
   Widget build(BuildContext context) {
     final String displayTitle = _formatTitle(widget.trackName);
+    final String formattedAbbreviatedTitle = formatAndAbbreviateTitle(
+      widget.trackName,
+      maxLength: 48,
+    );
     // Riverpod Consumer für Player- und Cast-Status
     return Consumer(
       builder: (context, ref, _) {
@@ -120,7 +124,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                     title: Opacity(
                       opacity: _titleOpacity,
                       child: Text(
-                        displayTitle,
+                        formattedAbbreviatedTitle,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
                         style: const TextStyle(
@@ -393,5 +397,50 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
   String formatReleaseDate(DateTime date) {
     return DateFormat('dd.MM.yyyy').format(date);
+  }
+
+  // Kombiniert Formatierung (Zeilenumbruch nach Trennzeichen) und Abkürzung für die erste Zeile (ohne Einkürzen, sondern Anfang und Ende zeigen).
+  String formatAndAbbreviateTitle(String input, {int maxLength = 32}) {
+    final formatted = _formatTitle(input);
+    final lines = formatted.split('\n');
+    if (lines.length == 1) {
+      // Nur eine Zeile: Anfang und Ende zeigen, Mittelteil durch ... ersetzen
+      return abbreviateStartAndEnd(lines[0], maxLength: maxLength);
+    } else {
+      // Erste Zeile: Anfang und Ende zeigen, zweite bleibt wie formatiert
+      final first = abbreviateStartAndEnd(lines[0], maxLength: maxLength);
+      return '$first\n${lines.sublist(1).join('\n')}';
+    }
+  }
+
+  // Gibt von einem langen String den Anfang und das Ende zurück, Mittelteil wird durch ... ersetzt (z.B. "Anfang ...Ende")
+  String abbreviateStartAndEnd(String input, {int maxLength = 48}) {
+    if (input.length <= maxLength) return input;
+    // Mindestens 6 Zeichen für Anfang und Ende, sonst nur ...
+    final minKeep = 6;
+    final keep = ((maxLength - 3) ~/ 2).clamp(minKeep, maxLength);
+    final start = input.substring(0, keep).trim();
+    final end = input.substring(input.length - keep).trim();
+    return '$start ... $end';
+  }
+
+  // Gibt den Titel für die AppBar so zurück, dass das Ende (z.B. Episodenname) immer sichtbar bleibt.
+  String abbreviateTitle(String input, {int maxLength = 32}) {
+    if (input.length <= maxLength) return input;
+    // Trennzeichen für Episoden-/Folgentitel
+    final delimiters = [':', '-', '|', '/'];
+    String lastSegment = input;
+    for (var d in delimiters) {
+      if (input.contains(d)) {
+        lastSegment = input.split(d).last.trim();
+        break;
+      }
+    }
+    // Wenn das letzte Segment fast so lang ist wie der ganze Titel, dann normal ellipsieren
+    if (lastSegment.length > maxLength - 4) {
+      return input.substring(0, maxLength - 1) + '…';
+    }
+    // Sonst: Anfang abschneiden, Ende behalten
+    return '… $lastSegment';
   }
 }
