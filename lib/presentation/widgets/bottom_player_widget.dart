@@ -104,7 +104,11 @@ class BottomPlayerWidget extends ConsumerWidget {
     final isLoading = audioState is Loading;
     final isError = audioState is ErrorState;
     // Buttons und ProgressBar im Buffering deaktivieren
-    final isTransportLocked = isLoading || isBuffering;
+    // NEU: Buttons NIE blockieren, wenn eine gültige Episode über die EpisodeDetailPage geladen wurde
+    final isEpisodeExplicitlyLoaded =
+        currentEpisode != null && currentEpisode.episodeUrl.isNotEmpty;
+    final isTransportLocked =
+        (isLoading || isBuffering) && !isEpisodeExplicitlyLoaded;
     final isPlayPauseButtonEnabled = _isPlayPauseButtonEnabled(
       hasValidUrl: hasValidUrl,
       isLoading: isTransportLocked,
@@ -176,11 +180,18 @@ class BottomPlayerWidget extends ConsumerWidget {
               isLoading: isTransportLocked,
               position: position,
               duration: duration,
-              isActiveEpisode: currentEpisode != null && isActive,
-              onPlayPause: isTransportLocked
-                  ? () {}
-                  : () => audioBloc.add(TogglePlayPause()),
-              onReset: isTransportLocked ? () {} : () => audioBloc.add(Stop()),
+              // Korrekt: isActiveEpisode ist true, wenn eine Episode geladen und Player aktiv (Playing/Paused)
+              isActiveEpisode: currentEpisode != null &&
+                  (audioState is Playing ||
+                      audioState is Paused ||
+                      audioState is Idle),
+              onPlayPause: isPlayPauseButtonEnabled
+                  ? () => audioBloc.add(TogglePlayPause())
+                  : () {},
+              onReset: (currentEpisode != null &&
+                      currentEpisode.episodeUrl.isNotEmpty)
+                  ? () => audioBloc.add(Stop())
+                  : () {},
               onRewind: isTransportLocked
                   ? () {}
                   : () {

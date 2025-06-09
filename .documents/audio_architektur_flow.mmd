@@ -1,0 +1,12 @@
+flowchart TD
+    UI["UI (Player, Progress, Buffer-Status)"]
+    Bloc["AudioPlayerBloc (Buffer-Strategie, State)"]
+    Backend["IAudioPlayerBackend (just_audio, Cast, AirPlay, ...)"]
+    Platform["Plattform/Engine (ExoPlayer, AVPlayer, CastSDK, ...)"]
+
+    UI --Events/Feedback--> Bloc
+    Bloc --Buffer-Strategie, Play, Preload--> Backend
+    Backend --Buffer-Status, Streams--> Bloc
+    Backend --Plattform-API--> Platform
+    Platform --Status/Events--> Backend
+    Bloc --State--> UI

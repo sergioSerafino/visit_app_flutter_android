@@ -45,7 +45,8 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                     : theme.disabledColor),
             iconSize: 24,
             tooltip: 'Player zurücksetzen',
-            onPressed: isLoading || !isActiveEpisode ? null : onReset,
+            // NEU: Reset NIE blockieren, wenn Episode explizit geladen
+            onPressed: isActiveEpisode ? onReset : null,
           ),
           const SizedBox(width: 8),
           // Zentrale Transport-Buttons

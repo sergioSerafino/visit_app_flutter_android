@@ -241,55 +241,114 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       }
       // NEU: Wechsel auf andere URL ist IMMER erlaubt, egal in welchem State
       // (vorher: nur aus Idle, Paused, ErrorState → das verhinderte Stream-Wechsel bei Playing)
-      emit(Loading());
-      if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Loading');
-      try {
-        await backend.stop();
-        currentUrl = event.url; // URL merken
-        await _safeSetUrlWithRetry(event.url, emit);
-        // --- Resume-Position aus SharedPreferences laden (Streaming/Download)
-        // Versuche, die aktuelle Episode aus Provider zu bekommen (für trackId/downloadedAt)
-        // (Im UI: currentEpisodeProvider, hier ggf. als Parameter oder über einen Service)
+      // Vor jedem neuen Play: Resume-Position der alten Folge explizit speichern
+      if (currentUrl != null &&
+          currentUrl != event.url &&
+          _lastKnownPosition > Duration.zero) {
+        // Resume-Position für alte Folge speichern
+        _resumePositions[currentUrl!] = _lastKnownPosition;
+        // Persistiere auch in SharedPreferences, falls trackId ermittelbar
         int? trackId;
         DateTime? downloadedAt;
-        // Versuche, die trackId/downloadedAt aus der URL zu mappen (hier als Beispiel: aus Map oder Service holen)
-        // TODO: Im echten Code: trackId/downloadedAt aus Episode-Objekt holen, z.B. per Provider oder Übergabe
-        // Hier: Dummy-Implementierung für Demo
-        // Beispiel: Wenn URL ein Mapping zu trackId hat, dann nutze das
-        // (In der Praxis: trackId und downloadedAt als Parameter an PlayEpisode übergeben oder im Bloc verfügbar machen)
-        // ---
-        // Dummy: Extrahiere trackId aus URL (nur für Demo, anpassen!)
-        final url = event.url;
+        final url = currentUrl!;
         if (url.contains('track')) {
           final idStr = url.split('track').last.split('.').first;
           trackId = int.tryParse(idStr);
         }
-        // ---
-        // Versuche Resume-Position zu laden
-        Duration persistedResume = Duration.zero;
         if (trackId != null) {
-          final loaded = await _loadResumePosition(
-              trackId: trackId, downloadedAt: downloadedAt);
-          if (loaded != null) persistedResume = loaded;
+          await _saveResumePosition(
+              trackId: trackId,
+              position: _lastKnownPosition,
+              downloadedAt: downloadedAt);
         }
-        // ---
-        // Resume-Position aus Map laden, falls vorhanden
-        Duration resumePosition =
-            _resumePositions[event.url] ?? persistedResume;
-        if (state is Paused) {
-          resumePosition = (state as Paused).position;
+      }
+      emit(Loading());
+      if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Loading');
+      try {
+        await backend.stop();
+        // Retry-Logik: Bei plötzlichem Abbruch/Fehler versuche Resume/Play bis zu 3x
+        int retryCount = 0;
+        bool success = false;
+        while (retryCount < 3 && !success) {
+          try {
+            currentUrl = event.url; // URL merken
+            await _safeSetUrlWithRetry(event.url, emit);
+            // Resume-Position prüfen und ggf. setzen
+            int? trackId;
+            DateTime? downloadedAt;
+            final url = event.url;
+            if (url.contains('track')) {
+              final idStr = url.split('track').last.split('.').first;
+              trackId = int.tryParse(idStr);
+            }
+            Duration persistedResume = Duration.zero;
+            if (trackId != null) {
+              final loaded = await _loadResumePosition(
+                  trackId: trackId, downloadedAt: downloadedAt);
+              if (loaded != null) persistedResume = loaded;
+            }
+            Duration resumePosition =
+                _resumePositions[event.url] ?? persistedResume;
+            if (state is Paused) {
+              resumePosition = (state as Paused).position;
+            }
+            final maxDuration = backend.duration ?? Duration.zero;
+            if (resumePosition > maxDuration ||
+                resumePosition < Duration.zero ||
+                maxDuration == Duration.zero) {
+              final validResume = _resumePositions[event.url];
+              if (validResume != null &&
+                  validResume <= maxDuration &&
+                  validResume >= Duration.zero) {
+                resumePosition = validResume;
+              } else {
+                resumePosition = Duration.zero;
+              }
+            }
+            if (persistedResume > maxDuration ||
+                persistedResume < Duration.zero) {
+              persistedResume = Duration.zero;
+            }
+            resumePosition = [resumePosition, persistedResume]
+                .where((d) => d <= maxDuration && d >= Duration.zero)
+                .fold(Duration.zero, (a, b) => a > b ? a : b);
+            if (resumePosition > Duration.zero) {
+              await backend.seek(resumePosition);
+            }
+            _duration = backend.duration ?? Duration.zero;
+            _lastKnownPosition = resumePosition;
+            emit(Playing(resumePosition, _duration,
+                speed: backend.speed, volume: backend.volume));
+            add(UpdateSpeed(backend.speed));
+            await _safePlayWithRetry(emit);
+            _listenToPosition();
+            _durationSub?.cancel();
+            _durationSub = backend.durationStream.listen((dur) {
+              if (!_disposed && dur != null && dur > Duration.zero) {
+                _duration = dur;
+                if (state is Playing) {
+                  add(UpdatePosition((state as Playing).position));
+                } else if (state is Paused) {
+                  add(UpdatePosition((state as Paused).position));
+                }
+              }
+            });
+            success = true;
+          } catch (e, st) {
+            retryCount++;
+            if (retryCount >= 3) {
+              emit(ErrorState(
+                  'Fehler beim Starten des Streams: \\${e.toString()}'));
+              if (kDebugMode)
+                logDebug(
+                    '[AudioPlayerBloc] Fehler beim Play (Retry): $e\\n$st');
+            } else {
+              emit(Loading()); // Zeige Loader im UI während Retry
+              await Future.delayed(const Duration(seconds: 1));
+            }
+          }
         }
-        if (resumePosition > Duration.zero) {
-          await backend.seek(resumePosition);
-        }
-        _duration = backend.duration ?? Duration.zero;
-        _lastKnownPosition = resumePosition;
-        emit(Playing(resumePosition, _duration,
-            speed: backend.speed, volume: backend.volume));
-        add(UpdateSpeed(backend.speed)); // NEU: Speed-Update nach Play
-        if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Playing (Start)');
-        await _safePlayWithRetry(emit);
-        _listenToPosition();
+        if (!success) return;
         _durationSub?.cancel();
         _durationSub = backend.durationStream.listen((dur) {
           if (!_disposed && dur != null && dur > Duration.zero) {
@@ -885,6 +944,16 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
   /// Gibt die Resume-Position für eine URL zurück (oder null, falls nicht vorhanden)
   Duration? getResumePosition(String url) => _resumePositions[url];
 }
+
+/*
+    Resume-Position Persistenz (Streaming/Download)
+    ------------------------------------------------
+    - Die Resume-Position wird pro trackId in den SharedPreferences gespeichert.
+    - Beim Starten einer Episode wird die gespeicherte Position geladen und das Audio an dieser Stelle fortgesetzt.
+    - Für Offline/Download-Folgen oder spezielle URLs ist die Key-Logik noch nicht robust genug (siehe TODO unten).
+    - TODO: Key-Logik für Resume-Positionen um localId/weitere Felder ergänzen, damit auch Offline/Download-Folgen eindeutig unterstützt werden.
+    - Aktuell ausreichend für Streaming-Folgen.
+  */
 
 // just_audio-Implementierung
 // --- JUST_AUDIO Fehlerbehandlung & Best Practices ---

@@ -247,6 +247,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             thickness: 2,
                             height: 4,
                           ),
+                          const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.only(top: 18),
                             child: Text(
@@ -257,16 +258,27 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               ),
                             ),
                           ),
-                          // Row mit Buttons direkt unterhalb der Beschreibung
-                          const SizedBox(height: 24),
+
+                          const SizedBox(height: 60),
+
+                          // Divider über der Button-Row
+                          Divider(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                            thickness: 2,
+                            height: 4,
+                          ),
+                          const SizedBox(
+                              height: 16), // Abstand über den Symbolen
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
                                 icon: Icon(
                                   Icons.star_border_outlined,
-                                  size: 32, // wie Download-Icon
-                                  color: Colors.grey[500],
+                                  size: 44, // wie Download-Icon
+                                  color: Colors.grey[400],
                                 ),
                                 tooltip: 'Favorisieren',
                                 onPressed: () {
@@ -278,8 +290,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               IconButton(
                                 icon: Icon(
                                   Icons.download,
-                                  size: 32,
-                                  color: Colors.grey[500],
+                                  size: 44,
+                                  color: Colors.grey[400],
                                 ),
                                 tooltip: 'Download',
                                 onPressed: () {
@@ -311,8 +323,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                     : null,
                                 iconColor:
                                     //Theme.of(context).colorScheme.primary,
-                                    Colors.grey[500],
-                                iconSize: 32,
+                                    Colors.grey[400],
+                                iconSize: 44,
                               ),
                               // Play/Pause-Button wie im Transportfeld
                               Consumer(
@@ -336,16 +348,18 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                   final playIconColor = !hasEverBeenLoaded
                                       ? Theme.of(context)
                                           .colorScheme
-                                          .primary // prominent
-                                      : Colors.grey[500]; // dezent
+                                          .onSurface
+                                          .withAlpha(140)
+                                      // prominent
+                                      : Colors.grey[400]; // dezent
                                   final isPlaying =
                                       isActiveEpisode && audioState is Playing;
                                   final isEnabled = audioState is! Loading &&
                                       audioState is! ErrorState;
                                   // Wenn Play aktiv ist, PlayIcon wie die anderen Icons einfärben (nicht prominent)
                                   return SizedBox(
-                                    width: 40,
-                                    height: 40,
+                                    width: 56,
+                                    height: 56,
                                     child: Center(
                                       child: IconButton(
                                         icon: Icon(
@@ -353,22 +367,28 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                               ? Icons.pause_circle_filled
                                               : Icons.play_circle_fill,
                                           color: playIconColor,
-                                          size: 40,
+                                          size: 56,
                                         ),
-                                        iconSize: 40,
+                                        iconSize: 56,
                                         padding: EdgeInsets.zero,
                                         alignment: Alignment.center,
                                         constraints: const BoxConstraints(),
                                         onPressed: isEnabled
                                             ? () {
-                                                final notifier = ref.read(currentEpisodeProvider.notifier);
+                                                final notifier = ref.read(
+                                                    currentEpisodeProvider
+                                                        .notifier);
                                                 if (!isActiveEpisode) {
                                                   // Vor dem Wechsel: Stop, um alten Stream sauber zu beenden und Resume-Position zu sichern
                                                   audioBloc.add(Stop());
-                                                  notifier.state = widget.episode;
-                                                  audioBloc.add(PlayEpisode(widget.episode.episodeUrl));
+                                                  notifier.state =
+                                                      widget.episode;
+                                                  audioBloc.add(PlayEpisode(
+                                                      widget
+                                                          .episode.episodeUrl));
                                                 } else {
-                                                  audioBloc.add(TogglePlayPause());
+                                                  audioBloc
+                                                      .add(TogglePlayPause());
                                                 }
                                               }
                                             : null,
@@ -381,6 +401,16 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 },
                               ),
                             ],
+                          ),
+                          const SizedBox(
+                              height: 16), // Abstand unter den Symbolen
+                          // Divider unter der Button-Row
+                          Divider(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                            thickness: 2,
+                            height: 4,
                           ),
                           SizedBox(
                               height: MediaQuery.of(context).size.height / 2),

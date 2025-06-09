@@ -330,3 +330,29 @@ Dieses Pattern ist für alle "statischen" Controls in Flutter relevant, die auch
 - Siehe Code-Kommentar im Widget und Issue #resume-hinweis.
 
 ---
+
+# Audio-Preload & Buffering-Strategien (Stand: 09.06.2025)
+
+## PreloadEpisode & Buffering
+- Das Event `PreloadEpisode` im AudioPlayerBloc ermöglicht das gezielte Vorladen (Pre-Buffering) einer Episode, ohne sofort abzuspielen.
+- Nach erfolgreichem Preload wird der State auf `Paused` (Position 0) gesetzt, was einen schnellen Start beim Play ermöglicht.
+- Die Buffergröße/-dauer kann (je nach Backend) gesteuert werden, z.B. über Parameter wie `bufferDuration` oder durch Anpassung der Backend-API (z.B. just_audio, ExoPlayer).
+
+## Erweiterte Lazy-Load-Strategie
+- Die Buffer-Strategie kann dynamisch an die Track-Länge angepasst werden:
+  - Ist der Track <= 15 Minuten, wird er vollständig vorgeladen (Preload = 100%).
+  - Ist der Track länger, wird zunächst nur ein Teil (z.B. die ersten 5 Minuten) gepuffert, weitere Abschnitte werden bei Bedarf nachgeladen (Lazy-Load).
+- Die Strategie kann über Parameter im PreloadEpisode-Event und im Backend gesteuert werden.
+- Die Logik kann weiter angepasst werden, z.B. nach Netzwerktyp, User-Settings oder Kategorie.
+
+## UI-Feedback
+- Der Buffer-Fortschritt kann im UI (z.B. unten links im Player) als Indikator oder Progressbar angezeigt werden.
+- Nutzer:innen sehen so, wie viel bereits vorgeladen ist und wann ein nahtloser Start möglich ist.
+
+## ToDo/Erweiterung
+- Implementierung der Buffer-Strategie im Backend (z.B. just_audio/ExoPlayer) und im Bloc.
+- Erweiterung des PreloadEpisode-Events um Parameter wie `bufferDuration` oder `bufferStrategy`.
+- UI-Komponente für Buffer-Fortschritt im Player ergänzen.
+- Optional: Adaptive Strategie je nach Kategorie, Netzwerk oder User-Präferenz.
+
+---
