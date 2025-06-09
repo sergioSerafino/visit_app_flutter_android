@@ -29,12 +29,7 @@ class BottomPlayerOverlay extends StatelessWidget {
                 minHeight: 4,
                 backgroundColor: Colors.transparent,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Color.fromRGBO(
-                    theme.colorScheme.primary.red,
-                    theme.colorScheme.primary.green,
-                    theme.colorScheme.primary.blue,
-                    0.18,
-                  ),
+                  theme.colorScheme.onSurface.withAlpha(100),
                 ),
               ),
             ),

@@ -237,7 +237,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                     ),
                   ),
 
-                  // Sticky Header mit Dauer & Veröffentlichungsdatum + Button-Row
+                  // Sticky Header mit Dauer & Veröffentlichungsdatum
                   SliverPersistentHeader(
                     pinned: true,
                     delegate: StickyInfoHeader(
@@ -245,9 +245,35 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                       releaseDate: formatReleaseDate(
                         widget.episode.releaseDate,
                       ),
-                      extraContent: Column(
-                        mainAxisSize: MainAxisSize.min,
+                    ),
+                  ),
+
+                  // Scrollbare Beschreibung
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Divider(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
+                            thickness: 2,
+                            height: 4,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 18),
+                            child: Text(
+                              widget.episode.description ?? "",
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          // Row mit Buttons direkt unterhalb der Beschreibung
+                          const SizedBox(height: 24),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -255,10 +281,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 icon: Icon(
                                   Icons.star_border_outlined,
                                   size: 32, // wie Download-Icon
-                                  color: /*Theme.of(context)
-                                      .colorScheme
-                                      .primary,*/
-                                      Colors.grey[500], // wie Download-Icon
+                                  color: Colors.grey[500],
                                 ),
                                 tooltip: 'Favorisieren',
                                 onPressed: () {
@@ -271,8 +294,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                 icon: Icon(
                                   Icons.download,
                                   size: 32,
-                                  color: //Theme.of(context).colorScheme.primary,
-                                      Colors.grey[500],
+                                  color: Colors.grey[500],
                                 ),
                                 tooltip: 'Download',
                                 onPressed: () {
@@ -307,36 +329,48 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                     Colors.grey[500],
                                 iconSize: 32,
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Scrollbare Beschreibung
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Divider(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surfaceContainerHighest,
-                            thickness: 2,
-                            height: 4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 18),
-                            child: Text(
-                              widget.episode.description ?? "",
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Theme.of(context).colorScheme.onSurface,
+                              // Play/Pause-Button wie im Transportfeld
+                              Consumer(
+                                builder: (context, ref, _) {
+                                  final audioBloc =
+                                      ref.watch(audioPlayerBlocProvider);
+                                  final audioStateAsync =
+                                      ref.watch(audioPlayerStateProvider);
+                                  final audioState =
+                                      audioStateAsync.asData?.value;
+                                  final isPlaying = audioState is Playing;
+                                  final isEnabled = audioState is! Loading &&
+                                      audioState is! ErrorState;
+                                  return SizedBox(
+                                    width:
+                                        40, // Angepasst: kleiner als Transportfeld
+                                    height: 40,
+                                    child: Center(
+                                      child: IconButton(
+                                        icon: Icon(
+                                          isPlaying
+                                              ? Icons.pause_circle_filled
+                                              : Icons.play_circle_fill,
+                                          color: Colors.grey[500],
+                                          size: 40, // Angepasst
+                                        ),
+                                        iconSize: 40, // Angepasst
+                                        padding: EdgeInsets.zero,
+                                        alignment: Alignment.center,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: isEnabled
+                                            ? () =>
+                                                audioBloc.add(TogglePlayPause())
+                                            : null,
+                                        tooltip: isPlaying
+                                            ? 'Pause'
+                                            : 'Wiedergabe starten',
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ),
+                            ],
                           ),
                           SizedBox(
                               height: MediaQuery.of(context).size.height / 2),
@@ -421,7 +455,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     final keep = ((maxLength - 3) ~/ 2).clamp(minKeep, maxLength);
     final start = input.substring(0, keep).trim();
     final end = input.substring(input.length - keep).trim();
-    return '$start ... $end';
+    return '$start...$end';
   }
 
   // Gibt den Titel für die AppBar so zurück, dass das Ende (z.B. Episodenname) immer sichtbar bleibt.

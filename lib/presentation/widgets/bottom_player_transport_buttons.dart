@@ -38,7 +38,7 @@ class BottomPlayerTransportButtons extends StatelessWidget {
           // Reset-Button
           IconButton(
             icon: Icon(Icons.refresh,
-                color: theme.colorScheme.onSurface.withAlpha(140)),
+                color: theme.colorScheme.primary.withAlpha(140)),
             iconSize: 24,
             tooltip: 'Player zurücksetzen',
             onPressed: isLoading ? null : onReset,
@@ -57,7 +57,7 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       button: true,
                       child: IconButton(
                         icon: Icon(Icons.replay_10,
-                            color: theme.colorScheme.onSurface.withAlpha(140)),
+                            color: theme.colorScheme.primary.withAlpha(140)),
                         iconSize: 32,
                         onPressed: isLoading ? null : onRewind,
                         tooltip: '10 Sekunden zurück',
@@ -119,7 +119,7 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       button: true,
                       child: IconButton(
                         icon: Icon(Icons.forward_10,
-                            color: theme.colorScheme.onSurface.withAlpha(140)),
+                            color: theme.colorScheme.primary.withAlpha(140)),
                         iconSize: 32,
                         onPressed: isLoading ? null : onForward,
                         tooltip: '10 Sekunden vor',
@@ -134,7 +134,13 @@ class BottomPlayerTransportButtons extends StatelessWidget {
           // Lautstärke-Button (Overlay)
           AbsorbPointer(
             absorbing: isLoading,
-            child: volumeButton,
+            child: IconTheme(
+              data: IconThemeData(
+                color: theme.colorScheme.primary
+                    .withAlpha(140), // Wie die anderen Buttons
+              ),
+              child: volumeButton,
+            ),
           ),
         ],
       ),

@@ -277,7 +277,8 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                 child: Material(
                   elevation: 8,
                   borderRadius: BorderRadius.circular(12),
-                  color: widget.theme.colorScheme.surface,
+                  color: widget.theme.colorScheme.primary.withAlpha(
+                      40), // Wieder wie Progressbar-Background, heller
                   child: Container(
                     padding: EdgeInsets.zero,
                     width: 72,
@@ -327,6 +328,12 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                               thumbShape: const RoundSliderThumbShape(
                                   enabledThumbRadius: 16),
                               trackHeight: 10,
+                              activeTrackColor: widget.theme.colorScheme.primary
+                                  .withAlpha(180), // Wie Progressbar
+                              inactiveTrackColor: widget
+                                  .theme.colorScheme.primary
+                                  .withAlpha(40),
+                              thumbColor: widget.theme.colorScheme.primary,
                             ),
                             child: Slider(
                               value: (!isActive)
@@ -416,7 +423,8 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.volume_up,
-          color: widget.theme.colorScheme.onSurface.withAlpha(140)),
+          color: widget.theme.colorScheme.primary.withAlpha(
+              140)), // Branding-Farbe wie Transportfeld und Progressbar
       iconSize: 24,
       tooltip: 'Lautstärke',
       onPressed: _toggleSlider,

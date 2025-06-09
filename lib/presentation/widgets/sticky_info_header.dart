@@ -13,8 +13,8 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
   });
 
   // Dynamische Höhe: Basis + extraContent (Buttons/Slider)
-  static const double _baseHeight = 44;
-  static const double _maxExtraHeight = 44;
+  static const double _baseHeight = 20;
+  static const double _maxExtraHeight = 20;
 
   @override
   double get minExtent => _baseHeight + _maxExtraHeight;
