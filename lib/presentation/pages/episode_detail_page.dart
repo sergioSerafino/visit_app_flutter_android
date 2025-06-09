@@ -259,7 +259,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             ),
                           ),
 
-                          const SizedBox(height: 60),
+                          const SizedBox(height: 40),
 
                           // Divider über der Button-Row
                           Divider(
@@ -270,7 +270,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             height: 4,
                           ),
                           const SizedBox(
-                              height: 16), // Abstand über den Symbolen
+                              height: 8), // Abstand über den Symbolen
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -403,7 +403,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             ],
                           ),
                           const SizedBox(
-                              height: 16), // Abstand unter den Symbolen
+                              height: 8), // Abstand unter den Symbolen
                           // Divider unter der Button-Row
                           Divider(
                             color: Theme.of(context)
