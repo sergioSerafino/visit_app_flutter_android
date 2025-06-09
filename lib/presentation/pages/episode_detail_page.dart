@@ -12,15 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
-import '../../application/providers/cast_airplay_provider.dart';
-import '../../application/providers/audio_player_provider.dart';
-import '../../application/providers/current_episode_provider.dart';
-import '../../core/services/audio_player_bloc.dart';
-import '../widgets/cast_airplay_button.dart';
 import '../widgets/cover_image_widget.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/bottom_player_widget.dart';
-import '../../core/messaging/snackbar_manager.dart';
+import '../widgets/episode_action_row.dart';
 
 class EpisodeDetailPage extends StatefulWidget {
   final PodcastEpisode episode;
@@ -85,14 +80,17 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     // Riverpod Consumer für Player- und Cast-Status
     return Consumer(
       builder: (context, ref, _) {
-        final devices = ref.watch(castDevicesProvider);
-        final connectedDevice = ref.watch(connectedCastDeviceProvider);
-        final isAvailable = devices.isNotEmpty;
-        final isConnected = connectedDevice != null;
-        final statusText = isConnected
-            ? 'Verbunden mit ${connectedDevice.name}'
-            : (isAvailable ? 'Mit Gerät verbinden' : 'Kein Gerät gefunden');
-        final service = ref.watch(castAirPlayServiceProvider);
+        // --- Entferne weitere ungenutzte lokale Variablen ---
+        // final devices = ref.watch(castDevicesProvider);
+        // final connectedDevice = ref.watch(connectedCastDeviceProvider);
+        // --- Entferne ungenutzte lokale Variablen ---
+        // final isAvailable = devices.isNotEmpty;
+        // final isConnected = connectedDevice != null;
+        // --- Entferne ungenutzte lokale Variablen ---
+        // final statusText = isConnected
+        //     ? 'Verbunden mit {connectedDevice.name}'
+        //     : (isAvailable ? 'Mit Gerät verbinden' : 'Kein Gerät gefunden');
+        // final service = ref.watch(castAirPlayServiceProvider);
 
         return Scaffold(
           body: Stack(
@@ -271,139 +269,13 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                           ),
                           const SizedBox(
                               height: 8), // Abstand über den Symbolen
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.star_border_outlined,
-                                  size: 44, // wie Download-Icon
-                                  color: Colors.grey[400],
-                                ),
-                                tooltip: 'Favorisieren',
-                                onPressed: () {
-                                  ref
-                                      .read(snackbarManagerProvider.notifier)
-                                      .showByKey('favorites_feature');
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.download,
-                                  size: 44,
-                                  color: Colors.grey[400],
-                                ),
-                                tooltip: 'Download',
-                                onPressed: () {
-                                  ref
-                                      .read(snackbarManagerProvider.notifier)
-                                      .showByKey('download_feature');
-                                },
-                              ),
-                              CastAirPlayButton(
-                                isAvailable: isAvailable,
-                                isConnected: isConnected,
-                                statusText: statusText,
-                                onPressed: isAvailable
-                                    ? () {
-                                        ref
-                                            .read(snackbarManagerProvider
-                                                .notifier)
-                                            .showByKey('cast_feature');
-                                        if (isConnected) {
-                                          service.disconnect();
-                                        } else if (devices.isNotEmpty) {
-                                          service.connectToDevice(
-                                            devices.first,
-                                          );
-                                        } else {
-                                          service.discoverDevices();
-                                        }
-                                      }
-                                    : null,
-                                iconColor:
-                                    //Theme.of(context).colorScheme.primary,
-                                    Colors.grey[400],
-                                iconSize: 44,
-                              ),
-                              // Play/Pause-Button wie im Transportfeld
-                              Consumer(
-                                builder: (context, ref, _) {
-                                  final audioBloc =
-                                      ref.watch(audioPlayerBlocProvider);
-                                  final audioStateAsync =
-                                      ref.watch(audioPlayerStateProvider);
-                                  final audioState =
-                                      audioStateAsync.asData?.value;
-                                  final currentEpisode =
-                                      ref.watch(currentEpisodeProvider);
-                                  // Abgleich: Button ist nur aktiv, wenn trackId übereinstimmt (TODO: für Offline ggf. localId/trackName prüfen)
-                                  // Farbwahl: prominent (Theme-Farbe), dezent (grau), siehe Doku oben
-                                  // Optional: TODO Highlight-Effekt beim erstmaligen Koppeln
-                                  final isActiveEpisode =
-                                      currentEpisode?.trackId ==
-                                          widget.episode.trackId;
-                                  final hasEverBeenLoaded =
-                                      isActiveEpisode; // (später ggf. persistent machen)
-                                  final playIconColor = !hasEverBeenLoaded
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withAlpha(140)
-                                      // prominent
-                                      : Colors.grey[400]; // dezent
-                                  final isPlaying =
-                                      isActiveEpisode && audioState is Playing;
-                                  final isEnabled = audioState is! Loading &&
-                                      audioState is! ErrorState;
-                                  // Wenn Play aktiv ist, PlayIcon wie die anderen Icons einfärben (nicht prominent)
-                                  return SizedBox(
-                                    width: 56,
-                                    height: 56,
-                                    child: Center(
-                                      child: IconButton(
-                                        icon: Icon(
-                                          isPlaying
-                                              ? Icons.pause_circle_filled
-                                              : Icons.play_circle_fill,
-                                          color: playIconColor,
-                                          size: 56,
-                                        ),
-                                        iconSize: 56,
-                                        padding: EdgeInsets.zero,
-                                        alignment: Alignment.center,
-                                        constraints: const BoxConstraints(),
-                                        onPressed: isEnabled
-                                            ? () {
-                                                final notifier = ref.read(
-                                                    currentEpisodeProvider
-                                                        .notifier);
-                                                if (!isActiveEpisode) {
-                                                  // Vor dem Wechsel: Stop, um alten Stream sauber zu beenden und Resume-Position zu sichern
-                                                  audioBloc.add(Stop());
-                                                  notifier.state =
-                                                      widget.episode;
-                                                  audioBloc.add(PlayEpisode(
-                                                      widget
-                                                          .episode.episodeUrl));
-                                                } else {
-                                                  audioBloc
-                                                      .add(TogglePlayPause());
-                                                }
-                                              }
-                                            : null,
-                                        tooltip: isPlaying
-                                            ? 'Pause'
-                                            : 'Wiedergabe starten',
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                          // --- ERSETZT: Inline-Button-Row durch EpisodeActionRow ---
+                          EpisodeActionRow(
+                            episode: widget.episode,
+                            trackName: widget.trackName,
                           ),
-                          const SizedBox(
-                              height: 8), // Abstand unter den Symbolen
+                          // --- ENDE Button-Row ---
+                          const SizedBox(height: 8),
                           // Divider unter der Button-Row
                           Divider(
                             color: Theme.of(context)
