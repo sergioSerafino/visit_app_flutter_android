@@ -67,7 +67,7 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     // Timer aus Marquee/Animationen ablaufen lassen, um Pending Timer zu vermeiden
     await tester.pump(const Duration(seconds: 4));
     // Es darf KEIN Playing-State erscheinen

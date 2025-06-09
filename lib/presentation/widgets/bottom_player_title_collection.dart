@@ -98,7 +98,8 @@ class BottomPlayerTitleCollection extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 2, left: 4),
                         child: Text(
                           formattedCollectionName,
-                          style: theme.textTheme.bodySmall?.copyWith(
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w400,
                             color: theme.colorScheme.onSurface.withAlpha(120),
                           ),
                           maxLines: 2,

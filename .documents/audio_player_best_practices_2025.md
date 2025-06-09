@@ -319,3 +319,14 @@ Dieses Pattern ist für alle "statischen" Controls in Flutter relevant, die auch
 - Kurze, klare Kontrollsperre (2–3s), vollständige Deaktivierung der Buttons, sofortige Reaktivierung bei Backend-Event.
 - Loader/Platzhalter für ProgressBar/Zeit, Fehleranzeige nach Timeout.
 - Siehe auch: README.md und bottom_player_widget.dart für konkrete Umsetzung.
+
+---
+
+## TODO [2025-06-09]: Resume-Hinweis im Player
+
+- Die Anzeige eines expliziten Hinweistexts wie „Fortsetzen bei …“ unter dem Episodentitel wurde auf Wunsch des Teams/UX entfernt.
+- Die Resume-Funktion (automatischer Wiedereinstieg an letzter Position) bleibt rein funktional, ohne sichtbaren Text.
+- Falls in Zukunft ein dezenter Hinweistext gewünscht wird, kann dies an der markierten Stelle in `bottom_player_widget.dart` wieder aktiviert werden.
+- Siehe Code-Kommentar im Widget und Issue #resume-hinweis.
+
+---

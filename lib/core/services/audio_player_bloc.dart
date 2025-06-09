@@ -12,6 +12,7 @@ import '../logging/logger_config.dart';
 import 'i_audio_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// ---
 /// PRODUCTION: Audio-Streaming Stabilität & Fehlerbehandlung (Juni 2025)
@@ -194,6 +195,9 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
 
   int _autoResumeAttempts = 0; // NEU: Zähler für Auto-Reconnect-Versuche
 
+  // NEU: Map für Resume-Positionen pro Episode (URL)
+  final Map<String, Duration> _resumePositions = {};
+
   String? get currentUrl => _currentUrl;
   set currentUrl(String? value) {
     // Nur bei PlayEpisode, PreloadEpisode oder Stop setzen
@@ -248,7 +252,35 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         await backend.stop();
         currentUrl = event.url; // URL merken
         await _safeSetUrlWithRetry(event.url, emit);
-        Duration resumePosition = Duration.zero;
+        // --- Resume-Position aus SharedPreferences laden (Streaming/Download)
+        // Versuche, die aktuelle Episode aus Provider zu bekommen (für trackId/downloadedAt)
+        // (Im UI: currentEpisodeProvider, hier ggf. als Parameter oder über einen Service)
+        int? trackId;
+        DateTime? downloadedAt;
+        // Versuche, die trackId/downloadedAt aus der URL zu mappen (hier als Beispiel: aus Map oder Service holen)
+        // TODO: Im echten Code: trackId/downloadedAt aus Episode-Objekt holen, z.B. per Provider oder Übergabe
+        // Hier: Dummy-Implementierung für Demo
+        // Beispiel: Wenn URL ein Mapping zu trackId hat, dann nutze das
+        // (In der Praxis: trackId und downloadedAt als Parameter an PlayEpisode übergeben oder im Bloc verfügbar machen)
+        // ---
+        // Dummy: Extrahiere trackId aus URL (nur für Demo, anpassen!)
+        final url = event.url;
+        if (url.contains('track')) {
+          final idStr = url.split('track').last.split('.').first;
+          trackId = int.tryParse(idStr);
+        }
+        // ---
+        // Versuche Resume-Position zu laden
+        Duration persistedResume = Duration.zero;
+        if (trackId != null) {
+          final loaded = await _loadResumePosition(
+              trackId: trackId, downloadedAt: downloadedAt);
+          if (loaded != null) persistedResume = loaded;
+        }
+        // ---
+        // Resume-Position aus Map laden, falls vorhanden
+        Duration resumePosition =
+            _resumePositions[event.url] ?? persistedResume;
         if (state is Paused) {
           resumePosition = (state as Paused).position;
         }
@@ -471,6 +503,25 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       // Nur updaten, wenn sich die Position wirklich geändert hat
       if (event.position != _lastKnownPosition) {
         _lastKnownPosition = event.position;
+        // NEU: Resume-Position für aktuelle URL speichern
+        if (_currentUrl != null && _currentUrl!.isNotEmpty) {
+          _resumePositions[_currentUrl!] = event.position;
+        }
+        // --- Persistiere Resume-Position (Streaming/Download)
+        // TODO: trackId/downloadedAt aus Episode-Objekt holen (siehe oben)
+        int? trackId;
+        DateTime? downloadedAt;
+        final url = _currentUrl!;
+        if (url.contains('track')) {
+          final idStr = url.split('track').last.split('.').first;
+          trackId = int.tryParse(idStr);
+        }
+        if (trackId != null) {
+          await _saveResumePosition(
+              trackId: trackId,
+              position: event.position,
+              downloadedAt: downloadedAt);
+        }
         if (state is Playing || state is Loading) {
           emit(Playing(event.position, _duration,
               speed: backend.speed, volume: backend.volume));
@@ -806,6 +857,38 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
       }
     }
   }
+
+  /// Hilfsfunktion: Erzeuge Resume-Key für Streaming oder Download
+  String _resumeKey({required int trackId, DateTime? downloadedAt}) {
+    if (downloadedAt != null) {
+      return 'resume_position_${trackId}_${downloadedAt.millisecondsSinceEpoch}';
+    }
+    return 'resume_position_$trackId';
+  }
+
+  Future<void> _saveResumePosition({
+    required int trackId,
+    required Duration position,
+    DateTime? downloadedAt,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _resumeKey(trackId: trackId, downloadedAt: downloadedAt);
+    await prefs.setInt(key, position.inMilliseconds);
+  }
+
+  Future<Duration?> _loadResumePosition({
+    required int trackId,
+    DateTime? downloadedAt,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _resumeKey(trackId: trackId, downloadedAt: downloadedAt);
+    final millis = prefs.getInt(key);
+    if (millis != null) return Duration(milliseconds: millis);
+    return null;
+  }
+
+  /// Gibt die Resume-Position für eine URL zurück (oder null, falls nicht vorhanden)
+  Duration? getResumePosition(String url) => _resumePositions[url];
 }
 
 // just_audio-Implementierung

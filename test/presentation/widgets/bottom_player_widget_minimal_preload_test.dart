@@ -54,6 +54,7 @@ void main() {
     expect(playButton.onPressed, isNotNull,
         reason: 'Im Preload-Overlay ist der Button enabled (UX-Update)');
     await tester.pumpWidget(Container());
-    await tester.pumpAndSettle(); // Timer/Marquee cleanup
+    await tester.pumpAndSettle(
+        const Duration(milliseconds: 200)); // Timer/Marquee cleanup
   });
 }

@@ -24,12 +24,12 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     // Slider bewegen
     final sliderFinder = find.byType(Slider);
     expect(sliderFinder, findsOneWidget);
     await tester.drag(sliderFinder, const Offset(100, 0));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     // onSeek wurde aufgerufen
     expect(seekedTo, isNotNull);
     // Wert bleibt im Widget sichtbar
@@ -56,7 +56,7 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     final sliderFinder = find.byType(Slider);
     expect(sliderFinder, findsOneWidget);
     final sliderWidget = tester.widget<Slider>(sliderFinder);

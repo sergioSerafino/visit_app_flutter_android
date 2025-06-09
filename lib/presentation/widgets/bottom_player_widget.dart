@@ -79,8 +79,15 @@ class BottomPlayerWidget extends ConsumerWidget {
     final audioState = audioStateAsync.asData?.value;
     final isPlaying = audioState is Playing;
     final isActive = audioState is Playing || audioState is Paused;
-    final position =
-        isActive ? (audioState as dynamic).position as Duration : Duration.zero;
+    // NEU: Resume-Position für ProgressBar, falls nicht aktiv
+    Duration resumePosition = Duration.zero;
+    if (!isActive && hasValidUrl) {
+      resumePosition = audioBloc.getResumePosition(currentEpisode.episodeUrl) ??
+          Duration.zero;
+    }
+    final position = isActive
+        ? (audioState as dynamic).position as Duration
+        : resumePosition;
     final duration =
         isActive ? (audioState as dynamic).duration as Duration : Duration.zero;
     final hasValidDuration =
@@ -149,7 +156,6 @@ class BottomPlayerWidget extends ConsumerWidget {
                   );
                 },
               ),
-              // const SizedBox(height: 8),
             ],
             // Fortschrittsbalken
             BottomPlayerProgressBar(

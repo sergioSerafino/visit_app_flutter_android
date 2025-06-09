@@ -82,7 +82,8 @@ void main() {
       expect(find.text('-00:50'), findsOneWidget); // rechte Zeit
       await bloc.close();
       await tester.pumpWidget(Container());
-      await tester.pumpAndSettle(); // Timer/Marquee cleanup
+      await tester.pumpAndSettle(
+          const Duration(milliseconds: 200)); // Timer/Marquee cleanup
     },
   );
 }

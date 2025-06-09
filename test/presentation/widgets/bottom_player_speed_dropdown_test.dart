@@ -43,14 +43,14 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     // Dropdown zeigt initial 1.0x
     expect(find.text('1.0x '), findsOneWidget);
     // Dropdown öffnen und 1.5x auswählen
     await tester.tap(find.byType(DropdownButton<double>));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     await tester.tap(find.text('1.5x ').last);
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     expect(selectedSpeed, 1.5);
   });
 
@@ -80,12 +80,12 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     // Dropdown öffnen und 2.0x auswählen
     await tester.tap(find.byType(DropdownButton<double>));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     await tester.tap(find.text('2.0x ').last);
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     expect(selectedSpeed, 2.0);
     // Wert bleibt im Widget sichtbar
     expect(find.text('2.0x '), findsOneWidget);
@@ -118,7 +118,7 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     // Wert aus Bloc-State wird angezeigt
     expect(find.text('1.5x '), findsOneWidget);
   });

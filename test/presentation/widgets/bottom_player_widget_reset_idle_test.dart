@@ -81,7 +81,7 @@ void main() {
           reason: 'Play/Pause-Button muss nach Reset aktiv bleiben');
       // Cleanup: Widget-Baum abräumen
       await tester.pumpWidget(Container());
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
     },
   );
 }

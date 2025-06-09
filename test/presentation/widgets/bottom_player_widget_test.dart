@@ -312,4 +312,41 @@ void main() {
     await tester.pumpWidget(Container());
     await tester.pumpAndSettle();
   });
+
+  testWidgets('BottomPlayerWidget zeigt Resume-Position im Idle/Loading-State',
+      (tester) async {
+    final mockBackend = MockAudioPlayerBackend();
+    stubAllBackendMethods(mockBackend);
+    final bloc = AudioPlayerBloc(backend: mockBackend);
+    // Simuliere gespeicherte Resume-Position
+    bloc
+      ..currentUrl = 'https://audio/test_resume.mp3'
+      ..add(UpdatePosition(const Duration(seconds: 42)));
+    final testEpisode = PodcastEpisode(
+      wrapperType: 'episode',
+      trackId: 2,
+      trackName: 'Resume Episode',
+      artworkUrl600: '',
+      description: 'Resume-Test',
+      episodeUrl: 'https://audio/test_resume.mp3',
+      trackTimeMillis: 60000,
+      episodeFileExtension: 'mp3',
+      releaseDate: DateTime(2024),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          audioPlayerBlocProvider.overrideWithValue(bloc),
+          currentEpisodeProvider.overrideWith((ref) => testEpisode),
+        ],
+        child: const MaterialApp(
+          home: Scaffold(body: BottomPlayerWidget()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    // Im Idle/Loading-State sollte die Resume-Position angezeigt werden
+    final progressText = find.textContaining('0m 42s');
+    expect(progressText, findsWidgets);
+  });
 }

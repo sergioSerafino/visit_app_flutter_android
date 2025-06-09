@@ -68,21 +68,21 @@ void main() {
 
     // Wechsel: verfügbar, nicht verbunden
     await tester.pumpWidget(build(true, false));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     expect(find.byIcon(Icons.cast), findsOneWidget);
     final btn2 = tester.widget<IconButton>(find.byType(IconButton));
     expect(btn2.onPressed, isNotNull);
 
     // Wechsel: verbunden
     await tester.pumpWidget(build(true, true));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     expect(find.byIcon(Icons.cast_connected), findsOneWidget);
     final btn3 = tester.widget<IconButton>(find.byType(IconButton));
     expect(btn3.onPressed, isNotNull);
 
     // Wechsel zurück: nicht verfügbar
     await tester.pumpWidget(build(false, false));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 200));
     expect(find.byIcon(Icons.cast), findsOneWidget);
     final btn4 = tester.widget<IconButton>(find.byType(IconButton));
     expect(btn4.onPressed, isNull);
