@@ -62,6 +62,7 @@ class _SplashCoverImageState extends ConsumerState<SplashCoverImage>
   }
 
   Widget _buildImage() {
+    // Debug-Ausgabe entfernt
     // Wenn explizit gewünscht, immer assetPath verwenden
     if (widget.forceAssetPath &&
         widget.assetPath != null &&

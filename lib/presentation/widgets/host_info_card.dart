@@ -26,7 +26,7 @@ class HostInfoCard extends StatelessWidget {
             SplashCoverImage(
               assetPath: TenantAssetLoader(host.collectionId).imagePath(),
               imageUrl: branding.logoUrl,
-              scaleFactor: 0.25,
+              scaleFactor: 0.4,
               duration: const Duration(milliseconds: 800),
             ),
 

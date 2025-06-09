@@ -477,3 +477,9 @@ r
 - Siehe auch: .documents/audio_player_best_practices_2025.md für Details und Codebeispiele.
 
 ---
+
+## Release-Checkliste
+
+Siehe [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) für alle Aufgaben, die vor dem Release erledigt oder geprüft werden müssen.
+
+---

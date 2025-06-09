@@ -35,31 +35,26 @@ class RssParserService {
 
   Future<RssMetadata?> parse(String feedUrl) async {
     final cacheManager = NetworkCacheManager(HiveCacheStorage());
-    final isExpired = await cacheManager.isResourceExpired(
-        feedUrl, const Duration(hours: 24));
-    if (!isExpired) {
-      // Hier: Prüfe, ob wirklich Metadaten im Cache liegen (z.B. per separater Methode oder speichere Metadaten im Cache)
-      // Da aktuell nur der Zeitstempel gecacht wird, lade trotzdem neu, wenn keine Metadaten gefunden werden
-      logDebug('RSS-Feed ist laut Cache frisch, versuche trotzdem zu parsen.',
-          tag: LogTag.data);
-      // Optional: Hier könnte man versuchen, Metadaten aus einem eigenen Cache zu laden
+
+    // Überprüfen, ob die Ressource veraltet ist
+    if (!await cacheManager.isResourceExpired(
+        feedUrl, const Duration(hours: 24))) {
+      logDebug(
+          'RSS-Feed ist aktuell, aber wir erzwingen einen Abruf, wenn keine Metadaten vorliegen.');
+      // Workaround: Feed trotzdem neu laden, damit immer aktuelle Daten angezeigt werden
+      // return null; // <--- Diese Zeile auskommentieren/entfernen, damit der Abruf immer erfolgt
     }
+
     try {
       final response = await _dio.get<String>(feedUrl);
-      logDebug('RSS-HTTP: Status ${response.statusCode} für $feedUrl',
-          tag: LogTag.data);
-      if (response.statusCode != 200 || response.data == null) {
-        logDebug('RSS-HTTP: Fehlerhafte Response oder kein Inhalt für $feedUrl',
-            tag: LogTag.data);
-        return null;
-      }
-      logDebug(
-          'RSS-HTTP: Erste 200 Zeichen: ${response.data!.substring(0, response.data!.length > 200 ? 200 : response.data!.length)}',
-          tag: LogTag.data);
+      if (response.statusCode != 200 || response.data == null) return null;
+
       final document = XmlDocument.parse(response.data!);
       final channel = document.findAllElements('channel').firstOrNull;
       if (channel == null) return null;
-      await cacheManager.updateTimeStamp(feedUrl); // TimeStamp aktualisieren
+      // Aktualisiere den TimeStamp nach erfolgreichem Abruf
+      await cacheManager.updateTimeStamp(feedUrl);
+
       return RssMetadata(
         websiteUrl: _getElementValue(channel, 'link'),
         description: _getElementValue(channel, 'description'),
@@ -145,19 +140,7 @@ class RssParserService {
   }
 
   String? _getCategoryText(XmlElement channel) {
-    // Hole das äußerste itunes:category-Attribut (text) und ggf. verschachtelte Kategorie
-    final mainCategory = channel.findElements('itunes:category').firstOrNull;
-    if (mainCategory == null) return null;
-    final mainText = mainCategory.getAttribute('text');
-    // Falls verschachtelt, hänge Subkategorie(n) mit an
-    final subCategory =
-        mainCategory.findElements('itunes:category').firstOrNull;
-    if (subCategory != null) {
-      final subText = subCategory.getAttribute('text');
-      if (subText != null && subText.isNotEmpty) {
-        return '$mainText > $subText';
-      }
-    }
-    return mainText;
+    final category = channel.findElements('itunes:category').firstOrNull;
+    return category?.getAttribute('text');
   }
 }

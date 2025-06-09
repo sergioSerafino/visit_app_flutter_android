@@ -2,12 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/podcast_provider.dart';
-import '../../core/utils/tenant_asset_loader.dart';
 import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../../application/providers/rss_metadata_provider.dart';
 import '../widgets/host_info_card.dart';
-import '../widgets/splash_cover_image.dart';
+import '../widgets/tenant_logo_widget.dart';
 
 class HostsPage extends ConsumerWidget {
   const HostsPage({super.key});
@@ -16,6 +15,7 @@ class HostsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final host = ref.watch(coll_prov.hostModelProvider);
     final collectionId = host.collectionId;
+    // Null-sichere Prüfung auf assetLogo
     final podcastCollectionAsync = ref.watch(
       podcastCollectionProvider(collectionId),
     );
@@ -23,13 +23,15 @@ class HostsPage extends ConsumerWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          // Fester Header oder beliebiges Widget
-          // SplashCoverImage als Artwork oben in der Card
-          SplashCoverImage(
-            assetPath: TenantAssetLoader(host.collectionId)
-                .assetLogoPath(host.branding.assetLogo),
-            scaleFactor: 0.5,
-            duration: const Duration(milliseconds: 800),
+          // Header mit neuem dynamischen Widget für das assetLogo
+          Padding(
+            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+            child: TenantLogoWidget(
+              collectionId: collectionId,
+              assetLogo: host.branding.assetLogo,
+              scaleFactor: 0.45,
+              duration: const Duration(milliseconds: 800),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 0.0, left: 24.0, right: 24.0),
@@ -87,9 +89,9 @@ class HostsPage extends ConsumerWidget {
                 //     label: 'Branding Secondary',
                 //     value: host.branding.secondaryColorHex ?? '-'),
 
-                InfoTile(
-                    label: 'Branding Logo',
-                    value: host.branding.logoUrl ?? '-'),
+                // InfoTile(
+                //     label: 'Branding Logo',
+                //     value: host.branding.logoUrl ?? '-'),
 
                 // für Admin
                 // InfoTile(label: 'Theme Mode', value: host.branding.themeMode ?? '-'),
@@ -132,10 +134,10 @@ class HostsPage extends ConsumerWidget {
 
                         // InfoTile(label: 'Genre', value: podcast.primaryGenreName),
 
-                        InfoTile(
-                            label: 'Feed URL', value: podcast.feedUrl ?? '-'),
-
-                        InfoTile(label: 'Feed URL (Debug)', value: feedUrl),
+                        // für Admin
+                        // InfoTile(
+                        //     label: 'Feed URL', value: podcast.feedUrl ?? '-'),
+                        // InfoTile(label: 'Feed URL (Debug)', value: feedUrl),
 
                         // für Admin
                         // InfoTile(
@@ -145,6 +147,33 @@ class HostsPage extends ConsumerWidget {
                         //PERFEKT:
                         InfoTile(
                             label: 'Artwork', value: podcast.artworkUrl600),
+                        if (podcast.artworkUrl600.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Row(
+                              children: [
+                                Spacer(), // schiebt das Bild ganz nach rechts
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    podcast.artworkUrl600,
+                                    width: 120,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                      color: Colors.grey[300],
+                                      width: 180,
+                                      height: 180,
+                                      child: Icon(Icons.broken_image,
+                                          size: 48, color: Colors.grey[500]),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
                         //PERFEKT: als 'numberOfEpisodes' ()
                         InfoTile(
@@ -207,7 +236,7 @@ class HostsPage extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Fehler beim Laden der RSS-Metadaten: $err'),
-                              Text('Debug: $stack'),
+                              // Text('Debug: $stack'),
                             ],
                           ),
                         ),

@@ -8,7 +8,8 @@
     "secondaryColorHex": "#EEEEEE",
     "headerImageUrl": "https://example.com/placeholder-header.png",
     "themeMode": "system",
-    "logoUrl": "https://example.com/placeholder-logo.png"
+    "logoUrl": "https://example.com/placeholder-logo.png",
+    "assetLogo": "assetLogo.png"
   },
   "features": { "showPortfolioTab": false },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },

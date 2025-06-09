@@ -10,7 +10,8 @@
     "secondaryColorHex": "#EEEEEE",
     "headerImageUrl": "https://example.com/host1-header.png",
     "themeMode": "light",
-    "logoUrl": "https://example.com/host1-logo.png"
+    "logoUrl": "https://example.com/host1-logo.png",
+    "assetLogo": "assetLogo.png"
   },
   "features": {
     "showPortfolioTab": true

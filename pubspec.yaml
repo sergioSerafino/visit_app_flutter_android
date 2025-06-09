@@ -90,6 +90,8 @@ flutter:
     - lib/tenants/common/host_model.json
     - lib/tenants/common/assets/visit22.png
     - lib/tenants/collection_1590516386/host_model.json
+    - lib/tenants/collection_1590516386/assets/assetLogo.png
+    - lib/tenants/collection_1590516386/assets/logoUrl.png
     - lib/tenants/collection_1765742605/host_model.json
     - lib/tenants/collection_1469653179/host_model.json
     - lib/tenants/collection_1481054140/host_model.json

@@ -8,7 +8,8 @@
     "secondaryColorHex": "#F08DA2",
     "headerImageUrl": "https://example.com/host3-header.png",
     "themeMode": "light",
-    "logoUrl": "https://example.com/host3-logo.png"
+    "logoUrl": "https://example.com/host3-logo.png",
+    "assetLogo": "assetLogo.png"
   },
   "features": { "showPortfolioTab": true },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
