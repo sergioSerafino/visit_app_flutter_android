@@ -176,6 +176,7 @@ class BottomPlayerWidget extends ConsumerWidget {
               isLoading: isTransportLocked,
               position: position,
               duration: duration,
+              isActiveEpisode: currentEpisode != null && isActive,
               onPlayPause: isTransportLocked
                   ? () {}
                   : () => audioBloc.add(TogglePlayPause()),

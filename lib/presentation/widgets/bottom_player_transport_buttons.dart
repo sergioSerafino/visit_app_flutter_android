@@ -12,6 +12,7 @@ class BottomPlayerTransportButtons extends StatelessWidget {
   final VoidCallback onForward;
   final Widget volumeButton;
   final bool isLoading;
+  final bool isActiveEpisode;
 
   const BottomPlayerTransportButtons({
     super.key,
@@ -25,6 +26,7 @@ class BottomPlayerTransportButtons extends StatelessWidget {
     required this.onForward,
     required this.volumeButton,
     this.isLoading = false,
+    this.isActiveEpisode = true,
   });
 
   @override
@@ -38,10 +40,12 @@ class BottomPlayerTransportButtons extends StatelessWidget {
           // Reset-Button
           IconButton(
             icon: Icon(Icons.refresh,
-                color: theme.colorScheme.primary.withAlpha(140)),
+                color: isActiveEpisode
+                    ? theme.colorScheme.primary.withAlpha(140)
+                    : theme.disabledColor),
             iconSize: 24,
             tooltip: 'Player zurücksetzen',
-            onPressed: isLoading ? null : onReset,
+            onPressed: isLoading || !isActiveEpisode ? null : onReset,
           ),
           const SizedBox(width: 8),
           // Zentrale Transport-Buttons
@@ -57,9 +61,12 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       button: true,
                       child: IconButton(
                         icon: Icon(Icons.replay_10,
-                            color: theme.colorScheme.primary.withAlpha(140)),
+                            color: isActiveEpisode
+                                ? theme.colorScheme.primary.withAlpha(140)
+                                : theme.disabledColor),
                         iconSize: 32,
-                        onPressed: isLoading ? null : onRewind,
+                        onPressed:
+                            isLoading || !isActiveEpisode ? null : onRewind,
                         tooltip: '10 Sekunden zurück',
                       ),
                     ),
@@ -76,8 +83,9 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                             child: AbsorbPointer(
                               child: CircularProgressIndicator(
                                 strokeWidth: 4,
-                                color:
-                                    theme.colorScheme.onSurface.withAlpha(140),
+                                color: isActiveEpisode
+                                    ? theme.colorScheme.onSurface.withAlpha(140)
+                                    : theme.disabledColor,
                               ),
                             ),
                           ),
@@ -97,8 +105,9 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                                 isPlaying
                                     ? Icons.pause_circle_filled
                                     : Icons.play_circle_fill,
-                                color:
-                                    theme.colorScheme.onSurface.withAlpha(140),
+                                color: isActiveEpisode
+                                    ? theme.colorScheme.onSurface.withAlpha(140)
+                                    : theme.disabledColor,
                                 size: 56,
                               ),
                               iconSize: 56,
@@ -106,7 +115,9 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                               alignment: Alignment.center,
                               constraints: const BoxConstraints(),
                               onPressed:
-                                  isPlayPauseButtonEnabled ? onPlayPause : null,
+                                  isPlayPauseButtonEnabled && isActiveEpisode
+                                      ? onPlayPause
+                                      : null,
                               tooltip:
                                   isPlaying ? 'Pause' : 'Wiedergabe starten',
                             ),
@@ -119,9 +130,12 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       button: true,
                       child: IconButton(
                         icon: Icon(Icons.forward_10,
-                            color: theme.colorScheme.primary.withAlpha(140)),
+                            color: isActiveEpisode
+                                ? theme.colorScheme.primary.withAlpha(140)
+                                : theme.disabledColor),
                         iconSize: 32,
-                        onPressed: isLoading ? null : onForward,
+                        onPressed:
+                            isLoading || !isActiveEpisode ? null : onForward,
                         tooltip: '10 Sekunden vor',
                       ),
                     ),
@@ -133,11 +147,12 @@ class BottomPlayerTransportButtons extends StatelessWidget {
           const SizedBox(width: 8),
           // Lautstärke-Button (Overlay)
           AbsorbPointer(
-            absorbing: isLoading,
+            absorbing: isLoading || !isActiveEpisode,
             child: IconTheme(
               data: IconThemeData(
-                color: theme.colorScheme.primary
-                    .withAlpha(140), // Wie die anderen Buttons
+                color: isActiveEpisode
+                    ? theme.colorScheme.primary.withAlpha(140)
+                    : theme.disabledColor, // Wie die anderen Buttons
               ),
               child: volumeButton,
             ),

@@ -113,13 +113,13 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
                   inactiveTrackColor:
                       theme.colorScheme.surfaceContainerHighest.withAlpha(140),
                   thumbColor: theme.colorScheme.primary.withAlpha(180),
-                  overlayColor: theme.colorScheme.primary.withAlpha(32),
+                  overlayColor: theme.colorScheme.primary.withAlpha(24),
                   trackHeight: 14,
                   thumbShape:
                       const RoundSliderThumbShape(enabledThumbRadius: 9),
                   valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
                   valueIndicatorColor: theme.colorScheme.primary.withAlpha(180),
-                  showValueIndicator: ShowValueIndicator.onlyForContinuous,
+                  showValueIndicator: ShowValueIndicator.always,
                 ),
                 child: Slider(
                   value: isSliderEnabled

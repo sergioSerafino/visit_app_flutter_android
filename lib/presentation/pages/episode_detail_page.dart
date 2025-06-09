@@ -46,23 +46,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
   void initState() {
     super.initState();
     _scrollController = ScrollController()..addListener(_onScroll);
-    // --- Buffering/Preload der Episode beim Öffnen (ohne Autoplay) ---
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final container = ProviderScope.containerOf(context, listen: false);
-      final audioBloc = container.read(audioPlayerBlocProvider);
-      final currentEpisode = container.read(currentEpisodeProvider);
-      final currentAudioUrl = audioBloc.currentUrl;
-      // --- currentEpisodeProvider setzen, falls noch nicht gesetzt ---
-      if (currentEpisode == null ||
-          currentEpisode.trackId != widget.episode.trackId) {
-        container.read(currentEpisodeProvider.notifier).state = widget.episode;
-      }
-      // Preload NUR wenn die URL sich geändert hat (sonst bleibt Position erhalten)
-      if (widget.episode.episodeUrl.isNotEmpty &&
-          currentAudioUrl != widget.episode.episodeUrl) {
-        audioBloc.add(PreloadEpisode(widget.episode.episodeUrl));
-      }
-    });
+    // --- ENTFERNT: KEIN automatisches Setzen/Preload der Episode mehr ---
+    // Die Episode wird erst beim Play-Button-Click gesetzt und abgespielt.
   }
 
   void _onScroll() {
@@ -338,12 +323,28 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                       ref.watch(audioPlayerStateProvider);
                                   final audioState =
                                       audioStateAsync.asData?.value;
-                                  final isPlaying = audioState is Playing;
+                                  final currentEpisode =
+                                      ref.watch(currentEpisodeProvider);
+                                  // Abgleich: Button ist nur aktiv, wenn trackId übereinstimmt (TODO: für Offline ggf. localId/trackName prüfen)
+                                  // Farbwahl: prominent (Theme-Farbe), dezent (grau), siehe Doku oben
+                                  // Optional: TODO Highlight-Effekt beim erstmaligen Koppeln
+                                  final isActiveEpisode =
+                                      currentEpisode?.trackId ==
+                                          widget.episode.trackId;
+                                  final hasEverBeenLoaded =
+                                      isActiveEpisode; // (später ggf. persistent machen)
+                                  final playIconColor = !hasEverBeenLoaded
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .primary // prominent
+                                      : Colors.grey[500]; // dezent
+                                  final isPlaying =
+                                      isActiveEpisode && audioState is Playing;
                                   final isEnabled = audioState is! Loading &&
                                       audioState is! ErrorState;
+                                  // Wenn Play aktiv ist, PlayIcon wie die anderen Icons einfärben (nicht prominent)
                                   return SizedBox(
-                                    width:
-                                        40, // Angepasst: kleiner als Transportfeld
+                                    width: 40,
                                     height: 40,
                                     child: Center(
                                       child: IconButton(
@@ -351,16 +352,25 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                           isPlaying
                                               ? Icons.pause_circle_filled
                                               : Icons.play_circle_fill,
-                                          color: Colors.grey[500],
-                                          size: 40, // Angepasst
+                                          color: playIconColor,
+                                          size: 40,
                                         ),
-                                        iconSize: 40, // Angepasst
+                                        iconSize: 40,
                                         padding: EdgeInsets.zero,
                                         alignment: Alignment.center,
                                         constraints: const BoxConstraints(),
                                         onPressed: isEnabled
-                                            ? () =>
-                                                audioBloc.add(TogglePlayPause())
+                                            ? () {
+                                                final notifier = ref.read(currentEpisodeProvider.notifier);
+                                                if (!isActiveEpisode) {
+                                                  // Vor dem Wechsel: Stop, um alten Stream sauber zu beenden und Resume-Position zu sichern
+                                                  audioBloc.add(Stop());
+                                                  notifier.state = widget.episode;
+                                                  audioBloc.add(PlayEpisode(widget.episode.episodeUrl));
+                                                } else {
+                                                  audioBloc.add(TogglePlayPause());
+                                                }
+                                              }
                                             : null,
                                         tooltip: isPlaying
                                             ? 'Pause'
@@ -477,4 +487,14 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
     // Sonst: Anfang abschneiden, Ende behalten
     return '… $lastSegment';
   }
+
+  /*
+  UX-Logik: Play-Button auf der EpisodeDetailPage
+  ------------------------------------------------
+  - Der Play-Button koppelt die jeweilige Episode explizit an den Player (BottomPlayerWidget).
+  - Die farbliche Hervorhebung (aktiv) erfolgt nur, wenn die aktuell im Player geladene Episode (currentEpisodeProvider)
+    mit der auf der Seite dargestellten Episode übereinstimmt.
+  - Der Abgleich erfolgt aktuell über trackId (TODO: Für Offline-Wiedergabe ggf. robusteren Vergleich implementieren, z.B. mit localId oder trackName).
+  - Ziel: Die UI bleibt konsistent, auch wenn mehrere Detailseiten geöffnet sind oder Episoden aus verschiedenen Quellen geladen werden.
+  */
 }

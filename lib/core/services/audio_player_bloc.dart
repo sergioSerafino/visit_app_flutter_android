@@ -239,13 +239,8 @@ class AudioPlayerBloc extends Bloc<AudioPlayerEvent, AudioPlayerState> {
         _listenToPosition();
         return;
       }
-      // Play nur aus Idle, Paused oder ErrorState zulassen
-      if (state is! Idle && state is! Paused && state is! ErrorState) {
-        if (kDebugMode) {
-          logDebug('[AudioPlayerBloc] PlayEpisode ignoriert (State: $state)');
-        }
-        return;
-      }
+      // NEU: Wechsel auf andere URL ist IMMER erlaubt, egal in welchem State
+      // (vorher: nur aus Idle, Paused, ErrorState → das verhinderte Stream-Wechsel bei Playing)
       emit(Loading());
       if (kDebugMode) logDebug('[AudioPlayerBloc] emit: Loading');
       try {
