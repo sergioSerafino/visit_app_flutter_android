@@ -243,22 +243,20 @@ Das Widget `CoverImageWidget` zeigt ein Cover-Bild oder einen Fallback (Icon + L
 ## Refactoring-Analyse: StickyInfoHeader
 
 ### Ausgangslage
-Das Widget `StickyInfoHeader` zeigt Metadaten (z.B. Veröffentlichungsdatum, Dauer) als Sticky-Header an. Style-Parameter wie Padding, TextStyle, Divider und Basis-/Maximalhöhe sind aktuell direkt im Widget kodiert.
+Das Widget `StickyInfoHeader` zeigt Metadaten (z.B. Veröffentlichungsdatum, Dauer) und optional weitere Inhalte an. Die Standardwerte für Höhe, Padding, TextStyle und Divider sind bereits in eine zentrale Datei (`sticky_info_header_constants.dart`) ausgelagert.
 
 ### Refactoring-Potenzial
-- **Utility-Auslagerung:** Die Standardwerte für Padding, TextStyle, Divider und Höhen können in eine zentrale Datei (`lib/core/utils/sticky_info_header_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
-- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten wird im HowTo dokumentiert und mit Querverweisen versehen.
-- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+- **Review und Dokumentation:** Die Auslagerung der Konstanten ist bereits erfolgt. Es empfiehlt sich, die Nutzung und die Vorteile (Wartbarkeit, Wiederverwendbarkeit) im HowTo zu dokumentieren und mit Querverweisen zu versehen.
+- **Layout- und Logiktreue:** Die aktuelle Implementierung entspricht den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien).
 
 ### Geplantes Vorgehen
-1. Auslagerung der Standardwerte in `lib/core/utils/sticky_info_header_constants.dart`.
-2. Anpassung des Widgets zur Nutzung dieser Konstanten.
-3. Dokumentation des Schritts mit Querverweisen im HowTo.
-4. Commit und Push nach jedem Schritt.
+1. Review und Dokumentation der bereits ausgelagerten Konstanten.
+2. Querverweise im HowTo ergänzen.
+3. Commit und Push nach dem Dokumentationsschritt.
 
 #### Querverweise
 - Siehe [lib/presentation/widgets/sticky_info_header.dart](lib/presentation/widgets/sticky_info_header.dart)
-- Siehe [lib/core/utils/sticky_info_header_constants.dart](lib/core/utils/sticky_info_header_constants.dart) *(wird neu angelegt)*
+- Siehe [lib/core/utils/sticky_info_header_constants.dart](lib/core/utils/sticky_info_header_constants.dart)
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
 ---
