@@ -2,6 +2,7 @@
 // lib/presentation/widgets/cover_placeholder.dart
 
 import 'package:flutter/material.dart';
+import '../../core/utils/cover_image_widget_constants.dart';
 
 class CoverImageWidget extends StatelessWidget {
   final String? imageUrl;
@@ -31,8 +32,8 @@ class CoverImageWidget extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: Colors.grey[500],
-          borderRadius: BorderRadius.circular(12),
+          color: CoverImageWidgetConstants.backgroundColor,
+          borderRadius: BorderRadius.circular(CoverImageWidgetConstants.borderRadius),
         ),
         clipBehavior: Clip.antiAlias,
         child: _buildContent(iconSize, labelBottomOffset, theme),
@@ -69,7 +70,7 @@ class CoverImageWidget extends StatelessWidget {
           child: Icon(
             Icons.podcasts,
             size: iconSize,
-            color: Colors.grey[500],
+            color: CoverImageWidgetConstants.iconColor,
           ),
         ),
         if (showLabel)
@@ -81,14 +82,14 @@ class CoverImageWidget extends StatelessWidget {
               child: Text(
                 'Podcast',
                 style: TextStyle(
-                  color: Colors.grey[300], //theme.colorScheme.onSurface,
+                  color: CoverImageWidgetConstants.labelColor,
                   fontWeight: FontWeight.bold,
                   fontSize: iconSize * 0.25,
                   shadows: const [
                     Shadow(
-                      blurRadius: 4,
-                      color: Colors.black45,
-                      offset: Offset(1, 1),
+                      blurRadius: CoverImageWidgetConstants.labelShadowBlur,
+                      color: CoverImageWidgetConstants.labelShadowColor,
+                      offset: CoverImageWidgetConstants.labelShadowOffset,
                     ),
                   ],
                 ),

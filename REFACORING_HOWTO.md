@@ -219,4 +219,25 @@ Das Widget `EpisodeDescriptionWidget` zeigt die Beschreibung einer Episode an un
 - Siehe [lib/core/utils/episode_description_widget_constants.dart](lib/core/utils/episode_description_widget_constants.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: CoverImageWidget
+
+### Ausgangslage
+Das Widget `CoverImageWidget` zeigt ein Cover-Bild oder einen Fallback (Icon + Label) an. Style-Parameter wie `scaleFactor`, BorderRadius, Farben, Icon-Größe und Label-TextStyle sind aktuell direkt im Widget kodiert.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Standardwerte für scaleFactor, BorderRadius, Farben, Icon-Größe und Label-TextStyle können in eine zentrale Datei (`lib/core/utils/cover_image_widget_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Standardwerte in `lib/core/utils/cover_image_widget_constants.dart`.
+2. Anpassung des Widgets zur Nutzung dieser Konstanten.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/cover_image_widget.dart](lib/presentation/widgets/cover_image_widget.dart)
+- Siehe [lib/core/utils/cover_image_widget_constants.dart](lib/core/utils/cover_image_widget_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---
