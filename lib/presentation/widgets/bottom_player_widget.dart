@@ -339,8 +339,8 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                           return SliderTheme(
                             data: SliderTheme.of(context).copyWith(
                               thumbShape: const RoundSliderThumbShape(
-                                  enabledThumbRadius: 16),
-                              trackHeight: 10,
+                                  enabledThumbRadius: BottomPlayerWidgetConstants.buttonSize / 2),
+                              trackHeight: BottomPlayerWidgetConstants.progressBarHeight,
                               activeTrackColor: widget.theme.colorScheme.primary
                                   .withAlpha(180), // Wie Progressbar
                               inactiveTrackColor: widget
