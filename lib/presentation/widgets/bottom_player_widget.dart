@@ -36,6 +36,7 @@ import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../core/services/audio_player_bloc.dart';
 import '../../core/services/audio_player_sync_service.dart';
+import '../../core/utils/bottom_player_widget_constants.dart';
 import 'bottom_player_progress_bar.dart';
 import 'bottom_player_transport_buttons.dart';
 import 'bottom_player_title_collection.dart';
@@ -97,7 +98,7 @@ class BottomPlayerWidget extends ConsumerWidget {
         : (audioState is Paused)
             ? audioState.speed
             : 1.0;
-    final List<double> speedOptions = [0.5, 1.0, 1.5, 2.0];
+    final List<double> speedOptions = BottomPlayerWidgetConstants.speedOptions;
     final isPaused = audioState is Paused;
     final isPreloadOverlay =
         isPaused && position == Duration.zero && hasValidUrl;
