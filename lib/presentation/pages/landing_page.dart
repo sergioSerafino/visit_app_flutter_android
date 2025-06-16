@@ -15,6 +15,7 @@ import '../../core/messaging/snackbar_manager.dart';
 import '../../domain/common/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/title_format_utils.dart';
+import '../../core/utils/landing_page_constants.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   const LandingPage({super.key});
@@ -80,13 +81,19 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                           podcast?.collectionName ?? "Gastgeber-Format";
                       return Padding(
                         padding: const EdgeInsets.only(
-                            top: 24, left: 24, right: 24, bottom: 8),
+                            top: LandingPageConstants.welcomeHeaderTop,
+                            left: LandingPageConstants.welcomeHeaderLeft,
+                            right: LandingPageConstants.welcomeHeaderRight,
+                            bottom: LandingPageConstants.welcomeHeaderBottom),
                         child: welcomeHeader(dynamicHostName, context: context),
                       );
                     },
                     error: (_) => Padding(
                       padding: const EdgeInsets.only(
-                          top: 24, left: 24, right: 24, bottom: 8),
+                          top: LandingPageConstants.welcomeHeaderTop,
+                          left: LandingPageConstants.welcomeHeaderLeft,
+                          right: LandingPageConstants.welcomeHeaderRight,
+                          bottom: LandingPageConstants.welcomeHeaderBottom),
                       child: welcomeHeader("dynamicHostName", context: context),
                     ),
                     loading: () => const SizedBox.shrink(), // Kein Loading mehr
@@ -94,12 +101,15 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   loading: () => const SizedBox.shrink(), // Kein Loading mehr
                   error: (_, __) => Padding(
                     padding: const EdgeInsets.only(
-                        top: 24, left: 24, right: 24, bottom: 8),
+                        top: LandingPageConstants.welcomeHeaderTop,
+                        left: LandingPageConstants.welcomeHeaderLeft,
+                        right: LandingPageConstants.welcomeHeaderRight,
+                        bottom: LandingPageConstants.welcomeHeaderBottom),
                     child: welcomeHeader("Fehler beim Laden", context: context),
                   ),
                 ),
                 // Cover
-                const SizedBox(height: 8),
+                const SizedBox(height: LandingPageConstants.coverSpacing),
                 collectionAsync.when(
                   data: (apiResponse) => apiResponse.when(
                     success: (collection) {
@@ -118,12 +128,12 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   error: (_, __) =>
                       const Center(child: CoverImageWidget(showLabel: true)),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: LandingPageConstants.buttonSpacing),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: LandingPageConstants.buttonHorizontal),
                   child: ButtonIconNavigation(
                     iconPosition: IconPosition.right,
-                    sizeOfFont: 28,
+                    sizeOfFont: LandingPageConstants.startButtonFontSize,
                     label: "Starten",
                     icon: Icons.play_arrow,
                     onPressed: () {
@@ -141,24 +151,24 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     color: theme.colorScheme.primary, // Hauptfarbe für Button
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: LandingPageConstants.titleSpacing),
                 Padding(
-                  padding: const EdgeInsets.only(left: 28.0, top: 8),
+                  padding: const EdgeInsets.only(left: LandingPageConstants.textLeft, top: LandingPageConstants.textTop),
                   child: Text("einer", style: theme.textTheme.bodySmall),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 28.0, top: 2),
+                  padding: const EdgeInsets.only(left: LandingPageConstants.textLeft, top: LandingPageConstants.textTopSmall),
                   child: Text(
                     "Universell Podcasten -App",
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: LandingPageConstants.endSpacing),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: LandingPageConstants.buttonHorizontal),
                   child: ButtonIconNavigation(
                     iconPosition: IconPosition.none,
-                    sizeOfFont: 18,
+                    sizeOfFont: LandingPageConstants.settingsButtonFontSize,
                     label: "Einstellungen",
                     onPressed: () {
                       showModalBottomSheet(
@@ -170,7 +180,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     color: theme.colorScheme.primary, // Hauptfarbe für Button
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: LandingPageConstants.buttonSpacing),
               ],
             ),
           ),
