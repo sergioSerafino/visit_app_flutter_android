@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'bottom_player_speed_dropdown.dart';
+import '../../core/utils/bottom_player_title_collection_constants.dart';
 
 /// Zeigt Titel und Collection-Name der aktuellen Episode im Player.
 class BottomPlayerTitleCollection extends StatelessWidget {
@@ -30,18 +31,20 @@ class BottomPlayerTitleCollection extends StatelessWidget {
       children: [
         if (artworkUrl.isNotEmpty)
           Padding(
-            padding:
-                const EdgeInsets.only(top: 12), // Cover nach unten eingerückt
+            padding: const EdgeInsets.only(
+                top: BottomPlayerTitleCollectionConstants
+                    .artworkTopPadding), // Cover nach unten eingerückt
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(
+                  BottomPlayerTitleCollectionConstants.artworkBorderRadius),
               child: Image.network(
                 artworkUrl,
-                width: 56,
-                height: 56,
+                width: BottomPlayerTitleCollectionConstants.artworkSize,
+                height: BottomPlayerTitleCollectionConstants.artworkSize,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  width: 56,
-                  height: 56,
+                  width: BottomPlayerTitleCollectionConstants.artworkSize,
+                  height: BottomPlayerTitleCollectionConstants.artworkSize,
                   color: Colors.grey.shade200,
                   child: const Icon(Icons.music_note, color: Colors.grey),
                 ),
@@ -50,24 +53,28 @@ class BottomPlayerTitleCollection extends StatelessWidget {
           ),
         if (artworkUrl.isEmpty)
           Padding(
-            padding:
-                const EdgeInsets.only(top: 12), // Cover nach unten eingerückt
+            padding: const EdgeInsets.only(
+                top: BottomPlayerTitleCollectionConstants
+                    .artworkTopPadding), // Cover nach unten eingerückt
             child: Container(
-              width: 56,
-              height: 56,
+              width: BottomPlayerTitleCollectionConstants.artworkSize,
+              height: BottomPlayerTitleCollectionConstants.artworkSize,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(
+                    BottomPlayerTitleCollectionConstants.artworkBorderRadius),
               ),
               child: const Icon(Icons.music_note, color: Colors.grey),
             ),
           ),
-        const SizedBox(width: 18),
+        const SizedBox(
+            width: BottomPlayerTitleCollectionConstants.betweenArtworkAndTitle),
         // Titel (Marquee) und SpeedDropdown in einer Zeile
         Expanded(
           flex: 2,
           child: Padding(
-            padding: const EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.only(
+                top: BottomPlayerTitleCollectionConstants.titleTopPadding),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,15 +83,20 @@ class BottomPlayerTitleCollection extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 22,
+                        height:
+                            BottomPlayerTitleCollectionConstants.titleHeight,
                         child: Marquee(
                           text: title,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface.withAlpha(100),
+                            color: theme.colorScheme.onSurface.withAlpha(
+                                BottomPlayerTitleCollectionConstants
+                                    .titleAlpha),
                           ),
-                          blankSpace: 24.0,
-                          velocity: 28.0,
+                          blankSpace: BottomPlayerTitleCollectionConstants
+                              .marqueeBlankSpace,
+                          velocity: BottomPlayerTitleCollectionConstants
+                              .marqueeVelocity,
                           pauseAfterRound: const Duration(seconds: 3),
                           accelerationDuration:
                               const Duration(milliseconds: 600),
@@ -95,12 +107,18 @@ class BottomPlayerTitleCollection extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 2, left: 4),
+                        padding: const EdgeInsets.only(
+                            top: BottomPlayerTitleCollectionConstants
+                                .collectionNameTopPadding,
+                            left: BottomPlayerTitleCollectionConstants
+                                .collectionNameLeftPadding),
                         child: Text(
                           formattedCollectionName,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w400,
-                            color: theme.colorScheme.onSurface.withAlpha(120),
+                            color: theme.colorScheme.onSurface.withAlpha(
+                                BottomPlayerTitleCollectionConstants
+                                    .collectionAlpha),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -111,7 +129,8 @@ class BottomPlayerTitleCollection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                    width: 16), // Mehr Luft zwischen Marquee und SpeedDropdown
+                    width: BottomPlayerTitleCollectionConstants
+                        .betweenTitleAndDropdown), // Mehr Luft zwischen Marquee und SpeedDropdown
                 // SpeedDropdown rechtsbündig, aber mit flexibler Breite
                 IntrinsicWidth(
                   child: Align(
