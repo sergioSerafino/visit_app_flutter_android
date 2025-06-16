@@ -4,6 +4,7 @@ import '../../application/providers/theme_provider.dart' as theme_prov;
 import '../../core/messaging/snackbar_event.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import '../../domain/models/branding_model.dart';
+import '../../core/utils/global_snackbar_constants.dart';
 
 // Zeigt Snackbars aus zentralem Stream/Notifier
 // UI-Komponente, evtl. als „GlobalLayer“ oder über app.dart
@@ -23,7 +24,8 @@ class GlobalSnackbarListener extends ConsumerWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final messenger = scaffoldMessengerKey.currentState;
           if (messenger != null) {
-            final formattedMessage = _formatMessageForLineBreak(next.message);
+            final formattedMessage =
+                GlobalSnackbarConstants.formatMessageForLineBreak(next.message);
             messenger.showSnackBar(
               SnackBar(
                 content: Row(
@@ -36,7 +38,7 @@ class GlobalSnackbarListener extends ConsumerWidget {
                         child: next.emoji != null
                             ? Text(next.emoji!,
                                 style: TextStyle(
-                                    fontSize: 24,
+                                    fontSize: GlobalSnackbarConstants.iconSize,
                                     color: _textColorForSnackbar(
                                         next.type, branding)))
                             : (next.icon != null
@@ -56,10 +58,8 @@ class GlobalSnackbarListener extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         formattedMessage,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: _textColorForSnackbar(next.type, branding),
-                        ),
+                        style: GlobalSnackbarConstants.textStyle(
+                            _textColorForSnackbar(next.type, branding)),
                         overflow: TextOverflow.visible,
                         softWrap: true,
                       ),
@@ -114,27 +114,4 @@ class GlobalSnackbarListener extends ConsumerWidget {
       return Colors.white;
     }
   }
-}
-
-String _formatMessageForLineBreak(String formatMes, {int threshold = 30}) {
-  if (formatMes.length < threshold) return formatMes;
-
-  final delimiters = [
-    ':',
-    //'-',
-    '|',
-    '/',
-    ',',
-    '!',
-    '?',
-  ]; // beliebig erweiterbar
-  for (var d in delimiters) {
-    if (formatMes.contains(d)) {
-      final parts = formatMes.split(d);
-      if (parts.length > 1) {
-        return '${parts[0]}$d\n${parts.sublist(1).join(d).trim()}';
-      }
-    }
-  }
-  return formatMes;
 }

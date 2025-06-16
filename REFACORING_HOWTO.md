@@ -259,4 +259,25 @@ Das Widget `StickyInfoHeader` zeigt Metadaten (z.B. Veröffentlichungsdatum, Dau
 - Siehe [lib/core/utils/sticky_info_header_constants.dart](lib/core/utils/sticky_info_header_constants.dart)
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: GlobalSnackbarListener
+
+### Ausgangslage
+Das Widget `GlobalSnackbarListener` zeigt zentrale Snackbars an und verwendet Style- und Farbwerte, die teilweise dynamisch (Branding), teilweise fest kodiert sind. Die Zeilenumbruch-Logik ist als Hilfsfunktion im Widget definiert.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Standardwerte für Farben, TextStyle, Icon-Größe und die Zeilenumbruch-Logik können in eine zentrale Datei (`lib/core/utils/global_snackbar_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten/Funktionen wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Standardwerte und Hilfsfunktionen in `lib/core/utils/global_snackbar_constants.dart`.
+2. Anpassung des Widgets zur Nutzung dieser Konstanten/Funktionen.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/global_snackbar.dart](lib/presentation/widgets/global_snackbar.dart)
+- Siehe [lib/core/utils/global_snackbar_constants.dart](lib/core/utils/global_snackbar_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---
