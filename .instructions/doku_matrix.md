@@ -65,3 +65,7 @@ Siehe auch:
 - CONTRIBUTING.md (Doku- und Coding-Guidelines)
 - GETTING_STARTED.md (Schnellstart und Doku-Einstieg)
 -->
+
+| Thema | Dokumentation |
+|-------|---------------|
+| Appweites Refactoring & God-Class-Vermeidung | [APPWIDE_REFACTORING_GUIDE.md](../APPWIDE_REFACTORING_GUIDE.md) |

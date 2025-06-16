@@ -50,12 +50,20 @@ class ButtonIconNavigation extends StatelessWidget {
     switch (iconPosition) {
       case IconPosition.left:
         children = hasIcon
-            ? [leadingIcon!, SizedBox(width: ButtonIconNavigationConstants.iconLabelSpacing), labelContent]
+            ? [
+                leadingIcon!,
+                SizedBox(width: ButtonIconNavigationConstants.iconLabelSpacing),
+                labelContent
+              ]
             : [labelContent];
         break;
       case IconPosition.right:
         children = hasIcon
-            ? [labelContent, SizedBox(width: ButtonIconNavigationConstants.iconLabelSpacing), leadingIcon!]
+            ? [
+                labelContent,
+                SizedBox(width: ButtonIconNavigationConstants.iconLabelSpacing),
+                leadingIcon!
+              ]
             : [labelContent];
         break;
       case IconPosition.none:

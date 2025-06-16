@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class LaunchScreenTextConstants {
   static const double fontSize = 24.0;
   static const double textTopOffset = 40.0;
-  static const double textLeftFactor = 0.25;
+  static const double textLeftFactor =
+      0.25; // Ursprünglicher Wert für linksbündig unter dem Bild
   static const FontWeight fontWeight = FontWeight.bold;
   static const Color textColor = Colors.grey;
   // Weitere Styles und Farben können bei Bedarf ergänzt werden

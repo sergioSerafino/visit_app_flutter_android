@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 import '../../domain/models/podcast_episode_model.dart';
+import '../../core/utils/episode_item_tile_constants.dart';
+import '../../core/utils/episode_format_utils.dart';
 
 class EpisodeItemTile extends StatelessWidget {
   final PodcastEpisode episode;
@@ -15,7 +17,7 @@ class EpisodeItemTile extends StatelessWidget {
     return InkWell(
       onTap: onTap ?? () {}, // fallback, falls null
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
+        padding: EpisodeItemTileConstants.padding,
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
         ),
@@ -27,8 +29,8 @@ class EpisodeItemTile extends StatelessWidget {
               child: episode.artworkUrl600.isNotEmpty
                   ? Image.network(
                       episode.artworkUrl600,
-                      width: 85,
-                      height: 85,
+                      width: EpisodeItemTileConstants.coverSize,
+                      height: EpisodeItemTileConstants.coverSize,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) =>
                           _buildPlaceholder(context),
@@ -46,9 +48,7 @@ class EpisodeItemTile extends StatelessWidget {
                 children: [
                   Text(
                     episode.trackName,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    style: EpisodeItemTileConstants.titleStyle.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                     maxLines: 2,
@@ -57,8 +57,7 @@ class EpisodeItemTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     episode.description ?? "Keine Beschreibung verfügbar",
-                    style: TextStyle(
-                        fontSize: 14,
+                    style: EpisodeItemTileConstants.descriptionStyle.copyWith(
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
@@ -80,9 +79,7 @@ class EpisodeItemTile extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     _formatDuration(episode.trackTimeMillis),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                    style: EpisodeItemTileConstants.durationStyle.copyWith(
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
@@ -100,7 +97,7 @@ class EpisodeItemTile extends StatelessWidget {
                     child: IconButton(
                       icon: Icon(
                         Icons.more_horiz,
-                        size: 32,
+                        size: EpisodeItemTileConstants.iconSize,
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
@@ -123,17 +120,16 @@ class EpisodeItemTile extends StatelessWidget {
   Widget _buildPlaceholder(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      width: 85,
-      height: 85,
+      width: EpisodeItemTileConstants.coverSize,
+      height: EpisodeItemTileConstants.coverSize,
       color: theme.colorScheme.surfaceContainerHighest,
       child: Icon(Icons.music_note,
-          size: 50, color: theme.colorScheme.primary.withAlpha(180)),
+          size: EpisodeItemTileConstants.placeholderIconSize,
+          color: theme.colorScheme.primary.withAlpha(180)),
     );
   }
 
   String _formatDuration(int millis) {
-    final seconds = (millis / 1000).round();
-    final minutes = (seconds / 60).floor();
-    return '${minutes + 1}min';
+    return EpisodeFormatUtils.formatDuration(millis);
   }
 }

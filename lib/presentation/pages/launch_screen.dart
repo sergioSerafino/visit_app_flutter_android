@@ -107,13 +107,8 @@ class _LaunchScreenState extends State<LaunchScreen>
   @override
   Widget build(BuildContext context) {
     // Berechnung der Größen auf Basis der Bildschirmgröße
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    final double imageSize = LaunchScreenConstants.imageSize;
-    final double imageTop = screenHeight / 2 - imageSize / 2;
-    final double textTop = imageTop + LaunchScreenTextConstants.textTopOffset;
-    final double textLeft = screenWidth * LaunchScreenTextConstants.textLeftFactor;
+    // final double screenWidth = MediaQuery.of(context).size.width;
+    // final double screenHeight = MediaQuery.of(context).size.height;
 
     // Fester neutraler Hintergrund, unabhängig vom Branding
     return Scaffold(
@@ -121,15 +116,15 @@ class _LaunchScreenState extends State<LaunchScreen>
       body: AnimatedOpacity(
         opacity: _opacity,
         duration: const Duration(),
-        child: Stack(
-          children: [
-            // Hero-Splashbild zentriert
-            Align(
-              child: Hero(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Hero(
                 tag: 'splashImage',
                 child: SizedBox(
-                  width: imageSize,
-                  height: imageSize,
+                  width: LaunchScreenConstants.imageSize,
+                  height: LaunchScreenConstants.imageSize,
                   child: SplashCoverImage(
                     showLabel: true,
                     assetPath: fallbackLogo,
@@ -138,13 +133,10 @@ class _LaunchScreenState extends State<LaunchScreen>
                   ),
                 ),
               ),
-            ),
-
-            // Bounce-Loading-Text
-            Positioned(
-              top: textTop,
-              left: textLeft,
-              child: Row(
+              const SizedBox(height: LaunchScreenTextConstants.textTopOffset),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: List.generate(loadingText.length, (index) {
                   return AnimatedBuilder(
                     animation: _animations[index],
@@ -156,7 +148,7 @@ class _LaunchScreenState extends State<LaunchScreen>
                           style: const TextStyle(
                             fontSize: LaunchScreenTextConstants.fontSize,
                             fontWeight: LaunchScreenTextConstants.fontWeight,
-                            color: LaunchScreenTextConstants.textColor, // Dezentes Grau für bessere Optik
+                            color: LaunchScreenTextConstants.textColor,
                           ),
                         ),
                       );
@@ -164,8 +156,8 @@ class _LaunchScreenState extends State<LaunchScreen>
                   );
                 }),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

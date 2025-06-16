@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class StickyInfoHeaderConstants {
   static const double baseHeight = 20;
   static const double maxExtraHeight = 20;
-  static const EdgeInsetsGeometry horizontalPadding = EdgeInsets.symmetric(horizontal: 16);
+  static const EdgeInsetsGeometry horizontalPadding =
+      EdgeInsets.symmetric(horizontal: 16);
   static const EdgeInsetsGeometry rowPadding = EdgeInsets.fromLTRB(0, 4, 0, 0);
   static const TextStyle releaseDateStyle = TextStyle(
     fontSize: 14,

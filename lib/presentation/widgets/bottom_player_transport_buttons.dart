@@ -34,7 +34,8 @@ class BottomPlayerTransportButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, BottomPlayerTransportButtonsConstants.paddingBottom),
+      padding: const EdgeInsets.fromLTRB(
+          0, 0, 0, BottomPlayerTransportButtonsConstants.paddingBottom),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -49,7 +50,8 @@ class BottomPlayerTransportButtons extends StatelessWidget {
             // NEU: Reset NIE blockieren, wenn Episode explizit geladen
             onPressed: isActiveEpisode ? onReset : null,
           ),
-          const SizedBox(width: BottomPlayerTransportButtonsConstants.buttonSpacing),
+          const SizedBox(
+              width: BottomPlayerTransportButtonsConstants.buttonSpacing),
           // Zentrale Transport-Buttons
           Expanded(
             child: Padding(
@@ -66,25 +68,32 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                             color: isActiveEpisode
                                 ? theme.colorScheme.primary.withAlpha(140)
                                 : theme.disabledColor),
-                        iconSize: BottomPlayerTransportButtonsConstants.iconButtonSize,
+                        iconSize: BottomPlayerTransportButtonsConstants
+                            .iconButtonSize,
                         onPressed:
                             isLoading || !isActiveEpisode ? null : onRewind,
                         tooltip: '10 Sekunden zurück',
                       ),
                     ),
-                    const SizedBox(width: BottomPlayerTransportButtonsConstants.centralButtonSpacing),
+                    const SizedBox(
+                        width: BottomPlayerTransportButtonsConstants
+                            .centralButtonSpacing),
                     // Play/Pause oder Loader
                     if (isLoading)
                       SizedBox(
-                        width: BottomPlayerTransportButtonsConstants.playPauseButtonSize,
-                        height: BottomPlayerTransportButtonsConstants.playPauseButtonSize,
+                        width: BottomPlayerTransportButtonsConstants
+                            .playPauseButtonSize,
+                        height: BottomPlayerTransportButtonsConstants
+                            .playPauseButtonSize,
                         child: Center(
                           child: Semantics(
                             label: 'Wird geladen…',
                             button: true,
                             child: AbsorbPointer(
                               child: CircularProgressIndicator(
-                                strokeWidth: BottomPlayerTransportButtonsConstants.loaderStrokeWidth,
+                                strokeWidth:
+                                    BottomPlayerTransportButtonsConstants
+                                        .loaderStrokeWidth,
                                 color: isActiveEpisode
                                     ? theme.colorScheme.onSurface.withAlpha(140)
                                     : theme.disabledColor,
@@ -98,8 +107,10 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                         label: isPlaying ? 'Pause' : 'Wiedergabe starten',
                         button: true,
                         child: SizedBox(
-                          width: BottomPlayerTransportButtonsConstants.playPauseButtonSize,
-                          height: BottomPlayerTransportButtonsConstants.playPauseButtonSize,
+                          width: BottomPlayerTransportButtonsConstants
+                              .playPauseButtonSize,
+                          height: BottomPlayerTransportButtonsConstants
+                              .playPauseButtonSize,
                           child: Center(
                             child: IconButton(
                               key: const Key('player_play_pause_button'),
@@ -110,9 +121,11 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                                 color: isActiveEpisode
                                     ? theme.colorScheme.onSurface.withAlpha(140)
                                     : theme.disabledColor,
-                                size: BottomPlayerTransportButtonsConstants.playPauseButtonSize,
+                                size: BottomPlayerTransportButtonsConstants
+                                    .playPauseButtonSize,
                               ),
-                              iconSize: BottomPlayerTransportButtonsConstants.playPauseButtonSize,
+                              iconSize: BottomPlayerTransportButtonsConstants
+                                  .playPauseButtonSize,
                               padding: EdgeInsets.zero,
                               alignment: Alignment.center,
                               constraints: const BoxConstraints(),
@@ -126,7 +139,9 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                           ),
                         ),
                       ),
-                    const SizedBox(width: BottomPlayerTransportButtonsConstants.centralButtonSpacing),
+                    const SizedBox(
+                        width: BottomPlayerTransportButtonsConstants
+                            .centralButtonSpacing),
                     Semantics(
                       label: '10 Sekunden vor',
                       button: true,
@@ -135,7 +150,8 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                             color: isActiveEpisode
                                 ? theme.colorScheme.primary.withAlpha(140)
                                 : theme.disabledColor),
-                        iconSize: BottomPlayerTransportButtonsConstants.iconButtonSize,
+                        iconSize: BottomPlayerTransportButtonsConstants
+                            .iconButtonSize,
                         onPressed:
                             isLoading || !isActiveEpisode ? null : onForward,
                         tooltip: '10 Sekunden vor',
@@ -146,7 +162,8 @@ class BottomPlayerTransportButtons extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: BottomPlayerTransportButtonsConstants.buttonSpacing),
+          const SizedBox(
+              width: BottomPlayerTransportButtonsConstants.buttonSpacing),
           // Lautstärke-Button (Overlay)
           AbsorbPointer(
             absorbing: isLoading || !isActiveEpisode,

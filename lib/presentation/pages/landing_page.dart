@@ -130,7 +130,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                 ),
                 const SizedBox(height: LandingPageConstants.buttonSpacing),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: LandingPageConstants.buttonHorizontal),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: LandingPageConstants.buttonHorizontal),
                   child: ButtonIconNavigation(
                     iconPosition: IconPosition.right,
                     sizeOfFont: LandingPageConstants.startButtonFontSize,
@@ -153,11 +154,15 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                 ),
                 const SizedBox(height: LandingPageConstants.titleSpacing),
                 Padding(
-                  padding: const EdgeInsets.only(left: LandingPageConstants.textLeft, top: LandingPageConstants.textTop),
+                  padding: const EdgeInsets.only(
+                      left: LandingPageConstants.textLeft,
+                      top: LandingPageConstants.textTop),
                   child: Text("einer", style: theme.textTheme.bodySmall),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: LandingPageConstants.textLeft, top: LandingPageConstants.textTopSmall),
+                  padding: const EdgeInsets.only(
+                      left: LandingPageConstants.textLeft,
+                      top: LandingPageConstants.textTopSmall),
                   child: Text(
                     "Universell Podcasten -App",
                     style: theme.textTheme.titleMedium,
@@ -165,7 +170,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                 ),
                 const SizedBox(height: LandingPageConstants.endSpacing),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: LandingPageConstants.buttonHorizontal),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: LandingPageConstants.buttonHorizontal),
                   child: ButtonIconNavigation(
                     iconPosition: IconPosition.none,
                     sizeOfFont: LandingPageConstants.settingsButtonFontSize,

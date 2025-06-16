@@ -324,3 +324,9 @@ Das Widget `BottomPlayerWidget` ist ein zentrales UI-Element für die Audio-Steu
 **Nächster Schritt:**
 - Review und ggf. weitere Zentralisierung von Farben/Styles für den ProgressBar-Bereich.
 - Übertragung des Prinzips auf weitere Subkomponenten (z.B. TransportButtons).
+
+---
+
+## Querverweis: Appweiter Refactoring-Guide
+
+Ein zentraler Leitfaden für appweite Refactoring-Prinzipien, God-Class-Vermeidung und Best Practices ist in [APPWIDE_REFACTORING_GUIDE.md](../APPWIDE_REFACTORING_GUIDE.md) zu finden. Jede Refactoring-Maßnahme und relevante Architekturentscheidung muss dort dokumentiert und mit Querverweis versehen werden.

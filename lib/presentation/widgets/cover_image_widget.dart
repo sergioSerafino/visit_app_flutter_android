@@ -24,7 +24,8 @@ class CoverImageWidget extends StatelessWidget {
     final size = screenWidth * scaleFactor;
 
     final iconSize = size * CoverImageWidgetConstants.iconSizeFactor;
-    final labelBottomOffset = size * CoverImageWidgetConstants.labelBottomOffsetFactor;
+    final labelBottomOffset =
+        size * CoverImageWidgetConstants.labelBottomOffsetFactor;
     final theme = Theme.of(context);
 
     return Center(
@@ -85,7 +86,8 @@ class CoverImageWidget extends StatelessWidget {
                 style: TextStyle(
                   color: CoverImageWidgetConstants.labelColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: iconSize * CoverImageWidgetConstants.labelFontSizeFactor,
+                  fontSize:
+                      iconSize * CoverImageWidgetConstants.labelFontSizeFactor,
                   shadows: const [
                     Shadow(
                       blurRadius: CoverImageWidgetConstants.labelShadowBlur,
