@@ -85,6 +85,7 @@ Nach jedem Refactoring-Schritt auf Emulator und echtem Gerät testen!
 
 ## Grundprinzipien
 
+- **Ziel:** Das bestmögliche Refactoring der Codebasis – jede Änderung soll die Wartbarkeit, Lesbarkeit und Erweiterbarkeit maximal verbessern, ohne Layout oder Logik zu verändern.
 - **Layouttreue**: Das visuelle Erscheinungsbild (Layout) der App darf durch das Refactoring zu keinem Zeitpunkt verändert werden. Jede Änderung muss so erfolgen, dass das UI exakt wie zuvor bleibt.
 - **Logiktreue**: Auch die **Logik** der Anwendung (Ablauf, Datenverarbeitung, Interaktionen, Navigation etc.) muss beim Refactoring stets unverändert bleiben. Es dürfen keine funktionalen Änderungen, Erweiterungen oder Reduktionen vorgenommen werden. Ziel ist ausschließlich die Verbesserung der Codebasis, nicht der Funktionalität.
 
@@ -280,4 +281,46 @@ Das Widget `GlobalSnackbarListener` zeigt zentrale Snackbars an und verwendet St
 - Siehe [lib/core/utils/global_snackbar_constants.dart](lib/core/utils/global_snackbar_constants.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: BottomPlayerWidget
+
+### Ausgangslage
+Das Widget `BottomPlayerWidget` ist ein zentrales UI-Element für die Audio-Steuerung. Es enthält viele Style- und Logikparameter (Farben, Größen, SpeedOptions, Padding), die teilweise direkt im Widget kodiert sind.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Standardwerte für Farben, Größen, Padding, SpeedOptions und ggf. Hilfsfunktionen können in eine zentrale Datei (`lib/core/utils/bottom_player_widget_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten/Funktionen wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Standardwerte und Hilfsfunktionen in `lib/core/utils/bottom_player_widget_constants.dart`.
+2. Anpassung des Widgets zur Nutzung dieser Konstanten/Funktionen.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/bottom_player_widget.dart](lib/presentation/widgets/bottom_player_widget.dart)
+- Siehe [lib/core/utils/bottom_player_widget_constants.dart](lib/core/utils/bottom_player_widget_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---
+
+### Refactoring: BottomPlayerProgressBar (Widget)
+
+**Analyse:**
+- Das Widget `BottomPlayerProgressBar` ist ein zentrales UI-Element des Audio-Players und wird im `BottomPlayerWidget` verwendet.
+- Bisher waren Werte wie Slider-Track-Höhe, Thumb-Radius, Breiten der Zeit-Anzeigen und Fontgrößen direkt im Widget als Literale definiert.
+- Für bessere Wartbarkeit und Portierbarkeit wurden diese Werte in eine zentrale Datei ausgelagert: `lib/core/utils/bottom_player_progress_bar_constants.dart`.
+- Die Widget-Implementierung verwendet nun ausschließlich diese Konstanten.
+- Keine Änderung an Layout oder Logik, ausschließlich Refactoring der Style-Konstanten.
+
+**Prinzipien:**
+- [2. Wiederverwendbare Widgets und Komponenten](#2-wiederverwendbare-widgets-und-komponenten)
+- [4. Konfigurierbarkeit und Portierbarkeit](#4-konfigurierbarkeit-und-portierbarkeit)
+
+**Querverweise:**
+- Siehe auch: `bottom_player_widget_constants.dart` (ähnliche Zentralisierung für das Haupt-Widget)
+- Siehe: `lib/presentation/widgets/bottom_player_progress_bar.dart` (Nutzung der neuen Konstanten)
+
+**Nächster Schritt:**
+- Review und ggf. weitere Zentralisierung von Farben/Styles für den ProgressBar-Bereich.
+- Übertragung des Prinzips auf weitere Subkomponenten (z.B. TransportButtons).

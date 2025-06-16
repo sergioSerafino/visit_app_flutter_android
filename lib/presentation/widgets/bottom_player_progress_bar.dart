@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/bottom_player_progress_bar_constants.dart';
 
 /// Fortschrittsbalken für den Audio-Player (Slider + Zeit-Anzeige)
 /// Kapselt die Logik für Position, Dauer und Slider-Interaktion.
@@ -91,11 +92,11 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
       child: Row(
         children: [
           SizedBox(
-            width: 70,
+            width: BottomPlayerProgressBarConstants.leftTimeWidth,
             child: Text(
               leftTime,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: BottomPlayerProgressBarConstants.fontSize,
                 color: theme.colorScheme.onSurface.withAlpha(140),
               ),
               textAlign: TextAlign.left,
@@ -104,7 +105,7 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
           Expanded(
             child: Semantics(
               label: widget.hasValidDuration
-                  ? 'Fortschritt: ${_position.inSeconds} Sekunden von ${_duration.inSeconds} Sekunden'
+                  ? 'Fortschritt: {_position.inSeconds} Sekunden von {_duration.inSeconds} Sekunden'
                   : 'Kein Fortschritt verfügbar',
               value: leftTime,
               child: SliderTheme(
@@ -114,9 +115,9 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
                       theme.colorScheme.surfaceContainerHighest.withAlpha(140),
                   thumbColor: theme.colorScheme.primary.withAlpha(180),
                   overlayColor: theme.colorScheme.primary.withAlpha(24),
-                  trackHeight: 14,
+                  trackHeight: BottomPlayerProgressBarConstants.sliderTrackHeight,
                   thumbShape:
-                      const RoundSliderThumbShape(enabledThumbRadius: 9),
+                      const RoundSliderThumbShape(enabledThumbRadius: BottomPlayerProgressBarConstants.enabledThumbRadius),
                   valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
                   valueIndicatorColor: theme.colorScheme.primary.withAlpha(180),
                   showValueIndicator: ShowValueIndicator.always,
@@ -161,11 +162,11 @@ class _BottomPlayerProgressBarState extends State<BottomPlayerProgressBar> {
             ),
           ),
           SizedBox(
-            width: 82,
+            width: BottomPlayerProgressBarConstants.rightTimeWidth,
             child: Text(
               rightTime,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: BottomPlayerProgressBarConstants.fontSize,
                 color: theme.colorScheme.onSurface.withAlpha(140),
                 fontFeatures: const [FontFeature.tabularFigures()],
               ),
