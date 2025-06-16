@@ -9,13 +9,14 @@
 */
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
-import '../widgets/cover_image_widget.dart';
+import '../widgets/episode_cover_widget.dart';
+import '../widgets/episode_title_widget.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/bottom_player_widget.dart';
 import '../widgets/episode_action_row.dart';
+import '../../core/utils/episode_format_utils.dart';
 
 class EpisodeDetailPage extends StatefulWidget {
   final PodcastEpisode episode;
@@ -72,8 +73,10 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String displayTitle = _formatTitle(widget.trackName);
-    final String formattedAbbreviatedTitle = formatAndAbbreviateTitle(
+    final String displayTitle =
+        EpisodeFormatUtils.formatTitle(widget.trackName);
+    final String formattedAbbreviatedTitle =
+        EpisodeFormatUtils.formatAndAbbreviateTitle(
       widget.trackName,
       maxLength: 48,
     );
@@ -131,9 +134,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                                     final theme = Theme.of(context);
                                     final secondary =
                                         theme.colorScheme.secondary;
-                                    // Standardwert, wie vom Skript gesetzt (z.B. #EEEEEE)
                                     const defaultSecondary = Color(0xFFEEEEEE);
-                                    // Vergleiche explizit die Farbkomponenten statt .value (deprecated)
                                     bool isCustomSecondary(Color c) =>
                                         c.r != defaultSecondary.r ||
                                         c.g != defaultSecondary.g ||
@@ -149,30 +150,10 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                               ),
                             ),
                           ),
-
-                          // Cover-Bild zentriert
-                          Align(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                top: 32,
-                              ), // leicht nach oben versetzt
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withAlpha(40),
-                                    blurRadius: 8,
-                                    offset: const Offset(3, 10),
-                                  ),
-                                ],
-                              ),
-                              child: CoverImageWidget(
-                                imageUrl: widget.episode.artworkUrl600,
-                                scaleFactor: 0.5,
-                              ),
-                            ),
+                          // Cover-Bild zentriert (ersetzt durch EpisodeCoverWidget)
+                          EpisodeCoverWidget(
+                            imageUrl: widget.episode.artworkUrl600,
+                            scaleFactor: 0.5,
                           ),
                         ],
                       ),
@@ -181,42 +162,9 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
                   // Großer Titel unter dem Bild (mit Fade-Out beim Scrollen)
                   SliverToBoxAdapter(
-                    child: Opacity(
+                    child: EpisodeTitleWidget(
+                      title: displayTitle,
                       opacity: _bigTitleOpacity,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 16,
-                          left: 16,
-                          right: 16,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                displayTitle,
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Divider(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                                thickness: 2,
-                                height: 4,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                     ),
                   ),
 
@@ -224,8 +172,9 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                   SliverPersistentHeader(
                     pinned: true,
                     delegate: StickyInfoHeader(
-                      duration: _formatDuration(widget.episode.trackTimeMillis),
-                      releaseDate: formatReleaseDate(
+                      duration: EpisodeFormatUtils.formatDuration(
+                          widget.episode.trackTimeMillis),
+                      releaseDate: EpisodeFormatUtils.formatReleaseDate(
                         widget.episode.releaseDate,
                       ),
                     ),
@@ -301,101 +250,4 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
       },
     );
   }
-
-  // 1. Optionaler manuell gesteuerter Umbruch nach Trennzeichen
-  // 2. Wörter extrahieren und Stück für Stück zusammensetzen
-  // 3. Suffix anhängen (z. B. ... – Max Mustermann)
-
-  String _formatTitle(String input) {
-    if (input.length > 10 && input.contains('- ')) {
-      final delimiters = [':', '-', '|', '/']; // beliebig erweiterbar
-
-      for (var d in delimiters) {
-        if (input.contains(d)) {
-          final parts = input.split(d);
-          if (parts.length > 1) {
-            return '${parts[0]}$d\n${parts.sublist(1).join(d).trim()}';
-          }
-        }
-      }
-      return input.replaceFirst(': ', ':\u200B');
-    }
-    return input;
-  }
-
-  // Hilfsfunktion für die Episoden-Dauer (für StickyInfoHeader)
-  String _formatDuration(int millis) {
-    final totalSeconds = (millis / 1000).round();
-    final hours = (totalSeconds ~/ 3600);
-    final minutes = ((totalSeconds % 3600) ~/ 60);
-    final seconds = totalSeconds % 60;
-    // Stunden nur anzeigen, wenn >0
-    if (hours > 0) {
-      return '${hours}h '
-          '${minutes.toString().padLeft(2, '0')}m '
-          '${seconds.toString().padLeft(2, '0')}s';
-    } else {
-      return '${minutes}m '
-          '${seconds.toString().padLeft(2, '0')}s';
-    }
-  }
-
-  String formatReleaseDate(DateTime date) {
-    return DateFormat('dd.MM.yyyy').format(date);
-  }
-
-  // Kombiniert Formatierung (Zeilenumbruch nach Trennzeichen) und Abkürzung für die erste Zeile (ohne Einkürzen, sondern Anfang und Ende zeigen).
-  String formatAndAbbreviateTitle(String input, {int maxLength = 32}) {
-    final formatted = _formatTitle(input);
-    final lines = formatted.split('\n');
-    if (lines.length == 1) {
-      // Nur eine Zeile: Anfang und Ende zeigen, Mittelteil durch ... ersetzen
-      return abbreviateStartAndEnd(lines[0], maxLength: maxLength);
-    } else {
-      // Erste Zeile: Anfang und Ende zeigen, zweite bleibt wie formatiert
-      final first = abbreviateStartAndEnd(lines[0], maxLength: maxLength);
-      return '$first\n${lines.sublist(1).join('\n')}';
-    }
-  }
-
-  // Gibt von einem langen String den Anfang und das Ende zurück, Mittelteil wird durch ... ersetzt (z.B. "Anfang ...Ende")
-  String abbreviateStartAndEnd(String input, {int maxLength = 48}) {
-    if (input.length <= maxLength) return input;
-    // Mindestens 6 Zeichen für Anfang und Ende, sonst nur ...
-    final minKeep = 6;
-    final keep = ((maxLength - 3) ~/ 2).clamp(minKeep, maxLength);
-    final start = input.substring(0, keep).trim();
-    final end = input.substring(input.length - keep).trim();
-    return '$start...$end';
-  }
-
-  // Gibt den Titel für die AppBar so zurück, dass das Ende (z.B. Episodenname) immer sichtbar bleibt.
-  String abbreviateTitle(String input, {int maxLength = 32}) {
-    if (input.length <= maxLength) return input;
-    // Trennzeichen für Episoden-/Folgentitel
-    final delimiters = [':', '-', '|', '/'];
-    String lastSegment = input;
-    for (var d in delimiters) {
-      if (input.contains(d)) {
-        lastSegment = input.split(d).last.trim();
-        break;
-      }
-    }
-    // Wenn das letzte Segment fast so lang ist wie der ganze Titel, dann normal ellipsieren
-    if (lastSegment.length > maxLength - 4) {
-      return input.substring(0, maxLength - 1) + '…';
-    }
-    // Sonst: Anfang abschneiden, Ende behalten
-    return '… $lastSegment';
-  }
-
-  /*
-  UX-Logik: Play-Button auf der EpisodeDetailPage
-  ------------------------------------------------
-  - Der Play-Button koppelt die jeweilige Episode explizit an den Player (BottomPlayerWidget).
-  - Die farbliche Hervorhebung (aktiv) erfolgt nur, wenn die aktuell im Player geladene Episode (currentEpisodeProvider)
-    mit der auf der Seite dargestellten Episode übereinstimmt.
-  - Der Abgleich erfolgt aktuell über trackId (TODO: Für Offline-Wiedergabe ggf. robusteren Vergleich implementieren, z.B. mit localId oder trackName).
-  - Ziel: Die UI bleibt konsistent, auch wenn mehrere Detailseiten geöffnet sind oder Episoden aus verschiedenen Quellen geladen werden.
-  */
 }

@@ -1,5 +1,8 @@
 # Refactoring-HowTo: Flutter App – Robustheit, Wiederverwendbarkeit, Erweiterbarkeit, Portierbarkeit
 
+> **WICHTIG:**
+> Das Refactoring orientiert sich strikt am bestehenden Layout und Design der App. Es werden keine optischen oder strukturellen Änderungen am UI-Layout vorgenommen. Ziel ist ausschließlich die Verbesserung der Codebasis (Robustheit, Wiederverwendbarkeit, Erweiterbarkeit, Portierbarkeit), nicht die Änderung des Nutzererlebnisses oder der Optik.
+
 Dieses Dokument beschreibt die empfohlene Vorgehensweise für das Refactoring der App, um eine solide Basis für Responsive Design und zukünftige Features zu schaffen.
 
 ## 1. Saubere Trennung von Logik und UI
