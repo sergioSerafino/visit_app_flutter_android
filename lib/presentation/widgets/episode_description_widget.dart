@@ -18,10 +18,11 @@ class EpisodeDescriptionWidget extends StatelessWidget {
       padding: padding ?? const EdgeInsets.only(top: 18),
       child: Text(
         description ?? "",
-        style: style ?? TextStyle(
-          fontSize: 22,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
+        style: style ??
+            TextStyle(
+              fontSize: 22,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
       ),
     );
   }
