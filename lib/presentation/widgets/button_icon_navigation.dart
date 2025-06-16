@@ -35,7 +35,8 @@ class ButtonIconNavigation extends StatelessWidget {
 
     Widget labelContent = Text(
       label,
-      style: ButtonIconNavigationConstants.textStyle.copyWith(fontSize: sizeOfFont),
+      style: ButtonIconNavigationConstants.textStyle
+          .copyWith(fontSize: sizeOfFont),
     );
 
     Widget? leadingIcon;
@@ -49,12 +50,12 @@ class ButtonIconNavigation extends StatelessWidget {
     switch (iconPosition) {
       case IconPosition.left:
         children = hasIcon
-            ? [leadingIcon!, const SizedBox(width: 8), labelContent]
+            ? [leadingIcon!, SizedBox(width: ButtonIconNavigationConstants.iconLabelSpacing), labelContent]
             : [labelContent];
         break;
       case IconPosition.right:
         children = hasIcon
-            ? [labelContent, const SizedBox(width: 8), leadingIcon!]
+            ? [labelContent, SizedBox(width: ButtonIconNavigationConstants.iconLabelSpacing), leadingIcon!]
             : [labelContent];
         break;
       case IconPosition.none:
@@ -69,7 +70,8 @@ class ButtonIconNavigation extends StatelessWidget {
             onPressed: onPressed,
             style: OutlinedButton.styleFrom(
               padding: ButtonIconNavigationConstants.padding,
-              textStyle: ButtonIconNavigationConstants.textStyle.copyWith(fontSize: sizeOfFont),
+              textStyle: ButtonIconNavigationConstants.textStyle
+                  .copyWith(fontSize: sizeOfFont),
             ),
             child: content,
           )
@@ -78,7 +80,8 @@ class ButtonIconNavigation extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: color,
               padding: ButtonIconNavigationConstants.padding,
-              textStyle: ButtonIconNavigationConstants.textStyle.copyWith(fontSize: sizeOfFont),
+              textStyle: ButtonIconNavigationConstants.textStyle
+                  .copyWith(fontSize: sizeOfFont),
             ),
             child: content,
           );
