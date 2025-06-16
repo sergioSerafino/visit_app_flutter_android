@@ -1,5 +1,6 @@
 //
 import 'package:flutter/material.dart';
+import '../../core/utils/button_icon_navigation_constants.dart';
 
 enum IconPosition { left, right, none }
 
@@ -34,14 +35,13 @@ class ButtonIconNavigation extends StatelessWidget {
 
     Widget labelContent = Text(
       label,
-      style:
-          const TextStyle(color: Colors.white), // Text immer weiß überschreiben
+      style: ButtonIconNavigationConstants.textStyle.copyWith(fontSize: sizeOfFont),
     );
 
     Widget? leadingIcon;
     if (icon != null) {
       leadingIcon = Icon(icon,
-          size: 20, color: Colors.white); // Icon immer weiß überschreiben
+          size: ButtonIconNavigationConstants.iconSize, color: Colors.white);
     }
     if (customIcon != null) leadingIcon = customIcon;
 
@@ -68,11 +68,8 @@ class ButtonIconNavigation extends StatelessWidget {
         ? OutlinedButton(
             onPressed: onPressed,
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
-              textStyle: TextStyle(fontSize: sizeOfFont),
+              padding: ButtonIconNavigationConstants.padding,
+              textStyle: ButtonIconNavigationConstants.textStyle.copyWith(fontSize: sizeOfFont),
             ),
             child: content,
           )
@@ -80,11 +77,8 @@ class ButtonIconNavigation extends StatelessWidget {
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: color,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
-              textStyle: TextStyle(fontSize: sizeOfFont),
+              padding: ButtonIconNavigationConstants.padding,
+              textStyle: ButtonIconNavigationConstants.textStyle.copyWith(fontSize: sizeOfFont),
             ),
             child: content,
           );

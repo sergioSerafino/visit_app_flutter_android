@@ -154,4 +154,25 @@ Die `LaunchScreen` ist die erste Seite der App und zeigt ein zentriertes Splash-
 - Siehe [lib/core/utils/launch_screen_constants.dart](lib/core/utils/launch_screen_constants.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: ButtonIconNavigation
+
+### Ausgangslage
+Das Widget `ButtonIconNavigation` wird für verschiedene Button-Varianten (Elevated, Outlined, mit/ohne Icon, Custom-Icon) genutzt. Die Standardwerte für Padding, TextStyle und Farben sind aktuell direkt im Widget kodiert.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Standardwerte für Padding, TextStyle und ggf. Farben können in eine zentrale Datei (`lib/core/utils/button_icon_navigation_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Standardwerte für Padding, TextStyle und Farben in eine neue Datei `lib/core/utils/button_icon_navigation_constants.dart`.
+2. Anpassung des Widgets zur Nutzung dieser Konstanten.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/button_icon_navigation.dart](lib/presentation/widgets/button_icon_navigation.dart)
+- Siehe [lib/core/utils/button_icon_navigation_constants.dart](lib/core/utils/button_icon_navigation_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---
