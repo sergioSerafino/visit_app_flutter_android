@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/bottom_player_overlay_constants.dart';
 
 /// Overlay für Lade- und Preload-Zustände im Player.
 class BottomPlayerOverlay extends StatelessWidget {
@@ -26,10 +27,11 @@ class BottomPlayerOverlay extends StatelessWidget {
             bottom: 0,
             child: IgnorePointer(
               child: LinearProgressIndicator(
-                minHeight: 4,
+                minHeight: BottomPlayerOverlayConstants.progressBarHeight,
                 backgroundColor: Colors.transparent,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  theme.colorScheme.primary.withAlpha(140),
+                  theme.colorScheme.primary
+                      .withAlpha(BottomPlayerOverlayConstants.progressBarAlpha),
                 ),
               ),
             ),
