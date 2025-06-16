@@ -438,7 +438,7 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
       icon: Icon(Icons.volume_up,
           color: widget.theme.colorScheme.primary.withAlpha(
               140)), // Branding-Farbe wie Transportfeld und Progressbar
-      iconSize: 24,
+      iconSize: BottomPlayerWidgetConstants.buttonSize,
       tooltip: 'Lautstärke',
       onPressed: _toggleSlider,
     );
