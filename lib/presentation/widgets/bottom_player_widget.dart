@@ -37,6 +37,7 @@ import '../../application/providers/collection_provider.dart';
 import '../../core/services/audio_player_bloc.dart';
 import '../../core/services/audio_player_sync_service.dart';
 import '../../core/utils/bottom_player_widget_constants.dart';
+import '../../core/utils/volume_overlay_button_constants.dart';
 import 'bottom_player_progress_bar.dart';
 import 'bottom_player_transport_buttons.dart';
 import 'bottom_player_title_collection.dart';
@@ -288,21 +289,22 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
             Positioned(
               left: buttonOffset.dx +
                   buttonSize.width / 2 -
-                  BottomPlayerWidgetConstants.overlayWidth / 2, // Breiter
+                  VolumeOverlayButtonConstants.overlayWidth / 2, // Breiter
               top: buttonOffset.dy -
-                  (BottomPlayerWidgetConstants.overlayHeight + 10), // Höher
+                  (VolumeOverlayButtonConstants.overlayHeight + 10), // Höher
               child: MouseRegion(
                 onEnter: (_) => _cancelAutoClose(),
                 onExit: (_) => _startAutoClose(),
                 child: Material(
-                  elevation: BottomPlayerWidgetConstants.overlayElevation,
+                  elevation: VolumeOverlayButtonConstants.overlayElevation,
                   borderRadius: BorderRadius.circular(
-                      BottomPlayerWidgetConstants.overlayBorderRadius),
-                  color: widget.theme.colorScheme.primary.withAlpha(40),
+                      VolumeOverlayButtonConstants.overlayBorderRadius),
+                  color: widget.theme.colorScheme.primary.withAlpha(
+                      VolumeOverlayButtonConstants.overlayInactiveTrackAlpha),
                   child: Container(
                     padding: EdgeInsets.zero,
-                    width: BottomPlayerWidgetConstants.overlayWidth,
-                    height: BottomPlayerWidgetConstants.overlayHeight,
+                    width: VolumeOverlayButtonConstants.overlayWidth,
+                    height: VolumeOverlayButtonConstants.overlayHeight,
                     child: RotatedBox(
                       quarterTurns: -1,
                       child: StreamBuilder(
@@ -347,15 +349,17 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                             data: SliderTheme.of(context).copyWith(
                               thumbShape: RoundSliderThumbShape(
                                   enabledThumbRadius:
-                                      BottomPlayerWidgetConstants
+                                      VolumeOverlayButtonConstants
                                           .overlayThumbRadius),
-                              trackHeight: BottomPlayerWidgetConstants
+                              trackHeight: VolumeOverlayButtonConstants
                                   .overlayTrackHeight,
                               activeTrackColor: widget.theme.colorScheme.primary
-                                  .withAlpha(180), // Wie Progressbar
+                                  .withAlpha(VolumeOverlayButtonConstants
+                                      .overlayActiveTrackAlpha), // Wie Progressbar
                               inactiveTrackColor: widget
                                   .theme.colorScheme.primary
-                                  .withAlpha(40),
+                                  .withAlpha(VolumeOverlayButtonConstants
+                                      .overlayInactiveTrackAlpha),
                               thumbColor: widget.theme.colorScheme.primary,
                             ),
                             child: Slider(
@@ -406,7 +410,9 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
 
   void _debounceSetVolume(double v) {
     _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 150), () {
+    _debounceTimer = Timer(
+        const Duration(milliseconds: VolumeOverlayButtonConstants.debounceMs),
+        () {
       widget.audioBloc.add(SetVolume(v));
     });
   }
@@ -429,7 +435,9 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
 
   void _startAutoClose() {
     _autoCloseTimer?.cancel();
-    _autoCloseTimer = Timer(const Duration(milliseconds: 1800), _removeOverlay);
+    _autoCloseTimer = Timer(
+        const Duration(milliseconds: VolumeOverlayButtonConstants.autoCloseMs),
+        _removeOverlay);
   }
 
   void _cancelAutoClose() {
@@ -447,8 +455,9 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
     return IconButton(
       icon: Icon(Icons.volume_up,
           color: widget.theme.colorScheme.primary.withAlpha(
-              140)), // Branding-Farbe wie Transportfeld und Progressbar
-      iconSize: BottomPlayerWidgetConstants.buttonSize,
+              VolumeOverlayButtonConstants
+                  .iconColorAlpha)), // Branding-Farbe wie Transportfeld und Progressbar
+      iconSize: VolumeOverlayButtonConstants.iconButtonSize,
       tooltip: 'Lautstärke',
       onPressed: _toggleSlider,
     );
