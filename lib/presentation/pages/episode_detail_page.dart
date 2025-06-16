@@ -11,13 +11,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
-import '../widgets/episode_cover_widget.dart';
 import '../widgets/episode_title_widget.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/bottom_player_widget.dart';
 import '../widgets/episode_action_row.dart';
-import '../widgets/episode_description_widget.dart';
 import '../../core/utils/episode_format_utils.dart';
+import '../widgets/cover_image_widget.dart';
 
 class EpisodeDetailPage extends StatefulWidget {
   final PodcastEpisode episode;
@@ -152,9 +151,28 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             ),
                           ),
                           // Cover-Bild zentriert (ersetzt durch EpisodeCoverWidget)
-                          EpisodeCoverWidget(
-                            imageUrl: widget.episode.artworkUrl600,
-                            scaleFactor: 0.5,
+                          Align(
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                top: 32,
+                              ), // leicht nach oben versetzt
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withAlpha(40),
+                                    blurRadius: 8,
+                                    offset: const Offset(3, 10),
+                                  ),
+                                ],
+                              ),
+                              child: CoverImageWidget(
+                                imageUrl: widget.episode.artworkUrl600,
+                                scaleFactor: 0.5,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -196,10 +214,15 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                             height: 4,
                           ),
                           const SizedBox(height: 16),
+                          // Beschreibungstext direkt hier eingefügt
                           Padding(
                             padding: const EdgeInsets.only(top: 18),
-                            child: EpisodeDescriptionWidget(
-                              description: widget.episode.description,
+                            child: Text(
+                              widget.episode.description ?? "",
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
                           ),
 
