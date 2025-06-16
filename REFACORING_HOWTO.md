@@ -175,4 +175,48 @@ Das Widget `ButtonIconNavigation` wird für verschiedene Button-Varianten (Eleva
 - Siehe [lib/core/utils/button_icon_navigation_constants.dart](lib/core/utils/button_icon_navigation_constants.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: EpisodeItemTile
+
+### Ausgangslage
+Das Widget `EpisodeItemTile` wird für die Darstellung einzelner Episoden in Listen verwendet. Es enthält mehrfach wiederkehrende Style-Parameter (Padding, TextStyle, Icon-/Bildgröße) und eine Hilfsfunktion `_formatDuration`.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Style-Konstanten (Padding, TextStyle, Bild-/Icon-Größe) können in eine zentrale Datei (`lib/core/utils/episode_item_tile_constants.dart`) ausgelagert werden. Die Formatierungsfunktion `_formatDuration` kann in die bestehende Utility-Klasse `episode_format_utils.dart` ausgelagert werden.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten/Funktionen wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Style-Konstanten in `lib/core/utils/episode_item_tile_constants.dart`.
+2. Auslagerung der Formatierungsfunktion in `lib/core/utils/episode_format_utils.dart` (falls noch nicht vorhanden).
+3. Anpassung des Widgets zur Nutzung dieser Konstanten/Funktionen.
+4. Dokumentation des Schritts mit Querverweisen im HowTo.
+5. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/episode_item_tile.dart](lib/presentation/widgets/episode_item_tile.dart)
+- Siehe [lib/core/utils/episode_item_tile_constants.dart](lib/core/utils/episode_item_tile_constants.dart) *(wird neu angelegt)*
+- Siehe [lib/core/utils/episode_format_utils.dart](lib/core/utils/episode_format_utils.dart)
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
+## Refactoring-Analyse: EpisodeDescriptionWidget
+
+### Ausgangslage
+Das Widget `EpisodeDescriptionWidget` zeigt die Beschreibung einer Episode an und verwendet Standardwerte für TextStyle und Padding, die aktuell direkt im Widget kodiert sind.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Standardwerte für TextStyle und Padding können in eine zentrale Datei (`lib/core/utils/episode_description_widget_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Standardwerte für TextStyle und Padding in `lib/core/utils/episode_description_widget_constants.dart`.
+2. Anpassung des Widgets zur Nutzung dieser Konstanten.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/episode_description_widget.dart](lib/presentation/widgets/episode_description_widget.dart)
+- Siehe [lib/core/utils/episode_description_widget_constants.dart](lib/core/utils/episode_description_widget_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---
