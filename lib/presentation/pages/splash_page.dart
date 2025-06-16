@@ -13,6 +13,7 @@ import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/splash_constants.dart';
+import '../../core/utils/splash_cover_image_constants.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -106,7 +107,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
                   showLabel: true,
                   assetPath: fallbackLogo,
                   // Skalierung des Bildes
-                  scaleFactor: 0.7,
+                  scaleFactor: SplashCoverImageConstants.defaultScaleFactor,
                 ),
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../core/utils/tenant_asset_loader.dart';
+import '../../core/utils/splash_cover_image_constants.dart';
 
 class SplashCoverImage extends ConsumerStatefulWidget {
   final String? imageUrl;
@@ -17,7 +18,7 @@ class SplashCoverImage extends ConsumerStatefulWidget {
     this.imageUrl,
     this.assetPath,
     this.duration = const Duration(milliseconds: 1200),
-    this.scaleFactor = 0.5,
+    this.scaleFactor = SplashCoverImageConstants.defaultScaleFactor,
     this.showLabel = false,
     this.forceAssetPath = false,
   });
