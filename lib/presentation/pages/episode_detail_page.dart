@@ -16,6 +16,7 @@ import '../widgets/episode_title_widget.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/bottom_player_widget.dart';
 import '../widgets/episode_action_row.dart';
+import '../widgets/episode_description_widget.dart';
 import '../../core/utils/episode_format_utils.dart';
 
 class EpisodeDetailPage extends StatefulWidget {
@@ -197,12 +198,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                           const SizedBox(height: 16),
                           Padding(
                             padding: const EdgeInsets.only(top: 18),
-                            child: Text(
-                              widget.episode.description ?? "",
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
+                            child: EpisodeDescriptionWidget(
+                              description: widget.episode.description,
                             ),
                           ),
 
@@ -250,4 +247,13 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
       },
     );
   }
+  /*
+  UX-Logik: Play-Button auf der EpisodeDetailPage
+  ------------------------------------------------
+  - Der Play-Button koppelt die jeweilige Episode explizit an den Player (BottomPlayerWidget).
+  - Die farbliche Hervorhebung (aktiv) erfolgt nur, wenn die aktuell im Player geladene Episode (currentEpisodeProvider)
+    mit der auf der Seite dargestellten Episode übereinstimmt.
+  - Der Abgleich erfolgt aktuell über trackId (TODO: Für Offline-Wiedergabe ggf. robusteren Vergleich implementieren, z.B. mit localId oder trackName).
+  - Ziel: Die UI bleibt konsistent, auch wenn mehrere Detailseiten geöffnet sind oder Episoden aus verschiedenen Quellen geladen werden.
+  */
 }
