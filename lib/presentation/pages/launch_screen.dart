@@ -34,6 +34,7 @@ class _LaunchScreenState extends State<LaunchScreen>
   int currentCycle = 0;
   // Sichtbarkeit des Bildschirm
   double _opacity = 1.0;
+  bool _showLoadingText = false;
 
   // AnimationController, Textanimation, Listener
   @override
@@ -77,6 +78,10 @@ class _LaunchScreenState extends State<LaunchScreen>
           _controller.forward();
         }
       }
+    });
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) setState(() => _showLoadingText = true);
     });
   }
 
@@ -134,27 +139,31 @@ class _LaunchScreenState extends State<LaunchScreen>
                 ),
               ),
               const SizedBox(height: LaunchScreenTextConstants.textTopOffset),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: List.generate(loadingText.length, (index) {
-                  return AnimatedBuilder(
-                    animation: _animations[index],
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(0, _animations[index].value),
-                        child: Text(
-                          loadingText[index],
-                          style: const TextStyle(
-                            fontSize: LaunchScreenTextConstants.fontSize,
-                            fontWeight: LaunchScreenTextConstants.fontWeight,
-                            color: LaunchScreenTextConstants.textColor,
+              AnimatedOpacity(
+                opacity: _showLoadingText ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 300),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(loadingText.length, (index) {
+                    return AnimatedBuilder(
+                      animation: _animations[index],
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, _animations[index].value),
+                          child: Text(
+                            loadingText[index],
+                            style: const TextStyle(
+                              fontSize: LaunchScreenTextConstants.fontSize,
+                              fontWeight: LaunchScreenTextConstants.fontWeight,
+                              color: LaunchScreenTextConstants.textColor,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }),
+                        );
+                      },
+                    );
+                  }),
+                ),
               ),
             ],
           ),
