@@ -120,14 +120,18 @@ class BottomPlayerWidget extends ConsumerWidget {
     // ---
     // 2a. Player-Content als Komposition von Sub-Widgets
     Widget playerContent = SafeArea(
-      minimum: BottomPlayerWidgetConstants.playerPadding as EdgeInsets,
+      minimum: BottomPlayerWidgetConstants.safeAreaMin,
       child: Container(
         padding: BottomPlayerWidgetConstants.playerPadding,
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(
+              BottomPlayerWidgetConstants.containerBorderRadius),
           boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(65), blurRadius: 4),
+            BoxShadow(
+                color: Colors.black
+                    .withAlpha(BottomPlayerWidgetConstants.boxShadowAlpha),
+                blurRadius: BottomPlayerWidgetConstants.boxShadowBlur),
           ],
         ),
         child: Column(
@@ -282,20 +286,23 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
         child: Stack(
           children: [
             Positioned(
-              left: buttonOffset.dx + buttonSize.width / 2 - 32, // Breiter
-              top: buttonOffset.dy - 170, // Höher
+              left: buttonOffset.dx +
+                  buttonSize.width / 2 -
+                  BottomPlayerWidgetConstants.overlayWidth / 2, // Breiter
+              top: buttonOffset.dy -
+                  (BottomPlayerWidgetConstants.overlayHeight + 10), // Höher
               child: MouseRegion(
                 onEnter: (_) => _cancelAutoClose(),
                 onExit: (_) => _startAutoClose(),
                 child: Material(
-                  elevation: 8,
-                  borderRadius: BorderRadius.circular(12),
-                  color: widget.theme.colorScheme.primary.withAlpha(
-                      40), // Wieder wie Progressbar-Background, heller
+                  elevation: BottomPlayerWidgetConstants.overlayElevation,
+                  borderRadius: BorderRadius.circular(
+                      BottomPlayerWidgetConstants.overlayBorderRadius),
+                  color: widget.theme.colorScheme.primary.withAlpha(40),
                   child: Container(
                     padding: EdgeInsets.zero,
-                    width: 72,
-                    height: 240,
+                    width: BottomPlayerWidgetConstants.overlayWidth,
+                    height: BottomPlayerWidgetConstants.overlayHeight,
                     child: RotatedBox(
                       quarterTurns: -1,
                       child: StreamBuilder(
@@ -338,9 +345,12 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                           }
                           return SliderTheme(
                             data: SliderTheme.of(context).copyWith(
-                              thumbShape: const RoundSliderThumbShape(
-                                  enabledThumbRadius: BottomPlayerWidgetConstants.buttonSize / 2),
-                              trackHeight: BottomPlayerWidgetConstants.progressBarHeight,
+                              thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius:
+                                      BottomPlayerWidgetConstants
+                                          .overlayThumbRadius),
+                              trackHeight: BottomPlayerWidgetConstants
+                                  .overlayTrackHeight,
                               activeTrackColor: widget.theme.colorScheme.primary
                                   .withAlpha(180), // Wie Progressbar
                               inactiveTrackColor: widget
