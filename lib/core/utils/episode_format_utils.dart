@@ -18,18 +18,10 @@ class EpisodeFormatUtils {
   }
 
   static String formatDuration(int millis) {
-    final totalSeconds = (millis / 1000).round();
-    final hours = (totalSeconds ~/ 3600);
-    final minutes = ((totalSeconds % 3600) ~/ 60);
-    final seconds = totalSeconds % 60;
-    if (hours > 0) {
-      return '${hours}h '
-          '${minutes.toString().padLeft(2, '0')}m '
-          '${seconds.toString().padLeft(2, '0')}s';
-    } else {
-      return '${minutes}m '
-          '${seconds.toString().padLeft(2, '0')}s';
-    }
+    final seconds = (millis / 1000).round();
+    final minutes = (seconds / 60).floor();
+    // Immer auf volle Minute aufrunden, keine Sekunden anzeigen
+    return '${minutes + 1}min';
   }
 
   static String formatReleaseDate(DateTime date) {
