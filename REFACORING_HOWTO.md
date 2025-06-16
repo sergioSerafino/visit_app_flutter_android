@@ -133,4 +133,25 @@ Die `SplashPage` ist eine zentrale Einstiegsseite und steuert das Routing (Onboa
 - Siehe [lib/core/utils/splash_constants.dart](lib/core/utils/splash_constants.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: LaunchScreen
+
+### Ausgangslage
+Die `LaunchScreen` ist die erste Seite der App und zeigt ein zentriertes Splash-Bild sowie einen animierten Lade-Text. Die Animationsparameter (Dauer, Bildgröße, Text, Fallback-Logo) sind aktuell als Konstanten im Widget definiert.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Animationsparameter, der Lade-Text und das Fallback-Logo können in eine zentrale Datei (`lib/core/utils/launch_screen_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Seite übersichtlicher.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik der Seite bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Animationsparameter, des Lade-Texts und des Fallback-Logos in eine neue Datei `lib/core/utils/launch_screen_constants.dart`.
+2. Anpassung der LaunchScreen zur Nutzung dieser Konstanten.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/pages/launch_screen.dart](lib/presentation/pages/launch_screen.dart)
+- Siehe [lib/core/utils/launch_screen_constants.dart](lib/core/utils/launch_screen_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import '/../../presentation/pages/splash_page.dart';
 import '../widgets/splash_cover_image.dart';
+import '../../core/utils/launch_screen_constants.dart';
 
 // import '../widgets/loading_dots.dart';
 
@@ -18,17 +19,15 @@ class _LaunchScreenState extends State<LaunchScreen>
   // Hinweis (04.06.2025):
   // Das dynamische Branding wird bewusst erst ab SplashPage geladen und angewendet.
   // Die LaunchScreen bleibt neutral (weiß, Platzhalter-Logo), um Ladeflackern zu vermeiden.
-  // Das frühere TODO ist damit obsolet und wurde entfernt.
-  static final fallbackLogo = "lib/tenants/common/assets/visit22.png";
-  // static final primaryColor = const Color(0x99FFFFFF); // z. B. aus theme.dart (nicht genutzt)
+  static const fallbackLogo = LaunchScreenConstants.fallbackLogo;
 
   // steuert die Animation
   late AnimationController _controller;
   // entählt einzelne Buchstaben-Animationen
   late List<Animation<double>> _animations;
   // Text der animiert wird und Durchlaufzyklen
-  final String loadingText = "   Wird gestartet . . .";
-  final int animationCycles = 2;
+  final String loadingText = LaunchScreenConstants.loadingText;
+  final int animationCycles = LaunchScreenConstants.animationCycles;
 
   // Zähler abgeshlossener Durchlaufzyklen
   int currentCycle = 0;
@@ -41,7 +40,7 @@ class _LaunchScreenState extends State<LaunchScreen>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: LaunchScreenConstants.animationDuration,
       vsync: this,
       // Startet sofort beim Öffnen:
     )..forward();
@@ -84,12 +83,11 @@ class _LaunchScreenState extends State<LaunchScreen>
   void _fadeOutAndNavigate() {
     setState(() => _opacity = 0.0); // Startet die Fade-Out Animation
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(LaunchScreenConstants.fadeOutDuration, () {
       // Wartezeit für den Fade-Out
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          transitionDuration:
-              const Duration(milliseconds: 500), // Sanfte Transition
+          transitionDuration: LaunchScreenConstants.transitionDuration,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
                 opacity: animation, child: const SplashPage());
@@ -111,7 +109,7 @@ class _LaunchScreenState extends State<LaunchScreen>
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
-    const double imageSize = 275;
+    final double imageSize = LaunchScreenConstants.imageSize;
     final double imageTop = screenHeight / 2 - imageSize / 2;
     final double textTop = imageTop + imageSize + 40;
     final double textLeft = screenWidth * 0.25;
