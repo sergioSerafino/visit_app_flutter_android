@@ -11,7 +11,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
-import '../widgets/episode_title_widget.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/bottom_player_widget.dart';
 import '../widgets/episode_action_row.dart';
@@ -181,9 +180,42 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
                   // Großer Titel unter dem Bild (mit Fade-Out beim Scrollen)
                   SliverToBoxAdapter(
-                    child: EpisodeTitleWidget(
-                      title: displayTitle,
+                    child: Opacity(
                       opacity: _bigTitleOpacity,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          left: 16,
+                          right: 16,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                displayTitle,
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Divider(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                thickness: 2,
+                                height: 4,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
 
