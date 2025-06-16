@@ -87,3 +87,26 @@ Nach jedem Refactoring-Schritt auf Emulator und echtem Gerät testen!
 
 - **Layouttreue**: Das visuelle Erscheinungsbild (Layout) der App darf durch das Refactoring zu keinem Zeitpunkt verändert werden. Jede Änderung muss so erfolgen, dass das UI exakt wie zuvor bleibt.
 - **Logiktreue**: Auch die **Logik** der Anwendung (Ablauf, Datenverarbeitung, Interaktionen, Navigation etc.) muss beim Refactoring stets unverändert bleiben. Es dürfen keine funktionalen Änderungen, Erweiterungen oder Reduktionen vorgenommen werden. Ziel ist ausschließlich die Verbesserung der Codebasis, nicht der Funktionalität.
+
+---
+
+## Refactoring-Analyse: LandingPage
+
+### Ausgangslage
+Die `LandingPage` ist die zentrale Einstiegsseite der App und enthält wiederkehrende UI-Elemente wie `ButtonIconNavigation`, `CoverImageWidget` und `welcomeHeader`. Die Logik ist bereits weitgehend ausgelagert, jedoch existieren noch kleinere Hilfsfunktionen (z.B. `formatTitleByDelimiter`) direkt in der Seite.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Hilfsfunktion `formatTitleByDelimiter` kann in eine zentrale Utility-Klasse (z.B. `lib/core/utils/title_format_utils.dart`) ausgelagert werden. Dadurch wird die Wiederverwendbarkeit erhöht und die Seite übersichtlicher.
+- **Dokumentation:** Die Auslagerung und Verwendung der Utility-Funktion wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik der Seite bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Funktion `formatTitleByDelimiter` in eine neue Utility-Datei `lib/core/utils/title_format_utils.dart`.
+2. Anpassung der `LandingPage`, sodass die Utility-Funktion verwendet wird.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/pages/landing_page.dart](lib/presentation/pages/landing_page.dart)
+- Siehe [lib/core/utils/title_format_utils.dart](lib/core/utils/title_format_utils.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)

@@ -14,6 +14,7 @@ import '../widgets/welcome_header.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import '../../domain/common/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/utils/title_format_utils.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   const LandingPage({super.key});
@@ -179,10 +180,7 @@ class _LandingPageState extends ConsumerState<LandingPage> {
   }
 
   String formatTitleByDelimiter(String title, String delimiter) {
-    final parts = title.split(delimiter);
-    if (parts.length > 1) {
-      return '${parts[0]}$delimiter\n${parts.sublist(1).join(delimiter).trim()}';
-    }
-    return title;
+    // Delegiert an Utility-Klasse
+    return TitleFormatUtils.formatTitleByDelimiter(title, delimiter);
   }
 }
