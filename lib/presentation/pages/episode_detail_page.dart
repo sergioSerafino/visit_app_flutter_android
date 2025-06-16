@@ -72,10 +72,8 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final String displayTitle =
-        EpisodeFormatUtils.formatTitle(widget.trackName);
-    final String formattedAbbreviatedTitle =
-        EpisodeFormatUtils.formatAndAbbreviateTitle(
+    final String displayTitle = EpisodeFormatUtils.formatTitle(widget.trackName);
+    final String formattedAbbreviatedTitle = EpisodeFormatUtils.formatAndAbbreviateTitle(
       widget.trackName,
       maxLength: 48,
     );
@@ -223,8 +221,7 @@ class _EpisodeDetailPageState extends State<EpisodeDetailPage> {
                   SliverPersistentHeader(
                     pinned: true,
                     delegate: StickyInfoHeader(
-                      duration: EpisodeFormatUtils.formatDuration(
-                          widget.episode.trackTimeMillis),
+                      duration: EpisodeFormatUtils.formatDuration(widget.episode.trackTimeMillis),
                       releaseDate: EpisodeFormatUtils.formatReleaseDate(
                         widget.episode.releaseDate,
                       ),
