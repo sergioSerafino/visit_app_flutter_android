@@ -94,14 +94,8 @@ class PreferencesBottomSheet extends ConsumerWidget {
                           },
                         ),
 
-                        const SizedBox(height: 18),
-                        // --- Apple-Style Trennung ---
-                        Container(
-                          height: 1,
-                          color: Theme.of(context).dividerColor,
-                          margin: const EdgeInsets.symmetric(),
-                        ),
                         const SizedBox(height: 8),
+                        const Divider(),
                         ListTile(
                           leading: Icon(
                             Icons.system_update,
@@ -128,12 +122,8 @@ class PreferencesBottomSheet extends ConsumerWidget {
                           },
                         ),
 
-                        const SizedBox(height: 18),
-                        Container(
-                          height: 1,
-                          color: Theme.of(context).dividerColor,
-                          margin: const EdgeInsets.symmetric(),
-                        ),
+                        const SizedBox(height: 8),
+                        const Divider(),
                         const SizedBox(height: 8),
                         ListTile(
                           leading: Icon(
@@ -149,12 +139,8 @@ class PreferencesBottomSheet extends ConsumerWidget {
                               'Passe die Farben der App dem Tagesverlauf an.'),
                         ),
 
-                        const SizedBox(height: 18),
-                        Container(
-                          height: 1,
-                          color: Theme.of(context).dividerColor,
-                          margin: const EdgeInsets.symmetric(),
-                        ),
+                        const SizedBox(height: 8),
+                        const Divider(),
                         const SizedBox(height: 8),
                         ListTile(
                           leading: Icon(
@@ -190,12 +176,8 @@ class PreferencesBottomSheet extends ConsumerWidget {
                           ),
                         ),
 
-                        const SizedBox(height: 18),
-                        Container(
-                          height: 1,
-                          color: Theme.of(context).dividerColor,
-                          margin: const EdgeInsets.symmetric(),
-                        ),
+                        const SizedBox(height: 8),
+                        const Divider(),
                         const SizedBox(height: 8),
 
                         ListTile(
