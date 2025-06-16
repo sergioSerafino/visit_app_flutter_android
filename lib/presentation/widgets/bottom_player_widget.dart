@@ -120,9 +120,9 @@ class BottomPlayerWidget extends ConsumerWidget {
     // ---
     // 2a. Player-Content als Komposition von Sub-Widgets
     Widget playerContent = SafeArea(
-      minimum: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
+      minimum: BottomPlayerWidgetConstants.playerPadding as EdgeInsets,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: BottomPlayerWidgetConstants.playerPadding,
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
