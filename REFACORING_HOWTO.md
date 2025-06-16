@@ -240,4 +240,25 @@ Das Widget `CoverImageWidget` zeigt ein Cover-Bild oder einen Fallback (Icon + L
 - Siehe [lib/core/utils/cover_image_widget_constants.dart](lib/core/utils/cover_image_widget_constants.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
 
+## Refactoring-Analyse: StickyInfoHeader
+
+### Ausgangslage
+Das Widget `StickyInfoHeader` zeigt Metadaten (z.B. Veröffentlichungsdatum, Dauer) als Sticky-Header an. Style-Parameter wie Padding, TextStyle, Divider und Basis-/Maximalhöhe sind aktuell direkt im Widget kodiert.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Standardwerte für Padding, TextStyle, Divider und Höhen können in eine zentrale Datei (`lib/core/utils/sticky_info_header_constants.dart`) ausgelagert werden. Dadurch wird die Wartbarkeit erhöht und die Wiederverwendbarkeit verbessert.
+- **Dokumentation:** Die Auslagerung und Verwendung der Konstanten wird im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik des Widgets bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Standardwerte in `lib/core/utils/sticky_info_header_constants.dart`.
+2. Anpassung des Widgets zur Nutzung dieser Konstanten.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/widgets/sticky_info_header.dart](lib/presentation/widgets/sticky_info_header.dart)
+- Siehe [lib/core/utils/sticky_info_header_constants.dart](lib/core/utils/sticky_info_header_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
 ---

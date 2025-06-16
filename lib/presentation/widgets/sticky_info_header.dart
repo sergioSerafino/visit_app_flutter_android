@@ -1,5 +1,6 @@
 // lib/presentation/widgets/sticky_info_header.dart
 import 'package:flutter/material.dart';
+import '../../core/utils/sticky_info_header_constants.dart';
 
 class StickyInfoHeader extends SliverPersistentHeaderDelegate {
   final String duration;
@@ -13,8 +14,8 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
   });
 
   // Dynamische Höhe: Basis + extraContent (Buttons/Slider)
-  static const double _baseHeight = 20;
-  static const double _maxExtraHeight = 20;
+  static const double _baseHeight = StickyInfoHeaderConstants.baseHeight;
+  static const double _maxExtraHeight = StickyInfoHeaderConstants.maxExtraHeight;
 
   @override
   double get minExtent => _baseHeight + _maxExtraHeight;
@@ -36,47 +37,40 @@ class StickyInfoHeader extends SliverPersistentHeaderDelegate {
           return SizedBox(
             height: constraints.maxHeight,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: StickyInfoHeaderConstants.horizontalPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
+                    padding: StickyInfoHeaderConstants.rowPadding,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Verfügbar seit $releaseDate",
-                          style: TextStyle(
-                            fontSize: 14,
+                          style: StickyInfoHeaderConstants.releaseDateStyle.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withAlpha(100), // dezenter
+                                .withAlpha(100),
                           ),
                         ),
                         Text(
                           duration,
-                          style: TextStyle(
-                            fontSize: 22,
+                          style: StickyInfoHeaderConstants.durationStyle.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withAlpha(100), // dezenter
+                                .withAlpha(100),
                           ),
                         ),
                       ],
                     ),
                   ),
                   const Divider(
-                    // color: Color.fromRGBO(224, 224, 224, 1),
-                    // thickness: 2,
-                    // height: 4, // Abstand nach der Linie komplett entfernt
-                    //),
-                    // Durch Theme-Farbe ersetzen:
-                    color: Colors.transparent, // wird durch Theme überschrieben
-                    thickness: 2,
-                    height: 4,
+                    color: StickyInfoHeaderConstants.dividerColor,
+                    thickness: StickyInfoHeaderConstants.dividerThickness,
+                    height: StickyInfoHeaderConstants.dividerHeight,
                   ),
                   if (extraContent != null) ...[extraContent!],
                 ],
