@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '/../../presentation/pages/splash_page.dart';
 import '../widgets/splash_cover_image.dart';
 import '../../core/utils/launch_screen_constants.dart';
+import '../../core/utils/launch_screen_text_constants.dart';
 
 // import '../widgets/loading_dots.dart';
 
@@ -111,8 +112,8 @@ class _LaunchScreenState extends State<LaunchScreen>
 
     final double imageSize = LaunchScreenConstants.imageSize;
     final double imageTop = screenHeight / 2 - imageSize / 2;
-    final double textTop = imageTop + imageSize + 40;
-    final double textLeft = screenWidth * 0.25;
+    final double textTop = imageTop + LaunchScreenTextConstants.textTopOffset;
+    final double textLeft = screenWidth * LaunchScreenTextConstants.textLeftFactor;
 
     // Fester neutraler Hintergrund, unabhängig vom Branding
     return Scaffold(
@@ -153,10 +154,9 @@ class _LaunchScreenState extends State<LaunchScreen>
                         child: Text(
                           loadingText[index],
                           style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color:
-                                Colors.grey, // Dezentes Grau für bessere Optik
+                            fontSize: LaunchScreenTextConstants.fontSize,
+                            fontWeight: LaunchScreenTextConstants.fontWeight,
+                            color: LaunchScreenTextConstants.textColor, // Dezentes Grau für bessere Optik
                           ),
                         ),
                       );
