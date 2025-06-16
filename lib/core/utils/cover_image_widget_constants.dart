@@ -10,4 +10,7 @@ class CoverImageWidgetConstants {
   static const double labelShadowBlur = 4.0;
   static const Color labelShadowColor = Colors.black45;
   static const Offset labelShadowOffset = Offset(1, 1);
+  static const double iconSizeFactor = 0.55;
+  static const double labelBottomOffsetFactor = 0.13;
+  static const double labelFontSizeFactor = 0.25;
 }

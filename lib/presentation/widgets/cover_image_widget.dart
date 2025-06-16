@@ -23,8 +23,8 @@ class CoverImageWidget extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final size = screenWidth * scaleFactor;
 
-    final iconSize = size * 0.55;
-    final labelBottomOffset = size * 0.13;
+    final iconSize = size * CoverImageWidgetConstants.iconSizeFactor;
+    final labelBottomOffset = size * CoverImageWidgetConstants.labelBottomOffsetFactor;
     final theme = Theme.of(context);
 
     return Center(
@@ -33,7 +33,8 @@ class CoverImageWidget extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           color: CoverImageWidgetConstants.backgroundColor,
-          borderRadius: BorderRadius.circular(CoverImageWidgetConstants.borderRadius),
+          borderRadius:
+              BorderRadius.circular(CoverImageWidgetConstants.borderRadius),
         ),
         clipBehavior: Clip.antiAlias,
         child: _buildContent(iconSize, labelBottomOffset, theme),
@@ -84,7 +85,7 @@ class CoverImageWidget extends StatelessWidget {
                 style: TextStyle(
                   color: CoverImageWidgetConstants.labelColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: iconSize * 0.25,
+                  fontSize: iconSize * CoverImageWidgetConstants.labelFontSizeFactor,
                   shadows: const [
                     Shadow(
                       blurRadius: CoverImageWidgetConstants.labelShadowBlur,
