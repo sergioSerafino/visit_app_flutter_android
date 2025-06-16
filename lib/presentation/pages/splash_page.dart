@@ -12,6 +12,7 @@ import '../../core/utils/tenant_asset_loader.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/utils/splash_constants.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -22,15 +23,15 @@ class SplashPage extends ConsumerStatefulWidget {
 
 class _SplashPageState extends ConsumerState<SplashPage> {
   // Start-Deckkraft
-  double _opacity = 1.0;
+  double _opacity = SplashConstants.initialOpacity;
 
   @override
   void initState() {
     super.initState();
     _checkOnboardingRestartedSnackbar();
-    Future.delayed(const Duration(milliseconds: 4000), () async {
-      setState(() => _opacity = 0.0);
-      await Future.delayed(const Duration(milliseconds: 500));
+    Future.delayed(SplashConstants.splashDelay, () async {
+      setState(() => _opacity = SplashConstants.finalOpacity);
+      await Future.delayed(SplashConstants.fadeOutWait);
 
       final onboardingAsync = await ref.read(onboardingStatusProvider.future);
       final hasCompletedStartAsync = await ref.read(
@@ -61,7 +62,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 1500),
+          transitionDuration: SplashConstants.fadeTransitionDuration,
           pageBuilder: (context, animation, _) {
             return FadeTransition(opacity: animation, child: target);
           },
@@ -83,9 +84,6 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   @override
   Widget build(BuildContext context) {
     final collectionId = ref.watch(collectionIdProvider);
-
-    // Größe des Splash-Bildes
-    const double imageSize = 300;
     // Dynamischer Fallback-Asset-Pfad
     final loader = TenantAssetLoader(collectionId);
     final fallbackLogo = loader.imagePath();
@@ -96,14 +94,14 @@ class _SplashPageState extends ConsumerState<SplashPage> {
         // animiert von 1.0 → 0.0
         opacity: _opacity,
         // lange Fadeout-Dauer (5s)
-        duration: const Duration(milliseconds: 5000),
+        duration: SplashConstants.fadeOutDuration,
         child: Stack(
           children: [
             // Bild zentriert
             Align(
               child: SizedBox(
-                width: imageSize,
-                height: imageSize,
+                width: SplashConstants.imageSize,
+                height: SplashConstants.imageSize,
                 child: SplashCoverImage(
                   showLabel: true,
                   assetPath: fallbackLogo,

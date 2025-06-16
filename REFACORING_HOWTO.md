@@ -110,3 +110,27 @@ Die `LandingPage` ist die zentrale Einstiegsseite der App und enthält wiederkeh
 - Siehe [lib/presentation/pages/landing_page.dart](lib/presentation/pages/landing_page.dart)
 - Siehe [lib/core/utils/title_format_utils.dart](lib/core/utils/title_format_utils.dart) *(wird neu angelegt)*
 - Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
+## Refactoring-Analyse: SplashPage
+
+### Ausgangslage
+Die `SplashPage` ist eine zentrale Einstiegsseite und steuert das Routing (Onboarding, Landing, Home) sowie die Anzeige des Splash-Logos mit animierter Deckkraft. Die Asset-Logik für das Fallback-Logo ist bereits in `TenantAssetLoader` ausgelagert. Die Animation und das Routing sind klar strukturiert.
+
+### Refactoring-Potenzial
+- **Utility-Auslagerung:** Die Berechnung des Fallback-Asset-Pfads (`loader.imagePath()`) ist bereits ausgelagert und entspricht den Prinzipien der Wiederverwendbarkeit.
+- **Animationsparameter:** Die Parameter für die Splash-Animation (Dauer, Opacity) sind aktuell fest im Widget kodiert. Optional könnten diese in eine zentrale Konstante oder Utility ausgelagert werden, um die Wartbarkeit zu erhöhen.
+- **Dokumentation:** Die Struktur und Auslagerung werden im HowTo dokumentiert und mit Querverweisen versehen.
+- **Layout- und Logiktreue:** Das Refactoring erfolgt strikt nach den Prinzipien aus [REFACORING_HOWTO.md → Grundprinzipien](REFACORING_HOWTO.md#grundprinzipien), d.h. das Layout und die Logik der Seite bleiben unverändert.
+
+### Geplantes Vorgehen
+1. Auslagerung der Animationsparameter in zentrale Konstanten (`lib/core/utils/splash_constants.dart`).
+2. Anpassung der SplashPage zur Nutzung dieser Konstanten.
+3. Dokumentation des Schritts mit Querverweisen im HowTo.
+4. Commit und Push nach jedem Schritt.
+
+#### Querverweise
+- Siehe [lib/presentation/pages/splash_page.dart](lib/presentation/pages/splash_page.dart)
+- Siehe [lib/core/utils/splash_constants.dart](lib/core/utils/splash_constants.dart) *(wird neu angelegt)*
+- Siehe [REFACORING_HOWTO.md → Utility-Auslagerung](REFACORING_HOWTO.md#utility-auslagerung)
+
+---
