@@ -4,7 +4,16 @@
   "collectionId": 1590516386,
   "hostName": "Test Host 1",
   "description": "Als Buchautorin auf dem spirituellen Buchmarkt und eine fest etablierte Größe, bekannt durch das eigene Podcast Format Opalia Talk. Bereits seit 2021 unterhält Sabine ihre Zuhörerschaft auf den Streaming-Platformen regelmäßig durch Ihre episodischen Gespräche mit wechselnden Gästen und vielfältigen Themen.",
-  "contact": { "email": "host1@example.com" },
+  "contact": { 
+    "email": "host1@example.com",
+    "socialLinks": {
+    "tiktok":"https://www.tiktok.com/tag/opalia",
+    "Facebook1":"https://www.facebook.com/sabine.guhrbiermann/?locale=de_DE",
+    "Facebook2":"https://www.facebook.com/profile.php?id=100067768762562&locale=de_DE",
+    "Facebook3":"https://www.facebook.com/LibellenVerlag?locale=de_DE",
+    "Instagram": "https://www.instagram.com/opaliapraxis"
+  } 
+},
   "branding": {
     "primaryColorHex": "#646464",
     "secondaryColorHex": "#32ABE0",
@@ -15,7 +24,7 @@
   },
   "features": { "showPortfolioTab": true },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
-  "content": { "bio": "Bio Host 1", "mission": "Mission Host 1", "rss": null, "links": [] },
+  "content": { "bio": "Die Buchautorin als etablierte Größe auf dem spirituellen Buchmarkt, in Social-Media durch durch ihre Beiträge sowie dasmit dem eigenen Podcast-Format Opalia Talk bekannt. Bereits seit 2021 unterhält Sabine ihre Zuhörerschaft auf den Streaming-Platformen regelmäßig durch Ihre episodischen Gespräche mit wechselnden Gästen und vielfältigen und spannenden Themen.", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, Inspiration, vielschichtige Themenbereiche logisch und nüchtern, Consulting-Praxis", "rss": null, "links": [] },
   "primaryGenreName": "Business",
   "authTokenRequired": false,
   "debugOnly": false,

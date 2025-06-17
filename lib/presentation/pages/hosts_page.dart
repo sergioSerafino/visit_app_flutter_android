@@ -4,14 +4,18 @@
 // UI/UX: StickyHeader für alle Abschnitte, robuste async-Fehlerbehandlung, konsistente Gestaltung.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/simple_section_header.dart';
 import '../widgets/tenant_logo_widget.dart';
+import '../widgets/social_links_bar.dart';
 import '../../core/utils/sticky_info_header_constants.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../../application/providers/rss_metadata_provider.dart';
+import '../../core/utils/tenant_asset_loader.dart';
+import '../widgets/splash_cover_image.dart';
 
 class HostsPage extends ConsumerWidget {
   const HostsPage({super.key});
@@ -28,7 +32,7 @@ class HostsPage extends ConsumerWidget {
           SliverPersistentHeader(
             pinned: true,
             delegate: SimpleSectionHeader(
-              title: 'Lokale Host-Informationen',
+              title: 'Bio / Porträt / Mission',
             ),
           ),
           SliverToBoxAdapter(
@@ -37,7 +41,44 @@ class HostsPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // assetLogo ganz oben
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: TenantLogoWidget(
+                      collectionId: host.collectionId,
+                      assetLogo: host.branding.assetLogo,
+                      scaleFactor: 0.5,
+                    ),
+                  ),
+                  // Mission
+                  InfoTile(
+                      label: 'Mission', value: host.content.mission ?? '-'),
                   // --- NEU: RSS Beschreibung direkt unter Ü1 ---
+                  // SplashCoverImage-Logo direkt darunter (oben/unten gecropped, mittig)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: MediaQuery.of(context).size.width * 0.28,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Align(
+                            alignment: Alignment.center,
+                            heightFactor: 0.7, // schneidet oben und unten ab
+                            child: SplashCoverImage(
+                              assetPath: TenantAssetLoader(host.collectionId)
+                                  .imagePath(),
+                              imageUrl: host.branding.logoUrl,
+                              scaleFactor: 1.0,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Builder(
                     builder: (context) {
                       // PodcastCollection holen
@@ -60,9 +101,22 @@ class HostsPage extends ConsumerWidget {
                           final rssMetaAsync =
                               ref.watch(rssMetadataProvider(feedUrl));
                           return rssMetaAsync.when(
-                            data: (rssMeta) => InfoTile(
-                              label: 'RSS Beschreibung',
-                              value: rssMeta?.description ?? '-',
+                            data: (rssMeta) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InfoTile(
+                                  label: 'RSS Beschreibung',
+                                  value: rssMeta?.description ?? '-',
+                                ),
+                                InfoTile(
+                                  label: 'Kontakt E-Mail (RSS)',
+                                  value: rssMeta?.contactEmail ?? '-',
+                                ),
+                                // Social Links als Icon-Leiste
+                                SocialLinksBar(
+                                  socialLinks: host.contact.socialLinks ?? {},
+                                ),
+                              ],
                             ),
                             loading: () => const SizedBox.shrink(),
                             error: (e, st) => const SizedBox.shrink(),
@@ -73,33 +127,23 @@ class HostsPage extends ConsumerWidget {
                       );
                     },
                   ),
+
                   // Bio
                   InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
-                  // Mission
-                  InfoTile(
-                      label: 'Mission', value: host.content.mission ?? '-'),
-                  // assetLogo
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: TenantLogoWidget(
-                      collectionId: host.collectionId,
-                      assetLogo: host.branding.assetLogo,
-                      scaleFactor: 0.5,
-                    ),
-                  ),
                   // Last Updated
                   InfoTile(
                     label: 'Last Updated',
                     value: host.lastUpdated?.toIso8601String() ?? '-',
                   ),
-                  //PERFEKT: als 'primaryColorHex' (aus Branding)
+                  /*    
                   InfoTile(
                       label: 'Primärfarbe',
                       value: host.branding.primaryColorHex ?? '-'),
-                  //PERFEKT: als 'secondaryColorHex' (aus Branding)
+
                   InfoTile(
                       label: 'Sekundärfarbe',
                       value: host.branding.secondaryColorHex ?? '-'),
+
                   //PERFEKT: als 'email' (aus Contact)
                   InfoTile(label: 'Kontakt', value: host.contact.email ?? '-'),
                   //PERFEKT: als 'showPortfolioTab' (aus Features)
@@ -108,7 +152,7 @@ class HostsPage extends ConsumerWidget {
                       value: (host.features.showPortfolioTab ?? false)
                           ? 'aktiviert'
                           : 'deaktiviert'),
-                  // ...weitere Felder/Kommentare aus der alten Version ggf. ergänzen...
+              */
                 ],
               ),
             ),
@@ -117,7 +161,7 @@ class HostsPage extends ConsumerWidget {
           SliverPersistentHeader(
             pinned: true,
             delegate: SimpleSectionHeader(
-              title: 'Podcast-/RSS-Informationen',
+              title: 'Kontakt & Visit',
             ),
           ),
           SliverToBoxAdapter(
@@ -140,29 +184,9 @@ class HostsPage extends ConsumerWidget {
                         return const Text('Kein Podcast gefunden');
                       }
                       final feedUrl = podcast.feedUrl ?? '';
-                      final rssMetaAsync =
-                          ref.watch(rssMetadataProvider(feedUrl));
-                      return rssMetaAsync.when(
-                        data: (rssMeta) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Kontakt E-Mail (RSS)
-                            InfoTile(
-                              label: 'Kontakt E-Mail (RSS)',
-                              value: rssMeta?.contactEmail ?? '-',
-                            ),
-                            // Social Links
-                            InfoTile(
-                              label: 'Social Links',
-                              value: host.contact.socialLinks?.entries
-                                      .map((e) => '${e.key}: ${e.value}')
-                                      .join(', ') ??
-                                  '-',
-                            ),
-                          ],
-                        ),
-                        loading: () => const SizedBox.shrink(),
-                        error: (e, st) => const SizedBox.shrink(),
+                      return InfoTile(
+                        label: 'Kontakt E-Mail (RSS)',
+                        value: '-',
                       );
                     },
                     loading: () => const SizedBox.shrink(),
@@ -176,7 +200,7 @@ class HostsPage extends ConsumerWidget {
           SliverPersistentHeader(
             pinned: true,
             delegate: SimpleSectionHeader(
-              title: 'Angebote / Portfolio',
+              title: 'Angebote & Portfolio',
             ),
           ),
           SliverToBoxAdapter(
@@ -191,6 +215,53 @@ class HostsPage extends ConsumerWidget {
                       child: Text('Portfolio-Inhalte folgen ...',
                           style: Theme.of(context).textTheme.bodyLarge),
                     ),
+                  // WebsiteTile nach Überschrift 3 einfügen
+                  Builder(
+                    builder: (context) {
+                      final podcastCollectionAsync = ref.watch(
+                        podcastCollectionProvider(host.collectionId),
+                      );
+                      return podcastCollectionAsync.when(
+                        data: (apiResponse) {
+                          if (!apiResponse.isSuccess ||
+                              apiResponse.data == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final podcast = apiResponse.data!.podcasts.isNotEmpty
+                              ? apiResponse.data!.podcasts.first
+                              : null;
+                          if (podcast == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final feedUrl = podcast.feedUrl ?? '';
+                          final rssMetaAsync =
+                              ref.watch(rssMetadataProvider(feedUrl));
+                          return rssMetaAsync.when(
+                            data: (rssMeta) {
+                              final website =
+                                  rssMeta?.websiteUrl?.isNotEmpty == true
+                                      ? rssMeta!.websiteUrl!
+                                      : (host.contact.websiteUrl ?? '-');
+                              return WebsiteTile(
+                                label: 'Website',
+                                url: website,
+                              );
+                            },
+                            loading: () =>
+                                const InfoTile(label: 'Website', value: '...'),
+                            error: (e, st) => InfoTile(
+                                label: 'Website',
+                                value: host.contact.websiteUrl ?? '-'),
+                          );
+                        },
+                        loading: () =>
+                            const InfoTile(label: 'Website', value: '...'),
+                        error: (e, st) => InfoTile(
+                            label: 'Website',
+                            value: host.contact.websiteUrl ?? '-'),
+                      );
+                    },
+                  ),
                   const Divider(height: 32),
                   // Dynamische Host-Felder
                   InfoTile(label: 'Host Name', value: host.hostName),
@@ -207,8 +278,37 @@ class HostsPage extends ConsumerWidget {
                               .map((e) => '${e.key}: ${e.value}')
                               .join(', ') ??
                           '-'),
-                  InfoTile(
-                      label: 'Website', value: host.contact.websiteUrl ?? '-'),
+                  Builder(
+                    builder: (context) {
+                      final podcastCollectionAsync = ref.watch(
+                        podcastCollectionProvider(host.collectionId),
+                      );
+                      return podcastCollectionAsync.when(
+                        data: (apiResponse) {
+                          if (!apiResponse.isSuccess ||
+                              apiResponse.data == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final podcast = apiResponse.data!.podcasts.isNotEmpty
+                              ? apiResponse.data!.podcasts.first
+                              : null;
+                          if (podcast == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final feedUrl = podcast.feedUrl ?? '';
+                          return InfoTile(
+                            label: 'Website',
+                            value: host.contact.websiteUrl ?? '-',
+                          );
+                        },
+                        loading: () =>
+                            const InfoTile(label: 'Website', value: '...'),
+                        error: (e, st) => InfoTile(
+                            label: 'Website',
+                            value: host.contact.websiteUrl ?? '-'),
+                      );
+                    },
+                  ),
                   InfoTile(
                       label: 'Impressum',
                       value: host.contact.impressumUrl ?? '-'),
@@ -355,6 +455,50 @@ class InfoTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium)),
           Expanded(
               child: Text(value, style: Theme.of(context).textTheme.bodyLarge)),
+        ],
+      ),
+    );
+  }
+}
+
+class WebsiteTile extends StatelessWidget {
+  final String label;
+  final String url;
+  const WebsiteTile({super.key, required this.label, required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    final isValid = url.isNotEmpty && url != '-';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+              width: 160,
+              child: Text('$label:',
+                  style: Theme.of(context).textTheme.bodyMedium)),
+          Expanded(
+            child: isValid
+                ? GestureDetector(
+                    onTap: () async {
+                      final uri = Uri.tryParse(url);
+                      if (uri != null) {
+                        // ignore: deprecated_member_use
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    child: Text(
+                      url,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                    ),
+                  )
+                : Text(url, style: Theme.of(context).textTheme.bodyLarge),
+          ),
         ],
       ),
     );

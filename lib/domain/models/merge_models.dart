@@ -43,6 +43,7 @@ class LocalJsonData with _$LocalJsonData {
     String? contactEmail,
     bool? authTokenRequired,
     List<String>? featureFlags,
+    Map<String, String>? socialLinks, // NEU: Social Links lokal
   }) = _LocalJsonData;
 
   factory LocalJsonData.fromJson(Map<String, dynamic> json) =>
@@ -62,6 +63,7 @@ class PodcastHostCollection with _$PodcastHostCollection {
     bool? isManagedCollection,
     List<String>? featureFlags,
     DateTime? lastUpdated,
+    Map<String, String>? socialLinks, // NEU: Social Links im Zielmodell
   }) = _PodcastHostCollection;
 
   factory PodcastHostCollection.fromJson(Map<String, dynamic> json) =>
@@ -90,5 +92,6 @@ PodcastHostCollection mergePodcastData(
             managedCollections.contains(itunes.collectionId!)),
     featureFlags: local.featureFlags ?? <String>[],
     lastUpdated: DateTime.now(),
+    socialLinks: local.socialLinks, // NEU: Social Links übernehmen
   );
 }

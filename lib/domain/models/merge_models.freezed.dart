@@ -520,6 +520,7 @@ mixin _$LocalJsonData {
   String? get contactEmail => throw _privateConstructorUsedError;
   bool? get authTokenRequired => throw _privateConstructorUsedError;
   List<String>? get featureFlags => throw _privateConstructorUsedError;
+  Map<String, String>? get socialLinks => throw _privateConstructorUsedError;
 
   /// Serializes this LocalJsonData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -545,7 +546,8 @@ abstract class $LocalJsonDataCopyWith<$Res> {
       String? author,
       String? contactEmail,
       bool? authTokenRequired,
-      List<String>? featureFlags});
+      List<String>? featureFlags,
+      Map<String, String>? socialLinks});
 }
 
 /// @nodoc
@@ -571,6 +573,7 @@ class _$LocalJsonDataCopyWithImpl<$Res, $Val extends LocalJsonData>
     Object? contactEmail = freezed,
     Object? authTokenRequired = freezed,
     Object? featureFlags = freezed,
+    Object? socialLinks = freezed,
   }) {
     return _then(_value.copyWith(
       collectionId: freezed == collectionId
@@ -605,6 +608,10 @@ class _$LocalJsonDataCopyWithImpl<$Res, $Val extends LocalJsonData>
           ? _value.featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      socialLinks: freezed == socialLinks
+          ? _value.socialLinks
+          : socialLinks // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
     ) as $Val);
   }
 }
@@ -625,7 +632,8 @@ abstract class _$$LocalJsonDataImplCopyWith<$Res>
       String? author,
       String? contactEmail,
       bool? authTokenRequired,
-      List<String>? featureFlags});
+      List<String>? featureFlags,
+      Map<String, String>? socialLinks});
 }
 
 /// @nodoc
@@ -649,6 +657,7 @@ class __$$LocalJsonDataImplCopyWithImpl<$Res>
     Object? contactEmail = freezed,
     Object? authTokenRequired = freezed,
     Object? featureFlags = freezed,
+    Object? socialLinks = freezed,
   }) {
     return _then(_$LocalJsonDataImpl(
       collectionId: freezed == collectionId
@@ -683,6 +692,10 @@ class __$$LocalJsonDataImplCopyWithImpl<$Res>
           ? _value._featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      socialLinks: freezed == socialLinks
+          ? _value._socialLinks
+          : socialLinks // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
     ));
   }
 }
@@ -698,8 +711,10 @@ class _$LocalJsonDataImpl implements _LocalJsonData {
       this.author,
       this.contactEmail,
       this.authTokenRequired,
-      final List<String>? featureFlags})
-      : _featureFlags = featureFlags;
+      final List<String>? featureFlags,
+      final Map<String, String>? socialLinks})
+      : _featureFlags = featureFlags,
+        _socialLinks = socialLinks;
 
   factory _$LocalJsonDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$LocalJsonDataImplFromJson(json);
@@ -728,9 +743,19 @@ class _$LocalJsonDataImpl implements _LocalJsonData {
     return EqualUnmodifiableListView(value);
   }
 
+  final Map<String, String>? _socialLinks;
+  @override
+  Map<String, String>? get socialLinks {
+    final value = _socialLinks;
+    if (value == null) return null;
+    if (_socialLinks is EqualUnmodifiableMapView) return _socialLinks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
   @override
   String toString() {
-    return 'LocalJsonData(collectionId: $collectionId, title: $title, description: $description, imageUrl: $imageUrl, author: $author, contactEmail: $contactEmail, authTokenRequired: $authTokenRequired, featureFlags: $featureFlags)';
+    return 'LocalJsonData(collectionId: $collectionId, title: $title, description: $description, imageUrl: $imageUrl, author: $author, contactEmail: $contactEmail, authTokenRequired: $authTokenRequired, featureFlags: $featureFlags, socialLinks: $socialLinks)';
   }
 
   @override
@@ -751,7 +776,9 @@ class _$LocalJsonDataImpl implements _LocalJsonData {
             (identical(other.authTokenRequired, authTokenRequired) ||
                 other.authTokenRequired == authTokenRequired) &&
             const DeepCollectionEquality()
-                .equals(other._featureFlags, _featureFlags));
+                .equals(other._featureFlags, _featureFlags) &&
+            const DeepCollectionEquality()
+                .equals(other._socialLinks, _socialLinks));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -765,7 +792,8 @@ class _$LocalJsonDataImpl implements _LocalJsonData {
       author,
       contactEmail,
       authTokenRequired,
-      const DeepCollectionEquality().hash(_featureFlags));
+      const DeepCollectionEquality().hash(_featureFlags),
+      const DeepCollectionEquality().hash(_socialLinks));
 
   /// Create a copy of LocalJsonData
   /// with the given fields replaced by the non-null parameter values.
@@ -792,7 +820,8 @@ abstract class _LocalJsonData implements LocalJsonData {
       final String? author,
       final String? contactEmail,
       final bool? authTokenRequired,
-      final List<String>? featureFlags}) = _$LocalJsonDataImpl;
+      final List<String>? featureFlags,
+      final Map<String, String>? socialLinks}) = _$LocalJsonDataImpl;
 
   factory _LocalJsonData.fromJson(Map<String, dynamic> json) =
       _$LocalJsonDataImpl.fromJson;
@@ -813,6 +842,8 @@ abstract class _LocalJsonData implements LocalJsonData {
   bool? get authTokenRequired;
   @override
   List<String>? get featureFlags;
+  @override
+  Map<String, String>? get socialLinks;
 
   /// Create a copy of LocalJsonData
   /// with the given fields replaced by the non-null parameter values.
@@ -839,6 +870,7 @@ mixin _$PodcastHostCollection {
   bool? get isManagedCollection => throw _privateConstructorUsedError;
   List<String>? get featureFlags => throw _privateConstructorUsedError;
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
+  Map<String, String>? get socialLinks => throw _privateConstructorUsedError;
 
   /// Serializes this PodcastHostCollection to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -866,7 +898,8 @@ abstract class $PodcastHostCollectionCopyWith<$Res> {
       bool? authTokenRequired,
       bool? isManagedCollection,
       List<String>? featureFlags,
-      DateTime? lastUpdated});
+      DateTime? lastUpdated,
+      Map<String, String>? socialLinks});
 }
 
 /// @nodoc
@@ -895,6 +928,7 @@ class _$PodcastHostCollectionCopyWithImpl<$Res,
     Object? isManagedCollection = freezed,
     Object? featureFlags = freezed,
     Object? lastUpdated = freezed,
+    Object? socialLinks = freezed,
   }) {
     return _then(_value.copyWith(
       collectionId: freezed == collectionId
@@ -937,6 +971,10 @@ class _$PodcastHostCollectionCopyWithImpl<$Res,
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      socialLinks: freezed == socialLinks
+          ? _value.socialLinks
+          : socialLinks // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
     ) as $Val);
   }
 }
@@ -960,7 +998,8 @@ abstract class _$$PodcastHostCollectionImplCopyWith<$Res>
       bool? authTokenRequired,
       bool? isManagedCollection,
       List<String>? featureFlags,
-      DateTime? lastUpdated});
+      DateTime? lastUpdated,
+      Map<String, String>? socialLinks});
 }
 
 /// @nodoc
@@ -987,6 +1026,7 @@ class __$$PodcastHostCollectionImplCopyWithImpl<$Res>
     Object? isManagedCollection = freezed,
     Object? featureFlags = freezed,
     Object? lastUpdated = freezed,
+    Object? socialLinks = freezed,
   }) {
     return _then(_$PodcastHostCollectionImpl(
       collectionId: freezed == collectionId
@@ -1029,6 +1069,10 @@ class __$$PodcastHostCollectionImplCopyWithImpl<$Res>
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      socialLinks: freezed == socialLinks
+          ? _value._socialLinks
+          : socialLinks // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
     ));
   }
 }
@@ -1046,8 +1090,10 @@ class _$PodcastHostCollectionImpl implements _PodcastHostCollection {
       this.authTokenRequired,
       this.isManagedCollection,
       final List<String>? featureFlags,
-      this.lastUpdated})
-      : _featureFlags = featureFlags;
+      this.lastUpdated,
+      final Map<String, String>? socialLinks})
+      : _featureFlags = featureFlags,
+        _socialLinks = socialLinks;
 
   factory _$PodcastHostCollectionImpl.fromJson(Map<String, dynamic> json) =>
       _$$PodcastHostCollectionImplFromJson(json);
@@ -1080,10 +1126,19 @@ class _$PodcastHostCollectionImpl implements _PodcastHostCollection {
 
   @override
   final DateTime? lastUpdated;
+  final Map<String, String>? _socialLinks;
+  @override
+  Map<String, String>? get socialLinks {
+    final value = _socialLinks;
+    if (value == null) return null;
+    if (_socialLinks is EqualUnmodifiableMapView) return _socialLinks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'PodcastHostCollection(collectionId: $collectionId, title: $title, description: $description, logoUrl: $logoUrl, author: $author, contactEmail: $contactEmail, authTokenRequired: $authTokenRequired, isManagedCollection: $isManagedCollection, featureFlags: $featureFlags, lastUpdated: $lastUpdated)';
+    return 'PodcastHostCollection(collectionId: $collectionId, title: $title, description: $description, logoUrl: $logoUrl, author: $author, contactEmail: $contactEmail, authTokenRequired: $authTokenRequired, isManagedCollection: $isManagedCollection, featureFlags: $featureFlags, lastUpdated: $lastUpdated, socialLinks: $socialLinks)';
   }
 
   @override
@@ -1107,7 +1162,9 @@ class _$PodcastHostCollectionImpl implements _PodcastHostCollection {
             const DeepCollectionEquality()
                 .equals(other._featureFlags, _featureFlags) &&
             (identical(other.lastUpdated, lastUpdated) ||
-                other.lastUpdated == lastUpdated));
+                other.lastUpdated == lastUpdated) &&
+            const DeepCollectionEquality()
+                .equals(other._socialLinks, _socialLinks));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1123,7 +1180,8 @@ class _$PodcastHostCollectionImpl implements _PodcastHostCollection {
       authTokenRequired,
       isManagedCollection,
       const DeepCollectionEquality().hash(_featureFlags),
-      lastUpdated);
+      lastUpdated,
+      const DeepCollectionEquality().hash(_socialLinks));
 
   /// Create a copy of PodcastHostCollection
   /// with the given fields replaced by the non-null parameter values.
@@ -1153,7 +1211,8 @@ abstract class _PodcastHostCollection implements PodcastHostCollection {
       final bool? authTokenRequired,
       final bool? isManagedCollection,
       final List<String>? featureFlags,
-      final DateTime? lastUpdated}) = _$PodcastHostCollectionImpl;
+      final DateTime? lastUpdated,
+      final Map<String, String>? socialLinks}) = _$PodcastHostCollectionImpl;
 
   factory _PodcastHostCollection.fromJson(Map<String, dynamic> json) =
       _$PodcastHostCollectionImpl.fromJson;
@@ -1178,6 +1237,8 @@ abstract class _PodcastHostCollection implements PodcastHostCollection {
   List<String>? get featureFlags;
   @override
   DateTime? get lastUpdated;
+  @override
+  Map<String, String>? get socialLinks;
 
   /// Create a copy of PodcastHostCollection
   /// with the given fields replaced by the non-null parameter values.

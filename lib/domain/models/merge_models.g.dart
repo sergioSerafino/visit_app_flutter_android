@@ -56,6 +56,9 @@ _$LocalJsonDataImpl _$$LocalJsonDataImplFromJson(Map<String, dynamic> json) =>
       featureFlags: (json['featureFlags'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      socialLinks: (json['socialLinks'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$$LocalJsonDataImplToJson(_$LocalJsonDataImpl instance) =>
@@ -68,6 +71,7 @@ Map<String, dynamic> _$$LocalJsonDataImplToJson(_$LocalJsonDataImpl instance) =>
       'contactEmail': instance.contactEmail,
       'authTokenRequired': instance.authTokenRequired,
       'featureFlags': instance.featureFlags,
+      'socialLinks': instance.socialLinks,
     };
 
 _$PodcastHostCollectionImpl _$$PodcastHostCollectionImplFromJson(
@@ -87,6 +91,9 @@ _$PodcastHostCollectionImpl _$$PodcastHostCollectionImplFromJson(
       lastUpdated: json['lastUpdated'] == null
           ? null
           : DateTime.parse(json['lastUpdated'] as String),
+      socialLinks: (json['socialLinks'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$$PodcastHostCollectionImplToJson(
@@ -102,4 +109,5 @@ Map<String, dynamic> _$$PodcastHostCollectionImplToJson(
       'isManagedCollection': instance.isManagedCollection,
       'featureFlags': instance.featureFlags,
       'lastUpdated': instance.lastUpdated?.toIso8601String(),
+      'socialLinks': instance.socialLinks,
     };
