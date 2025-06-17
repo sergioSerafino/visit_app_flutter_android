@@ -50,11 +50,11 @@ class HostsPage extends ConsumerWidget {
                       scaleFactor: 0.5,
                     ),
                   ),
-                  // Mission
+                  // Mission-Beschreibung
                   InfoTile(
                       label: 'Mission', value: host.content.mission ?? '-'),
-                  // --- NEU: RSS Beschreibung direkt unter Ü1 ---
-                  // SplashCoverImage-Logo direkt darunter (oben/unten gecropped, mittig)
+
+                  // logo (SplashCoverImage)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: Center(
@@ -78,58 +78,25 @@ class HostsPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-
-                  Builder(
-                    builder: (context) {
-                      // PodcastCollection holen
-                      final podcastCollectionAsync = ref.watch(
-                        podcastCollectionProvider(host.collectionId),
-                      );
-                      return podcastCollectionAsync.when(
-                        data: (apiResponse) {
-                          if (!apiResponse.isSuccess ||
-                              apiResponse.data == null) {
-                            return const SizedBox.shrink();
-                          }
-                          final podcast = apiResponse.data!.podcasts.isNotEmpty
-                              ? apiResponse.data!.podcasts.first
-                              : null;
-                          if (podcast == null) {
-                            return const SizedBox.shrink();
-                          }
-                          final feedUrl = podcast.feedUrl ?? '';
-                          final rssMetaAsync =
-                              ref.watch(rssMetadataProvider(feedUrl));
-                          return rssMetaAsync.when(
-                            data: (rssMeta) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InfoTile(
-                                  label: 'RSS Beschreibung',
-                                  value: rssMeta?.description ?? '-',
-                                ),
-                                InfoTile(
-                                  label: 'Kontakt E-Mail (RSS)',
-                                  value: rssMeta?.contactEmail ?? '-',
-                                ),
-                                // Social Links als Icon-Leiste
-                                SocialLinksBar(
-                                  socialLinks: host.contact.socialLinks ?? {},
-                                ),
-                              ],
-                            ),
-                            loading: () => const SizedBox.shrink(),
-                            error: (e, st) => const SizedBox.shrink(),
-                          );
-                        },
-                        loading: () => const SizedBox.shrink(),
-                        error: (e, st) => const SizedBox.shrink(),
-                      );
-                    },
-                  ),
-
-                  // Bio
+                  // Bio-Beschreibung
                   InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
+
+                  // hostImage
+                  if (host.hostImage != null && host.hostImage!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'lib/tenants/collection_${host.collectionId}/assets/${host.hostImage}',
+                            width: 220,
+                            height: 220,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
                   // Last Updated
                   InfoTile(
                     label: 'Last Updated',
@@ -143,56 +110,72 @@ class HostsPage extends ConsumerWidget {
                   InfoTile(
                       label: 'Sekundärfarbe',
                       value: host.branding.secondaryColorHex ?? '-'),
-
-                  //PERFEKT: als 'email' (aus Contact)
-                  InfoTile(label: 'Kontakt', value: host.contact.email ?? '-'),
-                  //PERFEKT: als 'showPortfolioTab' (aus Features)
-                  InfoTile(
-                      label: 'PortfolioTab',
-                      value: (host.features.showPortfolioTab ?? false)
-                          ? 'aktiviert'
-                          : 'deaktiviert'),
               */
                 ],
               ),
             ),
           ),
-          // --- StickyHeader: Podcast-/RSS-Informationen ---
+          // --- StickyHeader: Kontakt / Visit ---
           SliverPersistentHeader(
             pinned: true,
             delegate: SimpleSectionHeader(
-              title: 'Kontakt & Visit',
+              title: 'Kontakt / Visit',
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: Builder(
-                builder: (context) {
-                  final podcastCollectionAsync = ref.watch(
-                    podcastCollectionProvider(host.collectionId),
-                  );
-                  return podcastCollectionAsync.when(
-                    data: (apiResponse) {
-                      if (!apiResponse.isSuccess || apiResponse.data == null) {
-                        return const Text('Keine PodcastCollection geladen');
-                      }
-                      final podcast = apiResponse.data!.podcasts.isNotEmpty
-                          ? apiResponse.data!.podcasts.first
-                          : null;
-                      if (podcast == null) {
-                        return const Text('Kein Podcast gefunden');
-                      }
-                      final feedUrl = podcast.feedUrl ?? '';
-                      return InfoTile(
-                        label: 'Kontakt E-Mail (RSS)',
-                        value: '-',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // E-Mail (aus RSS)
+                  Builder(
+                    builder: (context) {
+                      final podcastCollectionAsync = ref.watch(
+                        podcastCollectionProvider(host.collectionId),
+                      );
+                      return podcastCollectionAsync.when(
+                        data: (apiResponse) {
+                          if (!apiResponse.isSuccess ||
+                              apiResponse.data == null) {
+                            return const InfoTile(label: 'E-Mail', value: '-');
+                          }
+                          final podcast = apiResponse.data!.podcasts.isNotEmpty
+                              ? apiResponse.data!.podcasts.first
+                              : null;
+                          if (podcast == null) {
+                            return const InfoTile(label: 'E-Mail', value: '-');
+                          }
+                          final feedUrl = podcast.feedUrl ?? '';
+                          final rssMetaAsync =
+                              ref.watch(rssMetadataProvider(feedUrl));
+                          return rssMetaAsync.when(
+                            data: (rssMeta) => InfoTile(
+                              label: 'E-Mail',
+                              value: rssMeta?.contactEmail ?? '-',
+                            ),
+                            loading: () =>
+                                const InfoTile(label: 'E-Mail', value: '...'),
+                            error: (e, st) =>
+                                const InfoTile(label: 'E-Mail', value: '-'),
+                          );
+                        },
+                        loading: () =>
+                            const InfoTile(label: 'E-Mail', value: '...'),
+                        error: (e, st) =>
+                            const InfoTile(label: 'E-Mail', value: '-'),
                       );
                     },
-                    loading: () => const SizedBox.shrink(),
-                    error: (e, st) => const SizedBox.shrink(),
-                  );
-                },
+                  ),
+                  // Social Links Bar
+                  if (host.contact.socialLinks != null &&
+                      host.contact.socialLinks!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SocialLinksBar(
+                          socialLinks: host.contact.socialLinks!),
+                    ),
+                ],
               ),
             ),
           ),
@@ -209,13 +192,7 @@ class HostsPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (host.features.showPortfolioTab ?? false)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text('Portfolio-Inhalte folgen ...',
-                          style: Theme.of(context).textTheme.bodyLarge),
-                    ),
-                  // WebsiteTile nach Überschrift 3 einfügen
+                  // Website
                   Builder(
                     builder: (context) {
                       final podcastCollectionAsync = ref.watch(
@@ -262,22 +239,7 @@ class HostsPage extends ConsumerWidget {
                       );
                     },
                   ),
-                  const Divider(height: 32),
-                  // Dynamische Host-Felder
-                  InfoTile(label: 'Host Name', value: host.hostName),
-                  //PERFEKT: als HAUPTE SEKTION
-                  InfoTile(label: 'Beschreibung', value: host.description),
-                  // InfoTile(label: 'CollectionId', value: host.collectionId.toString()),
-                  // InfoTile(
-                  //     label: 'Primäres Genre', value: host.primaryGenreName ?? '-'),
-                  // verleichen mit
-                  // InfoTile(label: 'Kontakt E-Mail', value: host.contact.email ?? '-'),
-                  InfoTile(
-                      label: 'Social Links',
-                      value: host.contact.socialLinks?.entries
-                              .map((e) => '${e.key}: ${e.value}')
-                              .join(', ') ??
-                          '-'),
+                  // Podcast-Cover
                   Builder(
                     builder: (context) {
                       final podcastCollectionAsync = ref.watch(
@@ -292,29 +254,100 @@ class HostsPage extends ConsumerWidget {
                           final podcast = apiResponse.data!.podcasts.isNotEmpty
                               ? apiResponse.data!.podcasts.first
                               : null;
-                          if (podcast == null) {
+                          if (podcast == null ||
+                              podcast.artworkUrl600.isEmpty) {
                             return const SizedBox.shrink();
                           }
-                          final feedUrl = podcast.feedUrl ?? '';
-                          return InfoTile(
-                            label: 'Website',
-                            value: host.contact.websiteUrl ?? '-',
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  podcast.artworkUrl600,
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(
+                                    width: 120,
+                                    height: 120,
+                                    color: Colors.grey,
+                                    child: const Icon(Icons.error),
+                                  ),
+                                ),
+                              ),
+                            ),
                           );
                         },
-                        loading: () =>
-                            const InfoTile(label: 'Website', value: '...'),
-                        error: (e, st) => InfoTile(
-                            label: 'Website',
-                            value: host.contact.websiteUrl ?? '-'),
+                        loading: () => const SizedBox.shrink(),
+                        error: (e, st) => const SizedBox.shrink(),
                       );
                     },
                   ),
-                  InfoTile(
-                      label: 'Impressum',
-                      value: host.contact.impressumUrl ?? '-'),
-                  InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
-                  InfoTile(
-                      label: 'Mission', value: host.content.mission ?? '-'),
+                ],
+              ),
+            ),
+          ),
+          // --- StickyHeader: Weitere Informationen ---
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: SimpleSectionHeader(
+              title: 'E N D E',
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Dynamische Host-Felder
+                  // InfoTile(label: 'Host Name', value: host.hostName),
+                  //PERFEKT: als HAUPT SEKTION
+                  // InfoTile(label: 'Beschreibung', value: host.description),
+                  // InfoTile(label: 'CollectionId', value: host.collectionId.toString()),
+                  // InfoTile(
+                  //     label: 'Primäres Genre', value: host.primaryGenreName ?? '-'),
+                  // verleichen mit
+                  // InfoTile(label: 'Kontakt E-Mail', value: host.contact.email ?? '-'),
+                  // Builder(
+                  //   builder: (context) {
+                  //     final podcastCollectionAsync = ref.watch(
+                  //       podcastCollectionProvider(host.collectionId),
+                  //     );
+                  //     return podcastCollectionAsync.when(
+                  //       data: (apiResponse) {
+                  //         if (!apiResponse.isSuccess ||
+                  //             apiResponse.data == null) {
+                  //           return const SizedBox.shrink();
+                  //         }
+                  //         final podcast = apiResponse.data!.podcasts.isNotEmpty
+                  //             ? apiResponse.data!.podcasts.first
+                  //             : null;
+                  //         if (podcast == null) {
+                  //           return const SizedBox.shrink();
+                  //         }
+                  //         final feedUrl = podcast.feedUrl ?? '';
+                  //         return InfoTile(
+                  //           label: 'Website',
+                  //           value: host.contact.websiteUrl ?? '-',
+                  //         );
+                  //       },
+                  //       loading: () =>
+                  //           const InfoTile(label: 'Website', value: '...'),
+                  //       error: (e, st) => InfoTile(
+                  //           label: 'Website',
+                  //           value: host.contact.websiteUrl ?? '-'),
+                  //     );
+                  //   },
+                  // ),
+                  // InfoTile(
+                  //     label: 'Impressum',
+                  //     value: host.contact.impressumUrl ?? '-'),
+                  // InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
+                  // InfoTile(
+                  //     label: 'Mission', value: host.content.mission ?? '-'),
                   // für Admin
                   // InfoTile(label: 'RSS-Feed', value: host.content.rss ?? '-'),
                   // für Admin
@@ -338,12 +371,12 @@ class HostsPage extends ConsumerWidget {
                   // InfoTile(
                   // label: 'Debug Only', value: host.debugOnly?.toString() ?? '-'),
                   //PERFEKT: als 'host.lastUpdated'
-                  InfoTile(
-                      label: 'Last Updated',
-                      value: host.lastUpdated?.toIso8601String() ?? '-'),
-                  const Divider(height: 32),
-                  Text('Podcast-/RSS-Informationen',
-                      style: Theme.of(context).textTheme.bodyMedium),
+                  // InfoTile(
+                  //     label: 'Last Updated',
+                  //     value: host.lastUpdated?.toIso8601String() ?? '-'),
+                  // const Divider(height: 32),
+                  // Text('Podcast-/RSS-Informationen',
+                  //     style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(height: 12),
                   Builder(
                     builder: (context) {
@@ -374,47 +407,45 @@ class HostsPage extends ConsumerWidget {
                               //PERFEKT: als 'hostName' (=='artistName' -> dann speichern)
                               InfoTile(
                                   label: 'Artist', value: podcast.artistName),
-                              // InfoTile(label: 'Genre', value: podcast.primaryGenreName),
                               // für Admin
                               // InfoTile(
                               //     label: 'Feed URL', value: podcast.feedUrl ?? '-'),
-                              // InfoTile(label: 'Feed URL (Debug)', value: feedUrl),
                               // für Admin
                               // InfoTile(
                               //     label: 'PodcastId',
                               //     value: podcast.collectionId.toString()),
                               //PERFEKT:
-                              InfoTile(
-                                  label: 'Artwork',
-                                  value: podcast.artworkUrl600),
-                              if (podcast.artworkUrl600.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 12.0),
-                                  child: Row(
-                                    children: [
-                                      Spacer(), // schiebt das Bild ganz nach rechts
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Image.network(
-                                          podcast.artworkUrl600,
-                                          width: 120,
-                                          height: 120,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Container(
-                                            width: 120,
-                                            height: 120,
-                                            color: Colors.grey,
-                                            child: const Icon(Icons.error),
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(), // schiebt das Bild ganz nach rechts
-                                    ],
-                                  ),
-                                ),
+                              // InfoTile(
+                              //     label: 'Artwork',
+                              //     value: podcast.artworkUrl600),
+                              // if (podcast.artworkUrl600.isNotEmpty)
+                              //   Padding(
+                              //     padding: const EdgeInsets.symmetric(
+                              //         vertical: 12.0),
+                              //     child: Row(
+                              //       children: [
+                              //         Spacer(), // schiebt das Bild ganz nach rechts
+                              //         ClipRRect(
+                              //           borderRadius: BorderRadius.circular(8),
+                              //           child: Image.network(
+                              //             podcast.artworkUrl600,
+                              //             width: 120,
+                              //             height: 120,
+                              //             fit: BoxFit.cover,
+                              //             errorBuilder:
+                              //                 (context, error, stackTrace) =>
+                              //                     Container(
+                              //               width: 120,
+                              //               height: 120,
+                              //               color: Colors.grey,
+                              //               child: const Icon(Icons.error),
+                              //             ),
+                              //           ),
+                              //         ),
+                              //         Spacer(), // schiebt das Bild ganz nach rechts
+                              //       ],
+                              //     ),
+                              //   ),
                               // für Admin
                               // InfoTile(
                               //     label: 'Debug Only',

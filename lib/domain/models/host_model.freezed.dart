@@ -35,6 +35,7 @@ mixin _$Host {
   bool get authTokenRequired => throw _privateConstructorUsedError;
   bool? get debugOnly => throw _privateConstructorUsedError;
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
+  String? get hostImage => throw _privateConstructorUsedError;
 
   /// Serializes this Host to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,7 +63,8 @@ abstract class $HostCopyWith<$Res> {
       String? primaryGenreName,
       bool authTokenRequired,
       bool? debugOnly,
-      DateTime? lastUpdated});
+      DateTime? lastUpdated,
+      String? hostImage});
 
   $ContactInfoCopyWith<$Res> get contact;
   $BrandingCopyWith<$Res> get branding;
@@ -98,6 +100,7 @@ class _$HostCopyWithImpl<$Res, $Val extends Host>
     Object? authTokenRequired = null,
     Object? debugOnly = freezed,
     Object? lastUpdated = freezed,
+    Object? hostImage = freezed,
   }) {
     return _then(_value.copyWith(
       collectionId: null == collectionId
@@ -148,6 +151,10 @@ class _$HostCopyWithImpl<$Res, $Val extends Host>
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      hostImage: freezed == hostImage
+          ? _value.hostImage
+          : hostImage // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -221,7 +228,8 @@ abstract class _$$HostImplCopyWith<$Res> implements $HostCopyWith<$Res> {
       String? primaryGenreName,
       bool authTokenRequired,
       bool? debugOnly,
-      DateTime? lastUpdated});
+      DateTime? lastUpdated,
+      String? hostImage});
 
   @override
   $ContactInfoCopyWith<$Res> get contact;
@@ -259,6 +267,7 @@ class __$$HostImplCopyWithImpl<$Res>
     Object? authTokenRequired = null,
     Object? debugOnly = freezed,
     Object? lastUpdated = freezed,
+    Object? hostImage = freezed,
   }) {
     return _then(_$HostImpl(
       collectionId: null == collectionId
@@ -309,6 +318,10 @@ class __$$HostImplCopyWithImpl<$Res>
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      hostImage: freezed == hostImage
+          ? _value.hostImage
+          : hostImage // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -328,7 +341,8 @@ class _$HostImpl implements _Host {
       this.primaryGenreName,
       this.authTokenRequired = false,
       this.debugOnly,
-      this.lastUpdated});
+      this.lastUpdated,
+      this.hostImage});
 
   factory _$HostImpl.fromJson(Map<String, dynamic> json) =>
       _$$HostImplFromJson(json);
@@ -367,10 +381,12 @@ class _$HostImpl implements _Host {
   final bool? debugOnly;
   @override
   final DateTime? lastUpdated;
+  @override
+  final String? hostImage;
 
   @override
   String toString() {
-    return 'Host(collectionId: $collectionId, hostName: $hostName, description: $description, contact: $contact, branding: $branding, features: $features, localization: $localization, content: $content, primaryGenreName: $primaryGenreName, authTokenRequired: $authTokenRequired, debugOnly: $debugOnly, lastUpdated: $lastUpdated)';
+    return 'Host(collectionId: $collectionId, hostName: $hostName, description: $description, contact: $contact, branding: $branding, features: $features, localization: $localization, content: $content, primaryGenreName: $primaryGenreName, authTokenRequired: $authTokenRequired, debugOnly: $debugOnly, lastUpdated: $lastUpdated, hostImage: $hostImage)';
   }
 
   @override
@@ -399,7 +415,9 @@ class _$HostImpl implements _Host {
             (identical(other.debugOnly, debugOnly) ||
                 other.debugOnly == debugOnly) &&
             (identical(other.lastUpdated, lastUpdated) ||
-                other.lastUpdated == lastUpdated));
+                other.lastUpdated == lastUpdated) &&
+            (identical(other.hostImage, hostImage) ||
+                other.hostImage == hostImage));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -417,7 +435,8 @@ class _$HostImpl implements _Host {
       primaryGenreName,
       authTokenRequired,
       debugOnly,
-      lastUpdated);
+      lastUpdated,
+      hostImage);
 
   /// Create a copy of Host
   /// with the given fields replaced by the non-null parameter values.
@@ -448,7 +467,8 @@ abstract class _Host implements Host {
       final String? primaryGenreName,
       final bool authTokenRequired,
       final bool? debugOnly,
-      final DateTime? lastUpdated}) = _$HostImpl;
+      final DateTime? lastUpdated,
+      final String? hostImage}) = _$HostImpl;
 
   factory _Host.fromJson(Map<String, dynamic> json) = _$HostImpl.fromJson;
 
@@ -476,6 +496,8 @@ abstract class _Host implements Host {
   bool? get debugOnly;
   @override
   DateTime? get lastUpdated;
+  @override
+  String? get hostImage;
 
   /// Create a copy of Host
   /// with the given fields replaced by the non-null parameter values.

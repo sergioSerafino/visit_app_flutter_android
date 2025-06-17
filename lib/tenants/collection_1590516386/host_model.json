@@ -1,5 +1,3 @@
-
-
 {
   "collectionId": 1590516386,
   "hostName": "Test Host 1",
@@ -28,5 +26,6 @@
   "primaryGenreName": "Business",
   "authTokenRequired": false,
   "debugOnly": false,
-  "lastUpdated": "2025-06-01T00:00:00.000Z"
+  "lastUpdated": "2025-06-01T00:00:00.000Z",
+  "hostImage": "hostImage.png"
 }
