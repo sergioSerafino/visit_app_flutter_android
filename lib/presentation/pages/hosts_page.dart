@@ -191,6 +191,7 @@ class HostsPage extends ConsumerWidget {
                       child: Text('Portfolio-Inhalte folgen ...',
                           style: Theme.of(context).textTheme.bodyLarge),
                     ),
+                  const Divider(height: 32),
                   // Dynamische Host-Felder
                   InfoTile(label: 'Host Name', value: host.hostName),
                   //PERFEKT: als HAUPTE SEKTION
@@ -242,7 +243,7 @@ class HostsPage extends ConsumerWidget {
                       value: host.lastUpdated?.toIso8601String() ?? '-'),
                   const Divider(height: 32),
                   Text('Podcast-/RSS-Informationen',
-                      style: Theme.of(context).textTheme.headlineMedium),
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(height: 12),
                   Builder(
                     builder: (context) {
