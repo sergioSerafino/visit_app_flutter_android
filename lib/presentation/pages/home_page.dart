@@ -87,8 +87,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                     hostName = podcast.artistName; //collectionName;
                   }
                 },
-                error: (_) {},
-                loading: () {},
+                error: (_) {
+                  hostName = "Fehler beim Laden";
+                },
+                loading: () {
+                  hostName = "Lädt...";
+                },
               );
             });
 

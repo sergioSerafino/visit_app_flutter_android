@@ -56,6 +56,7 @@ dependencies:
   audio_session: ^0.2.2
   audio_service: ^0.18.12
   marquee: ^2.3.0
+  sticky_headers: ^0.3.0+2
   #flutter_cast_framework: ^0.3.2
 
 dev_dependencies:

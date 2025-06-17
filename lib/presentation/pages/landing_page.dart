@@ -96,9 +96,11 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                           bottom: LandingPageConstants.welcomeHeaderBottom),
                       child: welcomeHeader("dynamicHostName", context: context),
                     ),
-                    loading: () => const SizedBox.shrink(), // Kein Loading mehr
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                   ),
-                  loading: () => const SizedBox.shrink(), // Kein Loading mehr
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (_, __) => Padding(
                     padding: const EdgeInsets.only(
                         top: LandingPageConstants.welcomeHeaderTop,
@@ -122,9 +124,11 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     },
                     error: (_) =>
                         const Center(child: CoverImageWidget(showLabel: true)),
-                    loading: () => const SizedBox.shrink(), // Kein Loading mehr
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                   ),
-                  loading: () => const SizedBox.shrink(), // Kein Loading mehr
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (_, __) =>
                       const Center(child: CoverImageWidget(showLabel: true)),
                 ),

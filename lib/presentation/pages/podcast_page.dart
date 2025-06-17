@@ -148,15 +148,23 @@ class PodcastPage extends ConsumerWidget {
                             ),
                           );
                         },
-                        loading: () => const CircularProgressIndicator(
-                          color: Colors.black12,
-                        ),
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
                         error: (msg) => AsyncUIHelper.error(msg),
                       ),
-                      loading: () => const CircularProgressIndicator(
-                        color: Colors.black12,
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (e, _) => Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.error_outline,
+                                color: Colors.red, size: 32),
+                            SizedBox(height: 8),
+                            Text('Fehler beim Laden der Podcast-Daten'),
+                          ],
+                        ),
                       ),
-                      error: (e, _) => const Text("Fehler beim Laden"),
                     );
 
                   case CollectionLoadState.error:

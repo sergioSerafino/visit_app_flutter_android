@@ -324,9 +324,17 @@ class PreferencesBottomSheet extends ConsumerWidget {
               ],
             );
           },
-          loading: () =>
-              const Center(child: CircularProgressIndicator.adaptive()),
-          error: (e, _) => Text('Fehler beim Laden: $e'),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, st) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.error_outline, color: Colors.red, size: 32),
+                SizedBox(height: 8),
+                Text('Fehler beim Laden der Einstellungen'),
+              ],
+            ),
+          ),
         ),
       ),
     );

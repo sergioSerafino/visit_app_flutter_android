@@ -80,7 +80,7 @@ class _LaunchScreenState extends State<LaunchScreen>
       }
     });
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 2000), () {
       if (mounted) setState(() => _showLoadingText = true);
     });
   }
