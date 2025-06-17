@@ -1,7 +1,7 @@
 {
   "collectionId": 1590516386,
   "hostName": "Test Host 1",
-  "description": "Als Buchautorin auf dem spirituellen Buchmarkt und eine fest etablierte Größe, bekannt durch das eigene Podcast Format Opalia Talk. Bereits seit 2021 unterhält Sabine ihre Zuhörerschaft auf den Streaming-Platformen regelmäßig durch Ihre episodischen Gespräche mit wechselnden Gästen und vielfältigen Themen.",
+  "description": "Test Description Host 1.",
   "contact": { 
     "email": "host1@example.com",
     "socialLinks": {
@@ -22,7 +22,7 @@
   },
   "features": { "showPortfolioTab": true },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
-  "content": { "bio": "Die Buchautorin als etablierte Größe auf dem spirituellen Buchmarkt, in Social-Media durch durch ihre Beiträge sowie dasmit dem eigenen Podcast-Format Opalia Talk bekannt. Bereits seit 2021 unterhält Sabine ihre Zuhörerschaft auf den Streaming-Platformen regelmäßig durch Ihre episodischen Gespräche mit wechselnden Gästen und vielfältigen und spannenden Themen.", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, Inspiration, vielschichtige Themenbereiche logisch und nüchtern, Consulting-Praxis", "rss": null, "links": [] },
+  "content": { "bio": "Vereinstätige, ModeratorIn, BeraterIn, eine etablierte Größe im spirituellen Buchhandel, in Social-Media durch ihre Beiträge bekannt und noch dazu mit dem eigenen Podcast-Format 'Opalia Talk - Seelenprofiling' stets gerne gehört - bereits seit Anfang der 2020er unterhält Sabine regelmäßig ihre Zuhörerschaft auf den Streaming-Platformen durch Ihre episodischen Gespräche mit wechselnden Gästen und spannenden Themen.", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, Inspiration, vielschichtige Themenbereiche logisch und nüchtern, Consulting-Praxis", "rss": null, "links": [] },
   "primaryGenreName": "Business",
   "authTokenRequired": false,
   "debugOnly": false,

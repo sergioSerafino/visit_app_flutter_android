@@ -5,6 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import '../widgets/sticky_info_header.dart';
 import '../widgets/simple_section_header.dart';
 import '../widgets/tenant_logo_widget.dart';
@@ -22,6 +24,7 @@ class HostsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    initializeDateFormatting('de_DE', null);
     // Host-Model aus Provider holen (zentral für alle Abschnitte)
     final host = ref.watch(coll_prov.hostModelProvider);
     return Scaffold(
@@ -51,10 +54,56 @@ class HostsPage extends ConsumerWidget {
                     ),
                   ),
                   // Mission-Beschreibung
-                  InfoTile(
-                      label: 'Mission', value: host.content.mission ?? '-'),
-
-                  // logo (SplashCoverImage)
+                  // Mission als großes Zitat
+                  if (host.content.mission != null &&
+                      host.content.mission!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Center(
+                        child: Text(
+                          '„${host.content.mission}“',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  // hostImage direkt unterhalb der Mission
+                  if (host.hostImage != null && host.hostImage!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'lib/tenants/collection_${host.collectionId}/assets/${host.hostImage}',
+                            width: 290,
+                            height: 220,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  // Bio-Beschreibung
+                  if (host.content.bio != null && host.content.bio!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        host.content.bio!,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  // logo (SplashCoverImage) nach der Bio
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: Center(
@@ -78,30 +127,64 @@ class HostsPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  // Bio-Beschreibung
-                  InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
+                  // RSS-Beschreibung (aus RSS-Metadaten)
+                  Builder(
+                    builder: (context) {
+                      final podcastCollectionAsync = ref.watch(
+                        podcastCollectionProvider(host.collectionId),
+                      );
+                      return podcastCollectionAsync.when(
+                        data: (apiResponse) {
+                          if (!apiResponse.isSuccess ||
+                              apiResponse.data == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final podcast = apiResponse.data!.podcasts.isNotEmpty
+                              ? apiResponse.data!.podcasts.first
+                              : null;
+                          if (podcast == null) {
+                            return const SizedBox.shrink();
+                          }
+                          final feedUrl = podcast.feedUrl ?? '';
+                          final rssMetaAsync =
+                              ref.watch(rssMetadataProvider(feedUrl));
+                          return rssMetaAsync.when(
+                            data: (rssMeta) => rssMeta?.description != null &&
+                                    rssMeta!.description!.isNotEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0),
+                                    child: Text(
+                                      rssMeta.description!,
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                            loading: () => const SizedBox.shrink(),
+                            error: (e, st) => const SizedBox.shrink(),
+                          );
+                        },
+                        loading: () => const SizedBox.shrink(),
+                        error: (e, st) => const SizedBox.shrink(),
+                      );
+                    },
+                  ),
 
-                  // hostImage
-                  if (host.hostImage != null && host.hostImage!.isNotEmpty)
+                  // Last Updated
+                  if (host.lastUpdated != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            'lib/tenants/collection_${host.collectionId}/assets/${host.hostImage}',
-                            width: 220,
-                            height: 220,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                      child: Text(
+                        'Letzte Aktualisierung: '
+                        '${DateFormat('dd.MM.yyyy HH:mm', 'de_DE').format(host.lastUpdated!.toLocal())}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                              fontStyle: FontStyle.italic,
+                            ),
+                        textAlign: TextAlign.right,
                       ),
                     ),
-                  // Last Updated
-                  InfoTile(
-                    label: 'Last Updated',
-                    value: host.lastUpdated?.toIso8601String() ?? '-',
-                  ),
                   /*    
                   InfoTile(
                       label: 'Primärfarbe',
@@ -150,14 +233,35 @@ class HostsPage extends ConsumerWidget {
                           final rssMetaAsync =
                               ref.watch(rssMetadataProvider(feedUrl));
                           return rssMetaAsync.when(
-                            data: (rssMeta) => InfoTile(
-                              label: 'E-Mail',
-                              value: rssMeta?.contactEmail ?? '-',
-                            ),
-                            loading: () =>
-                                const InfoTile(label: 'E-Mail', value: '...'),
-                            error: (e, st) =>
-                                const InfoTile(label: 'E-Mail', value: '-'),
+                            data: (rssMeta) => rssMeta?.contactEmail != null &&
+                                    rssMeta!.contactEmail!.isNotEmpty
+                                ? Row(
+                                    children: [
+                                      Icon(Icons.email,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                      const SizedBox(width: 8),
+                                      GestureDetector(
+                                        onTap: () => launchUrl(Uri.parse(
+                                            'mailto:${rssMeta.contactEmail}')),
+                                        child: Text(
+                                          rssMeta.contactEmail!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                color: Colors.blue,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                            loading: () => const SizedBox.shrink(),
+                            error: (e, st) => const SizedBox.shrink(),
                           );
                         },
                         loading: () =>
@@ -214,21 +318,26 @@ class HostsPage extends ConsumerWidget {
                           final rssMetaAsync =
                               ref.watch(rssMetadataProvider(feedUrl));
                           return rssMetaAsync.when(
-                            data: (rssMeta) {
-                              final website =
-                                  rssMeta?.websiteUrl?.isNotEmpty == true
-                                      ? rssMeta!.websiteUrl!
-                                      : (host.contact.websiteUrl ?? '-');
-                              return WebsiteTile(
-                                label: 'Website',
-                                url: website,
-                              );
-                            },
-                            loading: () =>
-                                const InfoTile(label: 'Website', value: '...'),
-                            error: (e, st) => InfoTile(
-                                label: 'Website',
-                                value: host.contact.websiteUrl ?? '-'),
+                            data: (rssMeta) => rssMeta?.websiteUrl != null &&
+                                    rssMeta!.websiteUrl!.isNotEmpty
+                                ? GestureDetector(
+                                    onTap: () => launchUrl(
+                                        Uri.parse(rssMeta.websiteUrl!)),
+                                    child: Text(
+                                      rssMeta.websiteUrl!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            color: Colors.blue,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                            loading: () => const SizedBox.shrink(),
+                            error: (e, st) => const SizedBox.shrink(),
                           );
                         },
                         loading: () =>
@@ -290,6 +399,8 @@ class HostsPage extends ConsumerWidget {
             ),
           ),
           // --- StickyHeader: Weitere Informationen ---
+          // SizedBox(height: MediaQuery.of(context).size.height / 2),
+
           SliverPersistentHeader(
             pinned: true,
             delegate: SimpleSectionHeader(

@@ -448,38 +448,56 @@ r
 
 ---
 
-## Best Practices: Testbare AudioPlayer-Synchronisation (Stand 08.06.2025)
+# TODO: Flexible Lokalisierungskonfiguration für die App
 
-**Empfohlenes Test-Muster für AudioPlayerSyncService und UI-Widgets:**
+## Konzept (siehe auch hosts_page.dart und preferences_page.dart)
 
-- Jeder Test erzeugt eigene StreamController für speed, volume, position, duration.
-- Die Controller werden im Mock und Service verwendet und im tearDown geschlossen.
-- Die Streams werden im Mock vor der Service-Initialisierung gestubbt.
-- Für Stream-Events wird `expectLater(..., emits(...))` verwendet, um deterministisch auf Werte zu warten.
-- Methoden wie setSpeed, setVolume, seek pushen direkt in die Controller und setzen die Service-Felder.
-- Beispiel siehe: `test/core/services/audio_player_sync_service_test.dart`
+- **Lokalisierungsquellen:**
+  - System-Lokalisierung (Flutter: Localizations.localeOf(context))
+  - Content-Lokalisierung (z. B. aus Collection/Content)
+  - Benutzereinstellung (über preferences_page)
 
-**Vorteile:**
-- Keine Race-Conditions oder hängende Tests mehr.
-- Volle Kontrolle über alle Player-Events und deterministische State-Wechsel.
-- Pattern ist auf alle Player-Widgets und BLoC-Tests übertragbar.
+- **Einstellungsoptionen in preferences_page:**
+  - „Automatisch (System)“
+  - „Sprache aus Collection/Content“
+  - Liste aller unterstützten Sprachen (Dropdown)
 
----
+- **Speicherung:**
+  - Auswahl persistent in SharedPreferences
 
-## Audio-Player: UX-Standard für Kontrollsperre, Buffering und Synchronisation (08.06.2025)
+- **Verwendung:**
+  - App verwendet die gewählte Locale für Übersetzungen und Formatierungen (intl, AppLocalizations, DateFormat etc.)
+  - Beispiel-Logik (siehe hosts_page.dart):
+    ```dart
+    Locale getAppLocale(BuildContext context, String? userPref, String? contentLocale) {
+      if (userPref == 'system' || userPref == null) {
+        return Localizations.localeOf(context);
+      } else if (userPref == 'content' && contentLocale != null) {
+        return Locale(contentLocale);
+      } else {
+        return Locale(userPref); // z.B. 'de', 'en'
+      }
+    }
+    ```
 
-- Während Buffering, Stream-Wechsel oder fehlender Backend-Events (z. B. nach Play/setUrl) wird die UI für maximal 2–3 Sekunden in einen Ladezustand versetzt (statt 10s wie bisher).
-- In dieser Zeit sind ALLE Transport-Buttons (Play, Pause, Seek, Reset) deaktiviert (optisch und funktional), ProgressBar und Zeitangaben zeigen einen Loader oder Platzhalter (z. B. „–:–“).
-- Nach Ablauf des Timeouts: Fehleranzeige oder Retry-Option.
-- Die UI wird sofort wieder aktiviert, sobald ein Event vom Backend (z. B. just_audio) kommt.
-- Die Timeout- und Kontrollsperren-Logik wird zentral im AudioPlayerSyncService gesteuert und an die UI weitergegeben.
-- Ziel: Keine „eingefrorene“ UI, sondern immer klares Feedback, ob eine Aktion möglich ist oder nicht.
-- Siehe auch: .documents/audio_player_best_practices_2025.md für Details und Codebeispiele.
+- **Vorteile:**
+  - Maximale Flexibilität für den User
+  - App kann dynamisch auf Content-Lokalisierung reagieren
+  - Einheitliche Formatierung und Übersetzung
 
----
+**Querverweise:**
+- hosts_page.dart (Datumsausgabe, dynamische Felder)
+- preferences_page.dart (Einstellungen für Sprache)
+- README.md (Architektur/UX)
 
-## Release-Checkliste
+## Dynamische Lokalisierung in den Models
 
-Siehe [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) für alle Aufgaben, die vor dem Release erledigt oder geprüft werden müssen.
+- Das Modell `LocalizationConfig` enthält:
+  - `defaultLanguageCode`: Bevorzugte Sprache für Content oder UI (z. B. aus RSS oder JSON)
+  - `localizedTexts`: Map für dynamisch geladene Übersetzungen (z. B. Buttonlabels, Begrüßung etc.)
 
----
+- Diese Felder können genutzt werden, um UI-Elemente oder Content dynamisch in der passenden Sprache anzuzeigen.
+- Beispiel: Wenn `localizedTexts['welcome']` existiert, kann dieser Wert anstelle eines statischen Strings angezeigt werden.
+- Die eigentliche dynamische Lokalisierung ist im Modell vorbereitet, wird aber in der UI aktuell nur für das Datumsfeld genutzt.
+
+**Querverweis:** Siehe auch hosts_page.dart und preferences_page.dart für die Verwendung und geplante Erweiterung.
