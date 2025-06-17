@@ -46,13 +46,14 @@ class HostsPage extends ConsumerWidget {
                 children: [
                   // assetLogo ganz oben
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
                     child: TenantLogoWidget(
                       collectionId: host.collectionId,
                       assetLogo: host.branding.assetLogo,
                       scaleFactor: 0.5,
                     ),
                   ),
+
                   // Mission-Beschreibung
                   // Mission als großes Zitat
                   if (host.content.mission != null &&
@@ -74,10 +75,11 @@ class HostsPage extends ConsumerWidget {
                         ),
                       ),
                     ),
+
                   // hostImage direkt unterhalb der Mission
                   if (host.hostImage != null && host.hostImage!.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
                       child: Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
@@ -90,6 +92,46 @@ class HostsPage extends ConsumerWidget {
                         ),
                       ),
                     ),
+                  // Artist-Name mittig unterhalb des hostImage
+                  Builder(
+                    builder: (context) {
+                      final podcastCollectionAsync = ref.watch(
+                        podcastCollectionProvider(host.collectionId),
+                      );
+                      return podcastCollectionAsync.when(
+                        data: (apiResponse) {
+                          if (!apiResponse.isSuccess ||
+                              apiResponse.data == null ||
+                              apiResponse.data!.podcasts.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          final podcast = apiResponse.data!.podcasts.first;
+                          if (podcast.artistName == null ||
+                              podcast.artistName.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                            child: Center(
+                              child: Text(
+                                podcast.artistName,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                //?.copyWith(
+                                //fontWeight: FontWeight.w500,
+                                //),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                        loading: () => const SizedBox.shrink(),
+                        error: (e, st) => const SizedBox.shrink(),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12.0),
+
                   // Bio-Beschreibung
                   if (host.content.bio != null && host.content.bio!.isNotEmpty)
                     Padding(
@@ -127,6 +169,7 @@ class HostsPage extends ConsumerWidget {
                       ),
                     ),
                   ),
+
                   // RSS-Beschreibung (aus RSS-Metadaten)
                   Builder(
                     builder: (context) {
@@ -170,19 +213,32 @@ class HostsPage extends ConsumerWidget {
                       );
                     },
                   ),
+                  // const SizedBox(height: 20.0),
 
                   // Last Updated
                   if (host.lastUpdated != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                      child: Text(
-                        'Letzte Aktualisierung: '
-                        '${DateFormat('dd.MM.yyyy HH:mm', 'de_DE').format(host.lastUpdated!.toLocal())}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                              fontStyle: FontStyle.italic,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Aktualisiert: '
+                                '${DateFormat('dd.MM.yyyy HH:mm', 'de_DE').format(host.lastUpdated!.toLocal())}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: Colors.grey[600],
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                textAlign: TextAlign.right,
+                              ),
                             ),
-                        textAlign: TextAlign.right,
+                          ),
+                        ],
                       ),
                     ),
                   /*    
@@ -198,6 +254,7 @@ class HostsPage extends ConsumerWidget {
               ),
             ),
           ),
+
           // --- StickyHeader: Kontakt / Visit ---
           SliverPersistentHeader(
             pinned: true,
@@ -205,12 +262,15 @@ class HostsPage extends ConsumerWidget {
               title: 'Kontakt / Visit',
             ),
           ),
+
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
+
                   // E-Mail (aus RSS)
                   Builder(
                     builder: (context) {
@@ -235,29 +295,32 @@ class HostsPage extends ConsumerWidget {
                           return rssMetaAsync.when(
                             data: (rssMeta) => rssMeta?.contactEmail != null &&
                                     rssMeta!.contactEmail!.isNotEmpty
-                                ? Row(
-                                    children: [
-                                      Icon(Icons.email,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                      const SizedBox(width: 8),
-                                      GestureDetector(
-                                        onTap: () => launchUrl(Uri.parse(
-                                            'mailto:${rssMeta.contactEmail}')),
-                                        child: Text(
-                                          rssMeta.contactEmail!,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                color: Colors.blue,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
+                                ? Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.email,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                                        const SizedBox(width: 8),
+                                        GestureDetector(
+                                          onTap: () => launchUrl(Uri.parse(
+                                              'mailto:${rssMeta.contactEmail}')),
+                                          child: Text(
+                                            rssMeta.contactEmail!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  color: Colors.blue,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   )
                                 : const SizedBox.shrink(),
                             loading: () => const SizedBox.shrink(),
@@ -296,6 +359,8 @@ class HostsPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
+
                   // Website
                   Builder(
                     builder: (context) {
@@ -320,19 +385,32 @@ class HostsPage extends ConsumerWidget {
                           return rssMetaAsync.when(
                             data: (rssMeta) => rssMeta?.websiteUrl != null &&
                                     rssMeta!.websiteUrl!.isNotEmpty
-                                ? GestureDetector(
-                                    onTap: () => launchUrl(
-                                        Uri.parse(rssMeta.websiteUrl!)),
-                                    child: Text(
-                                      rssMeta.websiteUrl!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            color: Colors.blue,
-                                            decoration:
-                                                TextDecoration.underline,
+                                ? Center(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.public,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                                        const SizedBox(width: 8),
+                                        GestureDetector(
+                                          onTap: () => launchUrl(
+                                              Uri.parse(rssMeta.websiteUrl!)),
+                                          child: Text(
+                                            rssMeta.websiteUrl!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  color: Colors.blue,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                ),
+                                            textAlign: TextAlign.center,
                                           ),
+                                        ),
+                                      ],
                                     ),
                                   )
                                 : const SizedBox.shrink(),
@@ -348,6 +426,7 @@ class HostsPage extends ConsumerWidget {
                       );
                     },
                   ),
+                  const SizedBox(height: 16),
                   // Podcast-Cover
                   Builder(
                     builder: (context) {
@@ -399,7 +478,12 @@ class HostsPage extends ConsumerWidget {
             ),
           ),
           // --- StickyHeader: Weitere Informationen ---
-          // SizedBox(height: MediaQuery.of(context).size.height / 2),
+          SliverToBoxAdapter(
+            child: Builder(
+              builder: (context) =>
+                  SizedBox(height: MediaQuery.of(context).size.height / 2),
+            ),
+          ),
 
           SliverPersistentHeader(
             pinned: true,

@@ -5,11 +5,11 @@
   "contact": { 
     "email": "host1@example.com",
     "socialLinks": {
-    "tiktok":"https://www.tiktok.com/tag/opalia",
     "Facebook1":"https://www.facebook.com/sabine.guhrbiermann/?locale=de_DE",
-    "Facebook2":"https://www.facebook.com/profile.php?id=100067768762562&locale=de_DE",
-    "Facebook3":"https://www.facebook.com/LibellenVerlag?locale=de_DE",
-    "Instagram": "https://www.instagram.com/opaliapraxis"
+    "Facebook2":"https://www.facebook.com/LibellenVerlag?locale=de_DE",
+    "Facebook3":"https://www.facebook.com/profile.php?id=100067768762562&locale=de_DE", 
+    "Instagram": "https://www.instagram.com/opaliapraxis",
+    "tiktok":"https://www.tiktok.com/tag/opalia"
   } 
 },
   "branding": {
@@ -22,7 +22,7 @@
   },
   "features": { "showPortfolioTab": true },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
-  "content": { "bio": "Vereinstätige, ModeratorIn, BeraterIn, eine etablierte Größe im spirituellen Buchhandel, in Social-Media durch ihre Beiträge bekannt und noch dazu mit dem eigenen Podcast-Format 'Opalia Talk - Seelenprofiling' stets gerne gehört - bereits seit Anfang der 2020er unterhält Sabine regelmäßig ihre Zuhörerschaft auf den Streaming-Platformen durch Ihre episodischen Gespräche mit wechselnden Gästen und spannenden Themen.", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, Inspiration, vielschichtige Themenbereiche logisch und nüchtern, Consulting-Praxis", "rss": null, "links": [] },
+  "content": { "bio": "Vereinstätige, ModeratorIn, BeraterIn, eine etablierte Größe im spirituellen Buchhandel, durch Social-Media mit ihren Beiträge bekannt und noch dazu mit dem eigenen Podcast-Format 'Opalia Talk - Seelenprofiling' stets gerne gehört - bereits seit Anfang der 2020er unterhält Sabine regelmäßig ihre Zuhörerschaft auf den Streaming-Platformen durch Ihre episodischen Gespräche mit wechselnden Gästen und spannenden Themen.", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, inspirierende, vielschichtige Themenbereiche logisch und nüchtern, Consulting in der Opalia-Praxis", "rss": null, "links": [] },
   "primaryGenreName": "Business",
   "authTokenRequired": false,
   "debugOnly": false,

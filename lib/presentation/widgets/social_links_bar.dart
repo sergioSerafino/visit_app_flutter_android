@@ -17,24 +17,68 @@ class SocialLinksBar extends StatelessWidget {
     return Icons.link;
   }
 
+  String _extractProfileLabel(String url) {
+    try {
+      final uri = Uri.parse(url);
+      final path = uri.path;
+      if (path.isEmpty || path == '/') return '';
+      final segments = path.split('/').where((s) => s.isNotEmpty).toList();
+      if (segments.isEmpty) return '';
+      return segments.last;
+    } catch (_) {
+      return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (socialLinks.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: socialLinks.entries.map((entry) {
-            final icon = _iconForPlatform(entry.key);
-            return IconButton(
-              icon: Icon(icon, size: 48), // doppelte Standardgröße
-              tooltip: entry.key,
-              onPressed: () => launchUrl(Uri.parse(entry.value),
-                  mode: LaunchMode.externalApplication),
-            );
-          }).toList(),
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: socialLinks.entries.map((entry) {
+          final icon = _iconForPlatform(entry.key);
+          final label =
+              entry.key.length > 12 ? entry.key.substring(0, 12) : entry.key;
+          final profileLabel = _extractProfileLabel(entry.value);
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(icon, size: 40),
+                tooltip: entry.key,
+                onPressed: () => launchUrl(Uri.parse(entry.value),
+                    mode: LaunchMode.externalApplication),
+              ),
+              const SizedBox(height: 4),
+              SizedBox(
+                width: 60,
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              if (profileLabel.isNotEmpty)
+                SizedBox(
+                  width: 60,
+                  child: Text(
+                    profileLabel,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall
+                        ?.copyWith(color: Colors.grey[600]),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+            ],
+          );
+        }).toList(),
       ),
     );
   }
