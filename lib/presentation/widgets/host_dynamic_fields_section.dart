@@ -81,5 +81,13 @@ class HostDynamicFieldsSection extends StatelessWidget {
     // const Divider(height: 32),
     // Text('Podcast-/RSS-Informationen',
     //     style: Theme.of(context).textTheme.bodyMedium),
+
+    // InfoTile(
+    // label: 'Primärfarbe',
+    // value: host.branding.primaryColorHex ?? '-'),
+
+    // InfoTile(
+    // label: 'Sekundärfarbe',
+    // value: host.branding.secondaryColorHex ?? '-'),
   }
 }

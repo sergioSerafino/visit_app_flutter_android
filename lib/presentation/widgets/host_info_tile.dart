@@ -11,19 +11,22 @@ class HostInfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // InfoTile: Einfache Zeile für Label/Wert-Paare, wie in HostCard genutzt.
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-              width: 160,
-              child: Text('$label:',
-                  style: Theme.of(context).textTheme.bodyMedium)),
-          Expanded(
-              child: Text(value, style: Theme.of(context).textTheme.bodyLarge)),
-        ],
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (label.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text('$label:',
+                    style: Theme.of(context).textTheme.bodyMedium),
+              ),
+            Text(value, style: Theme.of(context).textTheme.bodyLarge),
+          ],
+        ),
       ),
     );
   }

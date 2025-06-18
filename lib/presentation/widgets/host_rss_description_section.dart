@@ -40,7 +40,11 @@ class HostRssDescriptionSection extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Text(
                         rssMeta.description!,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          // fontWeight: FontWeight.w500,
+                          height: 1.35,
+                        ),
                       ),
                     )
                   : const SizedBox.shrink(),

@@ -21,7 +21,7 @@ class HostLastUpdatedSection extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: Text(
                 'Aktualisiert: '
-                '${DateFormat('dd.MM.yyyy HH:mm', 'de_DE').format(lastUpdated.toLocal())}',
+                '${DateFormat('dd.MM.yyyy', 'de_DE').format(lastUpdated.toLocal())}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.grey[600],
                       fontStyle: FontStyle.italic,

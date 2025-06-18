@@ -13,7 +13,7 @@ Dieses Projekt ist ein modernes, best-practice-orientiertes Flutter-Template mit
 
 ## Übersichtlichkeit & Struktur – Best Practices
 
-- Klare, konsistente Ordner- und Dateistruktur (z. B. domain, data, presentation, application, config, core)
+- Klare, konsistente Ordner- und Dateistruktur (z.  B. domain, data, presentation, application, config, core)
 - Sprechende, einheitliche Namen für Dateien, Klassen, Methoden und Variablen
 - Kurze, prägnante Funktionen und Klassen (keine "God-Classes")
 - Einrückung, Leerzeilen und Klammern nach Style Guide (siehe analysis_options.yaml)
@@ -32,7 +32,7 @@ Dieses Projekt ist ein modernes, best-practice-orientiertes Flutter-Template mit
 ## Code Style & Formatierung
 
 - Nach jeder Widget- und Klassen-Definition folgt grundsätzlich eine Leerzeile.
-- Diese Konvention dient der Übersichtlichkeit und Lesbarkeit und ist auch bei automatischer Formatierung (z. B. mit `dart format`) zu beachten.
+- Diese Konvention dient der Übersichtlichkeit und Lesbarkeit und ist auch bei automatischer Formatierung (z.  B. mit `dart format`) zu beachten.
 - Weitere Style-Konventionen siehe analysis_options.yaml.
 
 **Quellen & Community-Standards:**
@@ -60,7 +60,7 @@ Viel Erfolg beim Projektstart und der Weiterentwicklung!
 Damit die Dokumentation immer aktuell bleibt, ist ein automatischer Pre-Commit-Hook eingerichtet:
 
 1. **Was macht der Hook?**
-   - Prüft, ob bei Änderungen an Code (z. B. in `lib/`, `test/`, `application/`, `core/`, `presentation/`) auch die `README.md` aktualisiert wurde.
+   - Prüft, ob bei Änderungen an Code (z.  B. in `lib/`, `test/`, `application/`, `core/`, `presentation/`) auch die `README.md` aktualisiert wurde.
    - Falls nicht, wird der Commit abgebrochen und ein Hinweis ausgegeben.
 
 2. **Wie aktiviere ich den Hook?**
@@ -152,7 +152,7 @@ Füge am Anfang des Pre-Commit-Hooks folgende Zeile ein:
 
 **1. Letztes Refactoring vor Entfernung des Quell-Projekts:**
 - [ ] Unbenutzte Imports entfernen (siehe Lint-Warnungen)
-- [ ] Lint-Warnungen und Hinweise (z. B. Redundanzen, Annotationen, Super-Parameter) beheben
+- [ ] Lint-Warnungen und Hinweise (z.  B. Redundanzen, Annotationen, Super-Parameter) beheben
 - [ ] Lesbarkeit und Struktur nach SOLID und Clean Architecture prüfen (keine God-Classes, klare Verantwortlichkeiten)
 - [ ] Testabdeckung für alle kritischen UseCases, Services und Provider sicherstellen
 - [ ] Automatisierte Tests und Linting vor jedem Merge/Release ausführen
@@ -244,7 +244,7 @@ Verwende Tags, um wichtige Projektzustände dauerhaft zu dokumentieren:
 | Zweck        | Beschreibung                        | Beispiel             |
 |--------------|-------------------------------------|----------------------|
 | Release      | Versionierung                       | v1.0.0               |
-| Deployment   | Genaue Deploy-Stände (z. B. Prod)   | prod-2024-06-01      |
+| Deployment   | Genaue Deploy-Stände (z.  B. Prod)   | prod-2024-06-01      |
 | Milestone    | Relevante Projektpunkte             | after-refactor       |
 | Review       | Review-fertiger Stand               | pre-review-audio     |
 | Archivierung | Letzter Stand vor Branch-Delete     | archived-feature-x   |
@@ -272,7 +272,7 @@ git log -3 --oneline
 
 - **main** – Release/Produktiv
 - **dev** – Entwicklung
-- **feature/<feature-name>** – z. B. feature/audio-player
+- **feature/<feature-name>** – z.  B. feature/audio-player
 
 Weitere Details und Beispiele siehe [MIGRATION_HISTORY.md](./MIGRATION_HISTORY.md) und [GETTING_STARTED.md](./GETTING_STARTED.md).
 
@@ -301,14 +301,14 @@ Weitere Infos: [Git Dokumentation](https://git-scm.com/docs/git-status)
 
 ---
 
-## Best Practice: Architektur- und Pattern-Review mit externen Ressourcen (z. B. Reso Coder)
+## Best Practice: Architektur- und Pattern-Review mit externen Ressourcen (z.  B. Reso Coder)
 
 Um die Codequalität und Architekturentscheidungen kontinuierlich zu verbessern, empfiehlt sich folgender Workflow:
 
 1. **Recherche und Review:**
    - Nutze externe Ressourcen wie die [Reso-Coder Tutorials](https://resocoder.com/?s=) gezielt für Architektur- und Pattern-Reviews.
-   - Suche nach relevanten Begriffen (z. B. "BLoC", "Clean Architecture", "Testing") und vergleiche die eigene Implementierung mit den dort empfohlenen Best Practices.
-   - Dokumentiere die wichtigsten Erkenntnisse und Abweichungen direkt in der Projekt-Doku (z. B. in `.documents/bloc_best_practices_2024.md`).
+   - Suche nach relevanten Begriffen (z.  B. "BLoC", "Clean Architecture", "Testing") und vergleiche die eigene Implementierung mit den dort empfohlenen Best Practices.
+   - Dokumentiere die wichtigsten Erkenntnisse und Abweichungen direkt in der Projekt-Doku (z.  B. in `.documents/bloc_best_practices_2024.md`).
 
 2. **Empfohlener Ablauf:**
    - **Schritt 1:** Website aufrufen und nach dem gewünschten Pattern/Begriff suchen.
@@ -342,8 +342,8 @@ Siehe auch: [docs/audio_player_best_practices_2025.md](docs/audio_player_best_pr
 - Die Widget- und BLoC-Tests für den Audio-Player (insbesondere BottomPlayerWidget) wurden 2025 grundlegend modernisiert und beschleunigt.
 - Alle relevanten States (Idle, Loading, Playing, Paused, Error) werden in den Tests gezielt simuliert und geprüft.
 - Provider-Overrides und Mock-Backends sorgen für deterministische, schnelle Testläufe (meist < 2 s pro Test).
-- Nach jedem Test wird der Widget-Baum abgeräumt, um Pending-Timer-Fehler (z. B. durch das Marquee-Widget) zu vermeiden.
-- **Wichtiger Hinweis:** Einzelne Tests, die das Marquee-Widget oder animierte Timer nutzen (z. B. Slider-Resume-Test), sind mit `skip: true` markiert, da Flutter hier einen bekannten Pending-Timer-Bug aufweist. Die eigentliche Player-Funktionalität ist durch andere, stabile Tests abgedeckt. Siehe Querverweis und Kommentar im Test.
+- Nach jedem Test wird der Widget-Baum abgeräumt, um Pending-Timer-Fehler (z.  B. durch das Marquee-Widget) zu vermeiden.
+- **Wichtiger Hinweis:** Einzelne Tests, die das Marquee-Widget oder animierte Timer nutzen (z.  B. Slider-Resume-Test), sind mit `skip: true` markiert, da Flutter hier einen bekannten Pending-Timer-Bug aufweist. Die eigentliche Player-Funktionalität ist durch andere, stabile Tests abgedeckt. Siehe Querverweis und Kommentar im Test.
 - Die Lessons Learned und alle Test- und UX-Prinzipien sind in der zentralen Doku dokumentiert.
 
 **Quellen & weiterführende Doku:**
@@ -413,7 +413,7 @@ Der Ordner `docs/legacy/` kann nach erfolgreicher Migration entfernt werden.
 
 **Ausgangslage & Architektur-Empfehlung:**
 
-- Die aktuelle Audio-Architektur basiert auf einer klaren Trennung von Systemintegration (`AudioHandler`/`audio_service`) und App-Logik (`IAudioPlayerBackend`, z.B. `JustAudioPlayerBackend`).
+- Die aktuelle Audio-Architektur basiert auf einer klaren Trennung von Systemintegration (`AudioHandler`/`audio_service`) und App-Logik (`IAudioPlayerBackend`, z.  B. `JustAudioPlayerBackend`).
 - Der `AudioPlayerBloc` vermittelt zwischen UI und Backend und ist über Provider flexibel erweiterbar.
 - Die UI und der BLoC sind unabhängig von der konkreten Backend-Implementierung und konsumieren nu das Interface.
 r
@@ -493,11 +493,34 @@ r
 ## Dynamische Lokalisierung in den Models
 
 - Das Modell `LocalizationConfig` enthält:
-  - `defaultLanguageCode`: Bevorzugte Sprache für Content oder UI (z. B. aus RSS oder JSON)
-  - `localizedTexts`: Map für dynamisch geladene Übersetzungen (z. B. Buttonlabels, Begrüßung etc.)
+  - `defaultLanguageCode`: Bevorzugte Sprache für Content oder UI (z.  B. aus RSS oder JSON)
+  - `localizedTexts`: Map für dynamisch geladene Übersetzungen (z.  B. Buttonlabels, Begrüßung etc.)
 
 - Diese Felder können genutzt werden, um UI-Elemente oder Content dynamisch in der passenden Sprache anzuzeigen.
 - Beispiel: Wenn `localizedTexts['welcome']` existiert, kann dieser Wert anstelle eines statischen Strings angezeigt werden.
 - Die eigentliche dynamische Lokalisierung ist im Modell vorbereitet, wird aber in der UI aktuell nur für das Datumsfeld genutzt.
 
 **Querverweis:** Siehe auch hosts_page.dart und preferences_page.dart für die Verwendung und geplante Erweiterung.
+
+---
+
+# TODO für nächsten Meilenstein: Zentrale Nutzung von PodcastHostCollection und Auslagerung aller RSS-Metadaten
+
+- Nach Abschluss des aktuellen Refactorings soll die gesamte App (insbesondere HostsPage und alle UI-Widgets) ausschließlich mit dem zentralen, persistenten Modell `PodcastHostCollection` arbeiten.
+- Alle RSS-Metadaten (z.  B. Website, Impressum, Kontakt) und Host-Infos werden im MergeService in das Modell übernommen und stehen dann persistent zur Verfügung.
+- Die UI greift nur noch auf das Modell zu, keine Einzelabrufe oder Provider-Logik mehr in Widgets.
+- Siehe dazu die Doku-Quellen:
+  - `.instructions/adr-001-merge-strategy.md` (Merge-Strategie & Priorisierung)
+  - `.instructions/howto_merge_caching.md` (Caching & Persistenz)
+  - `.instructions/howto_merge_decisions_and_field_sources.md` (Feldherkunft & Mapping)
+  - `.instructions/prd_white_label_podcast_app.md` (Architektur, Datenfluss)
+  - `lib/tenants/HOWTO_BRANDING_TENANTS.md` (Branding, Fallback)
+
+---
+
+# Hinweis zur RSS-Metadaten-Bearbeitung (Admin/Entwicklung)
+
+- Das Widget `HostRssMetaTile` bleibt auch nach der Umstellung auf persistente Speicherung der RSS-Metadaten im Modell einsatzbereit.
+- Es dient als Fallback und Werkzeug für Admin- und Entwicklungsarbeiten, um RSS-Felder (z.  B. E-Mail, Website, Impressum) weiterhin dynamisch und aktuell aus dem Feed anzuzeigen und zu prüfen.
+- Auch nach der Persistenz kann es für Debugging, Migration und initiale Bearbeitung genutzt werden.
+- Siehe auch: `.instructions/adr-001-merge-strategy.md`, `.instructions/howto_merge_decisions_and_field_sources.md`, `.instructions/prd_white_label_podcast_app.md`.

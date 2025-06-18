@@ -13,18 +13,20 @@ class HostWebsiteTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isValid = url.isNotEmpty && url != '-';
-    // WebsiteTile
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-              width: 160,
-              child: Text('$label:',
-                  style: Theme.of(context).textTheme.bodyMedium)),
-          Expanded(
-            child: isValid
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (label.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text('$label:',
+                    style: Theme.of(context).textTheme.bodyMedium),
+              ),
+            isValid
                 ? GestureDetector(
                     onTap: () async {
                       final uri = Uri.tryParse(url);
@@ -42,8 +44,8 @@ class HostWebsiteTile extends StatelessWidget {
                     ),
                   )
                 : Text(url, style: Theme.of(context).textTheme.bodyLarge),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
