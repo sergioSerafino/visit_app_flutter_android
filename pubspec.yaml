@@ -60,6 +60,7 @@ dependencies:
   #flutter_cast_framework: ^0.3.2
   font_awesome_flutter: ^10.7.0
   url_launcher: ^6.2.5
+  auto_hyphenating_text: ^0.3.0
 
 dev_dependencies:
   flutter_test:

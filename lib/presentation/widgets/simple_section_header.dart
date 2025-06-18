@@ -45,12 +45,15 @@ class SimpleSectionHeader extends SliverPersistentHeaderDelegate {
             ),
           // Header-Inhalt
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              height: height,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
               ),
             ),
           ),

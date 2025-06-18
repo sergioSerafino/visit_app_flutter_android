@@ -7,11 +7,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import '../widgets/sticky_info_header.dart';
 import '../widgets/simple_section_header.dart';
 import '../widgets/tenant_logo_widget.dart';
 import '../widgets/social_links_bar.dart';
-import '../../core/utils/sticky_info_header_constants.dart';
+import '../widgets/host_bio_section.dart';
+import '../widgets/host_logo_section.dart';
+import '../widgets/host_mission_section.dart';
+import '../widgets/host_image_and_artist_section.dart';
+import '../widgets/host_logo_image_section.dart';
+import '../widgets/host_rss_description_section.dart';
+import '../widgets/host_social_links_section.dart';
+import '../widgets/host_last_updated_section.dart';
+import '../widgets/host_info_tile.dart';
+import '../widgets/host_website_tile.dart';
+import '../widgets/host_section_header.dart';
+import '../widgets/host_dynamic_fields_section.dart';
+import '../widgets/host_scroll_spacer_section.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
@@ -32,11 +43,9 @@ class HostsPage extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           // --- StickyHeader: Lokale Host-Informationen ---
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SimpleSectionHeader(
-              title: 'Bio / Porträt / Mission',
-            ),
+          const HostSectionHeader(
+            title: 'Über Sabine',
+            showShadow: true,
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -45,202 +54,67 @@ class HostsPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // assetLogo ganz oben
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                    child: TenantLogoWidget(
-                      collectionId: host.collectionId,
-                      assetLogo: host.branding.assetLogo,
-                      scaleFactor: 0.5,
-                    ),
+                  HostLogoSection(
+                    collectionId: host.collectionId,
+                    assetLogo: host.branding.assetLogo,
+                    scaleFactor: 0.5,
                   ),
 
                   // Mission-Beschreibung
                   // Mission als großes Zitat
                   if (host.content.mission != null &&
                       host.content.mission!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Center(
-                        child: Text(
-                          '„${host.content.mission}“',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
+                    HostMissionSection(mission: host.content.mission!),
 
                   // hostImage direkt unterhalb der Mission
-                  if (host.hostImage != null && host.hostImage!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            'lib/tenants/collection_${host.collectionId}/assets/${host.hostImage}',
-                            width: 290,
-                            height: 220,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
                   // Artist-Name mittig unterhalb des hostImage
-                  Builder(
-                    builder: (context) {
-                      final podcastCollectionAsync = ref.watch(
-                        podcastCollectionProvider(host.collectionId),
-                      );
-                      return podcastCollectionAsync.when(
-                        data: (apiResponse) {
-                          if (!apiResponse.isSuccess ||
-                              apiResponse.data == null ||
-                              apiResponse.data!.podcasts.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-                          final podcast = apiResponse.data!.podcasts.first;
-                          if (podcast.artistName == null ||
-                              podcast.artistName.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                            child: Center(
-                              child: Text(
-                                podcast.artistName,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                //?.copyWith(
-                                //fontWeight: FontWeight.w500,
-                                //),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          );
-                        },
-                        loading: () => const SizedBox.shrink(),
-                        error: (e, st) => const SizedBox.shrink(),
-                      );
-                    },
-                  ),
+                  if (host.hostImage != null && host.hostImage!.isNotEmpty)
+                    HostImageAndArtistSection(
+                      collectionId: host.collectionId.toString(),
+                      hostImage: host.hostImage!,
+                      artistName: (() {
+                        final podcastCollectionAsync = ref.watch(
+                          podcastCollectionProvider(host.collectionId),
+                        );
+                        final apiResponse =
+                            podcastCollectionAsync.asData?.value;
+                        if (apiResponse == null ||
+                            !apiResponse.isSuccess ||
+                            apiResponse.data == null ||
+                            apiResponse.data!.podcasts.isEmpty) {
+                          return null;
+                        }
+                        final podcast = apiResponse.data!.podcasts.first;
+                        return podcast.artistName.isNotEmpty
+                            ? podcast.artistName
+                            : null;
+                      })(),
+                    ),
                   const SizedBox(height: 12.0),
 
                   // Bio-Beschreibung
                   if (host.content.bio != null && host.content.bio!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        host.content.bio!,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: Theme.of(context).colorScheme.onBackground,
-                            ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
+                    HostBioSection(bio: host.content.bio!),
+
                   // logo (SplashCoverImage) nach der Bio
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: Center(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.width * 0.28,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Align(
-                            alignment: Alignment.center,
-                            heightFactor: 0.7, // schneidet oben und unten ab
-                            child: SplashCoverImage(
-                              assetPath: TenantAssetLoader(host.collectionId)
-                                  .imagePath(),
-                              imageUrl: host.branding.logoUrl,
-                              scaleFactor: 1.0,
-                              duration: const Duration(milliseconds: 800),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                  HostLogoImageSection(
+                    collectionId: host.collectionId,
+                    logoUrl: host.branding.logoUrl,
                   ),
 
                   // RSS-Beschreibung (aus RSS-Metadaten)
-                  Builder(
-                    builder: (context) {
-                      final podcastCollectionAsync = ref.watch(
-                        podcastCollectionProvider(host.collectionId),
-                      );
-                      return podcastCollectionAsync.when(
-                        data: (apiResponse) {
-                          if (!apiResponse.isSuccess ||
-                              apiResponse.data == null) {
-                            return const SizedBox.shrink();
-                          }
-                          final podcast = apiResponse.data!.podcasts.isNotEmpty
-                              ? apiResponse.data!.podcasts.first
-                              : null;
-                          if (podcast == null) {
-                            return const SizedBox.shrink();
-                          }
-                          final feedUrl = podcast.feedUrl ?? '';
-                          final rssMetaAsync =
-                              ref.watch(rssMetadataProvider(feedUrl));
-                          return rssMetaAsync.when(
-                            data: (rssMeta) => rssMeta?.description != null &&
-                                    rssMeta!.description!.isNotEmpty
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0),
-                                    child: Text(
-                                      rssMeta.description!,
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                            loading: () => const SizedBox.shrink(),
-                            error: (e, st) => const SizedBox.shrink(),
-                          );
-                        },
-                        loading: () => const SizedBox.shrink(),
-                        error: (e, st) => const SizedBox.shrink(),
-                      );
-                    },
+                  HostRssDescriptionSection(
+                    podcastCollectionAsync: ref.watch(
+                      podcastCollectionProvider(host.collectionId),
+                    ),
+                    collectionId: host.collectionId,
                   ),
                   // const SizedBox(height: 20.0),
 
                   // Last Updated
                   if (host.lastUpdated != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Aktualisiert: '
-                                '${DateFormat('dd.MM.yyyy HH:mm', 'de_DE').format(host.lastUpdated!.toLocal())}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: Colors.grey[600],
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    HostLastUpdatedSection(lastUpdated: host.lastUpdated!),
+
                   /*    
                   InfoTile(
                       label: 'Primärfarbe',
@@ -256,11 +130,8 @@ class HostsPage extends ConsumerWidget {
           ),
 
           // --- StickyHeader: Kontakt / Visit ---
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SimpleSectionHeader(
-              title: 'Kontakt / Visit',
-            ),
+          const HostSectionHeader(
+            title: '(Anfahrt,) Visit & Kontakt',
           ),
 
           SliverToBoxAdapter(
@@ -337,21 +208,16 @@ class HostsPage extends ConsumerWidget {
                   // Social Links Bar
                   if (host.contact.socialLinks != null &&
                       host.contact.socialLinks!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: SocialLinksBar(
-                          socialLinks: host.contact.socialLinks!),
+                    HostSocialLinksSection(
+                      socialLinks: host.contact.socialLinks!,
                     ),
                 ],
               ),
             ),
           ),
           // --- StickyHeader: Angebote / Portfolio ---
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SimpleSectionHeader(
-              title: 'Angebote & Portfolio',
-            ),
+          const HostSectionHeader(
+            title: 'Portfolio & weitere Angebote',
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -427,6 +293,7 @@ class HostsPage extends ConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 16),
+
                   // Podcast-Cover
                   Builder(
                     builder: (context) {
@@ -478,18 +345,9 @@ class HostsPage extends ConsumerWidget {
             ),
           ),
           // --- StickyHeader: Weitere Informationen ---
-          SliverToBoxAdapter(
-            child: Builder(
-              builder: (context) =>
-                  SizedBox(height: MediaQuery.of(context).size.height / 2),
-            ),
-          ),
-
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SimpleSectionHeader(
-              title: 'E N D E',
-            ),
+          const HostScrollSpacerSection(),
+          const HostSectionHeader(
+            title: 'Weitere Informationen',
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -498,80 +356,11 @@ class HostsPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Dynamische Host-Felder
-                  // InfoTile(label: 'Host Name', value: host.hostName),
-                  //PERFEKT: als HAUPT SEKTION
-                  // InfoTile(label: 'Beschreibung', value: host.description),
-                  // InfoTile(label: 'CollectionId', value: host.collectionId.toString()),
-                  // InfoTile(
-                  //     label: 'Primäres Genre', value: host.primaryGenreName ?? '-'),
-                  // verleichen mit
-                  // InfoTile(label: 'Kontakt E-Mail', value: host.contact.email ?? '-'),
-                  // Builder(
-                  //   builder: (context) {
-                  //     final podcastCollectionAsync = ref.watch(
-                  //       podcastCollectionProvider(host.collectionId),
-                  //     );
-                  //     return podcastCollectionAsync.when(
-                  //       data: (apiResponse) {
-                  //         if (!apiResponse.isSuccess ||
-                  //             apiResponse.data == null) {
-                  //           return const SizedBox.shrink();
-                  //         }
-                  //         final podcast = apiResponse.data!.podcasts.isNotEmpty
-                  //             ? apiResponse.data!.podcasts.first
-                  //             : null;
-                  //         if (podcast == null) {
-                  //           return const SizedBox.shrink();
-                  //         }
-                  //         final feedUrl = podcast.feedUrl ?? '';
-                  //         return InfoTile(
-                  //           label: 'Website',
-                  //           value: host.contact.websiteUrl ?? '-',
-                  //         );
-                  //       },
-                  //       loading: () =>
-                  //           const InfoTile(label: 'Website', value: '...'),
-                  //       error: (e, st) => InfoTile(
-                  //           label: 'Website',
-                  //           value: host.contact.websiteUrl ?? '-'),
-                  //     );
-                  //   },
-                  // ),
-                  // InfoTile(
-                  //     label: 'Impressum',
-                  //     value: host.contact.impressumUrl ?? '-'),
-                  // InfoTile(label: 'Bio', value: host.content.bio ?? '-'),
-                  // InfoTile(
-                  //     label: 'Mission', value: host.content.mission ?? '-'),
-                  // für Admin
-                  // InfoTile(label: 'RSS-Feed', value: host.content.rss ?? '-'),
-                  // für Admin
-                  // InfoTile(
-                  //     label: 'PortfolioTab',
-                  //     value: (host.features.showPortfolioTab ?? false).toString()),
-                  // für Admin
-                  // InfoTile(
-                  //     label: 'Branding Primary',
-                  //     value: host.branding.primaryColorHex ?? '-'),
-                  // für Admin
-                  // InfoTile(
-                  //     label: 'Branding Secondary',
-                  //     value: host.branding.secondaryColorHex ?? '-'),
-                  // InfoTile(
-                  //     label: 'Branding Logo',
-                  //     value: host.branding.logoUrl ?? '-'),
-                  // für Admin
-                  // InfoTile(label: 'Theme Mode', value: host.branding.themeMode ?? '-'),
-                  // für Admin
-                  // InfoTile(
-                  // label: 'Debug Only', value: host.debugOnly?.toString() ?? '-'),
-                  //PERFEKT: als 'host.lastUpdated'
-                  // InfoTile(
-                  //     label: 'Last Updated',
-                  //     value: host.lastUpdated?.toIso8601String() ?? '-'),
-                  // const Divider(height: 32),
-                  // Text('Podcast-/RSS-Informationen',
-                  //     style: Theme.of(context).textTheme.bodyMedium),
+                  HostDynamicFieldsSection(
+                    host: host,
+                    // isAdmin: true, // Optional, falls Admin-Felder angezeigt werden sollen
+                  ),
+
                   const SizedBox(height: 12),
                   Builder(
                     builder: (context) {
@@ -602,14 +391,12 @@ class HostsPage extends ConsumerWidget {
                               //PERFEKT: als 'hostName' (=='artistName' -> dann speichern)
                               InfoTile(
                                   label: 'Artist', value: podcast.artistName),
-                              // für Admin
+                              // für Admin (direkter Zugriff, keine Provider-Logik)
                               // InfoTile(
                               //     label: 'Feed URL', value: podcast.feedUrl ?? '-'),
-                              // für Admin
                               // InfoTile(
                               //     label: 'PodcastId',
                               //     value: podcast.collectionId.toString()),
-                              //PERFEKT:
                               // InfoTile(
                               //     label: 'Artwork',
                               //     value: podcast.artworkUrl600),
@@ -619,7 +406,7 @@ class HostsPage extends ConsumerWidget {
                               //         vertical: 12.0),
                               //     child: Row(
                               //       children: [
-                              //         Spacer(), // schiebt das Bild ganz nach rechts
+                              //         Spacer(),
                               //         ClipRRect(
                               //           borderRadius: BorderRadius.circular(8),
                               //           child: Image.network(
@@ -637,11 +424,10 @@ class HostsPage extends ConsumerWidget {
                               //             ),
                               //           ),
                               //         ),
-                              //         Spacer(), // schiebt das Bild ganz nach rechts
+                              //         Spacer(),
                               //       ],
                               //     ),
                               //   ),
-                              // für Admin
                               // InfoTile(
                               //     label: 'Debug Only',
                               //     value: podcast.debugOnly?.toString() ?? '-'),
@@ -664,33 +450,13 @@ class HostsPage extends ConsumerWidget {
 }
 
 // InfoTile: Einfache Zeile für Label/Wert-Paare, wie in HostCard genutzt.
-class InfoTile extends StatelessWidget {
-  final String label;
-  final String value;
-  const InfoTile({super.key, required this.label, required this.value});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-              width: 160,
-              child: Text('$label:',
-                  style: Theme.of(context).textTheme.bodyMedium)),
-          Expanded(
-              child: Text(value, style: Theme.of(context).textTheme.bodyLarge)),
-        ],
-      ),
-    );
-  }
+class InfoTile extends HostInfoTile {
+  const InfoTile({super.key, required super.label, required super.value});
 }
 
-class WebsiteTile extends StatelessWidget {
-  final String label;
-  final String url;
-  const WebsiteTile({super.key, required this.label, required this.url});
+// WebsiteTile: Zeigt eine Website als klickbaren Link an.
+class WebsiteTile extends HostWebsiteTile {
+  const WebsiteTile({super.key, required super.label, required super.url});
 
   @override
   Widget build(BuildContext context) {

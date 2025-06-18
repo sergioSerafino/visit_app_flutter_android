@@ -19,6 +19,7 @@
 // Das funktioniert auch für Code, nicht nur für Werte: Die meisten Codeänderungen können
 // einfach mit Hot Reload getestet werden.
 
+import 'package:auto_hyphenating_text/auto_hyphenating_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -31,6 +32,9 @@ Future<void> main() async {
   // 🔐 Hive initialisieren und Box öffnen
   await Hive.initFlutter();
   await Hive.openBox('podcastBox');
+
+  // Silbentrennung initialisieren
+  await initHyphenation();
 
   runApp(
     ProviderScope(
