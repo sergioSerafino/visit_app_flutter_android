@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/tenant_asset_loader.dart';
+import 'safe_image.dart';
 
 /// Zeigt das assetLogo für einen Tenant an, mit Fallback auf das Standard-Logo.
 class TenantLogoWidget extends StatelessWidget {
@@ -32,25 +33,22 @@ class TenantLogoWidget extends StatelessWidget {
               alignment: Alignment.center,
               heightFactor:
                   1.0, // z.B. 70% der Bildhöhe anzeigen (oben und unten croppen)
-              child: Image.asset(
-                assetLogoPath,
+              child: SafeImage(
+                imageUrl: assetLogoPath,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback auf Standard-Logo
-                  final fallbackPath =
-                      TenantAssetLoader(collectionId).imagePath();
-                  return Image.asset(
-                    fallbackPath,
-                    fit: BoxFit.fitWidth,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: Icon(Icons.image,
-                            size: 100, color: Colors.grey[500]),
-                      ),
+                isAsset: true,
+                fallback: SafeImage(
+                  imageUrl: TenantAssetLoader(collectionId).imagePath(),
+                  fit: BoxFit.fitWidth,
+                  isAsset: true,
+                  fallback: Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child:
+                          Icon(Icons.image, size: 100, color: Colors.grey[500]),
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
           ),

@@ -19,11 +19,13 @@ import '../../../core/placeholders/placeholder_loader_service.dart';
 import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
 import '../../core/utils/color_utils.dart';
-import '../../../application/providers/overlay_header_provider.dart';
 import '../../../application/providers/overlay_tab_provider.dart';
 
 class PodcastPage extends ConsumerWidget {
-  const PodcastPage({super.key});
+  final ScrollController? scrollController;
+  final double? initialScrollOffset;
+  const PodcastPage(
+      {super.key, this.scrollController, this.initialScrollOffset});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,6 +87,15 @@ class PodcastPage extends ConsumerWidget {
     }
 
     // final isLoading = podcastResponse.isLoading || episodeResponse.isLoading;
+
+    if (initialScrollOffset != null && scrollController != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (scrollController!.hasClients &&
+            scrollController!.offset != initialScrollOffset) {
+          scrollController!.jumpTo(initialScrollOffset!);
+        }
+      });
+    }
 
     return Scaffold(
       body: Padding(
@@ -242,6 +253,7 @@ class PodcastPage extends ConsumerWidget {
                               );
                             }
                             return ListView.builder(
+                              controller: scrollController, // <- NEU
                               itemCount: episodes.length,
                               itemBuilder: (context, index) {
                                 final episode = episodes[index];

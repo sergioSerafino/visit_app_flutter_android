@@ -5,14 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/theme_provider.dart';
-import '../../application/providers/itunes_result_count_provider.dart';
 import '../widgets/home_header_material3.dart';
 import 'podcast_page.dart';
 import 'hosts_page.dart';
 import 'preferences_page.dart';
-import 'overlay_test_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
+import '../../core/utils/scroll_shadow_controller.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,24 +35,24 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const PodcastPage(),
-    const HostsPage(),
-    const OverlayTestPage()
-  ];
+  // Für jeden Tab ein eigener Controller
+  late final ScrollShadowController _podcastScrollShadowController;
+  late final ScrollShadowController _hostsScrollShadowController;
 
   bool _snackbarShown = false;
+
   @override
   void initState() {
     super.initState();
-    // _checkOnboardingRestartedSnackbar();
-    // if (widget.showMeWelcome) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     Future.delayed(const Duration(milliseconds: 1500), () {
-    //       ref.read(snackbarManagerProvider.notifier).showByKey('welcome_back');
-    //     });
-    //   });
-    // }
+    _podcastScrollShadowController = ScrollShadowController();
+    _hostsScrollShadowController = ScrollShadowController();
+  }
+
+  @override
+  void dispose() {
+    _podcastScrollShadowController.dispose();
+    _hostsScrollShadowController.dispose();
+    super.dispose();
   }
 
   void _onTabSelected(int index) {
@@ -64,6 +63,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final showOverlay = _selectedIndex == 0
+        ? _podcastScrollShadowController.showShadow
+        : _hostsScrollShadowController.showShadow;
     if (!_snackbarShown) {
       _snackbarShown = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -83,7 +85,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90), // <- konstante Höhe!
+        preferredSize: const Size.fromHeight(90),
         child: Consumer(
           builder: (context, ref, _) {
             final theme = ref.watch(appThemeProvider);
@@ -92,14 +94,14 @@ class _HomePageState extends ConsumerState<HomePage> {
               podcastCollectionProvider(collectionId),
             );
 
-            String hostName = "artistName"; //"collectionName";
+            String hostName = "artistName";
 
             collectionAsync.whenData((apiResponse) {
               apiResponse.when(
                 success: (collection) {
                   final podcast = collection.podcasts.firstOrNull;
                   if (podcast != null) {
-                    hostName = podcast.artistName; //collectionName;
+                    hostName = podcast.artistName;
                   }
                 },
                 error: (_) {},
@@ -125,10 +127,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                         hostName: hostName,
                         baseColor: theme.colorScheme.primary,
                         surfaceTint: theme.colorScheme.surfaceTint,
-                        overlayActive: false, // ggf. dynamisch setzen
+                        overlayActive: showOverlay, // <- dynamisch!
                         textColor: Colors.white,
                         height: kToolbarHeight + 30,
-                        actions: null, // Actions werden unten übergeben
+                        actions: null,
                         textStyle: TextStyle(
                           fontSize: 24,
                           color: Colors.white,
@@ -234,7 +236,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           },
         ),
       ),
-      body: IndexedStack(index: _selectedIndex, children: _pages),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          PodcastPage(
+              scrollController: _podcastScrollShadowController.controller),
+          HostsPage(scrollController: _hostsScrollShadowController.controller),
+        ],
+      ),
       bottomNavigationBar: Consumer(
         builder: (context, ref, _) {
           final theme = ref.watch(appThemeProvider);
@@ -260,13 +269,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Icons.person_outline,
                 ),
                 label: "HostsView",
-                backgroundColor: theme.colorScheme.primary,
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.layers,
-                ),
-                label: "OverlayTest",
                 backgroundColor: theme.colorScheme.primary,
               ),
             ],

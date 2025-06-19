@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'safe_image.dart';
 
 /// Zeigt das Host-Bild (hostImage) und darunter den Artist-Namen auf der HostsPage an.
 ///
@@ -27,11 +28,13 @@ class HostImageAndArtistSection extends StatelessWidget {
           child: Center(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'lib/tenants/collection_${collectionId}/assets/${hostImage}',
+              child: SafeImage(
+                imageUrl:
+                    'lib/tenants/collection_${collectionId}/assets/${hostImage}',
                 width: 290,
                 height: 220,
                 fit: BoxFit.cover,
+                isAsset: true,
               ),
             ),
           ),

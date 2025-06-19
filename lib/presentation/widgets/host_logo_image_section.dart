@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/splash_cover_image.dart';
 import '../../core/utils/tenant_asset_loader.dart';
+import 'safe_image.dart';
 
 /// Zeigt das Logo (SplashCoverImage) nach der Bio auf der HostsPage an.
 ///
@@ -25,11 +25,12 @@ class HostLogoImageSection extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               heightFactor: 0.7, // schneidet oben und unten ab
-              child: SplashCoverImage(
-                assetPath: TenantAssetLoader(collectionId).imagePath(),
-                imageUrl: logoUrl,
-                scaleFactor: 1.0,
-                duration: const Duration(milliseconds: 800),
+              child: SafeImage(
+                imageUrl: TenantAssetLoader(collectionId).imagePath(),
+                width: MediaQuery.of(context).size.width * 0.5 * 1.25,
+                height: MediaQuery.of(context).size.width * 0.28 * 1.25,
+                fit: BoxFit.cover,
+                isAsset: true,
               ),
             ),
           ),

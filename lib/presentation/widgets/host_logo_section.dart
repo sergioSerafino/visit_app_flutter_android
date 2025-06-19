@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/tenant_logo_widget.dart';
 
-/// Zeigt das Host-Logo oben auf der HostsPage an.
+/// Zeigt das Host-Logo auf der HostsPage an.
 ///
 /// Das Padding, die Einbindung und die Übergabe der Parameter bleiben wie im Original.
 class HostLogoSection extends StatelessWidget {
@@ -17,7 +17,7 @@ class HostLogoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // assetLogo ganz oben
+    // assetLogo
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: TenantLogoWidget(

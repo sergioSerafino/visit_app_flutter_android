@@ -17,7 +17,6 @@ import '../widgets/host_last_updated_section.dart';
 import '../widgets/host_info_tile.dart';
 import '../widgets/host_website_tile.dart';
 import '../widgets/host_section_header.dart';
-import '../widgets/host_dynamic_fields_section.dart';
 import '../widgets/host_scroll_spacer_section.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../domain/common/api_response.dart';
@@ -25,10 +24,17 @@ import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../widgets/host_rss_meta_tile.dart';
 import '../../application/providers/overlay_header_provider.dart';
 import '../../application/providers/overlay_tab_provider.dart';
+import '../widgets/safe_image.dart';
 
 class HostsPage extends ConsumerStatefulWidget {
+  final ScrollController? scrollController;
+  final double? initialScrollOffset;
   final void Function(bool)? onScrollChanged;
-  const HostsPage({super.key, this.onScrollChanged});
+  const HostsPage(
+      {super.key,
+      this.scrollController,
+      this.initialScrollOffset,
+      this.onScrollChanged});
 
   @override
   ConsumerState<HostsPage> createState() => _HostsPageState();
@@ -40,8 +46,16 @@ class _HostsPageState extends ConsumerState<HostsPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+    _scrollController = widget.scrollController ?? ScrollController();
     _scrollController.addListener(_onScroll);
+    if (widget.initialScrollOffset != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients &&
+            _scrollController.offset != widget.initialScrollOffset) {
+          _scrollController.jumpTo(widget.initialScrollOffset!);
+        }
+      });
+    }
   }
 
   void _onScroll() {
@@ -208,18 +222,11 @@ class _HostsPageState extends ConsumerState<HostsPage> {
                             child: Center(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  podcast.artworkUrl600,
+                                child: SafeImage(
+                                  imageUrl: podcast.artworkUrl600,
                                   width: 120,
                                   height: 120,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
-                                    width: 120,
-                                    height: 120,
-                                    color: Colors.grey,
-                                    child: const Icon(Icons.error),
-                                  ),
                                 ),
                               ),
                             ),
