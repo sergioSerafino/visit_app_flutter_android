@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import '../../core/utils/color_utils.dart';
 import '../widgets/host_bio_section.dart';
 import '../widgets/host_logo_section.dart';
 import '../widgets/host_mission_section.dart';
@@ -61,8 +62,14 @@ class _HostsPageState extends ConsumerState<HostsPage> {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('de_DE', null);
-    // Host-Model aus Provider holen (zentral für alle Abschnitte)
     final host = ref.watch(coll_prov.hostModelProvider);
+    final showOverlay = ref.watch(overlayHeaderProvider);
+    final baseColor = host.branding.primaryColorHex != null
+        ? Color(
+            int.parse(host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
+        : Theme.of(context).colorScheme.primary;
+    final appBarColor =
+        showOverlay ? flutterAppBarOverlayColor(context, baseColor) : baseColor;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
@@ -73,10 +80,7 @@ class _HostsPageState extends ConsumerState<HostsPage> {
             title: host.sectionTitles?['about'] ??
                 'Bio / Mission / Persona / About',
             showShadow: true,
-            color: host.branding.primaryColorHex != null
-                ? Color(int.parse(
-                    host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
-                : Theme.of(context).colorScheme.primary,
+            color: appBarColor,
           ),
           SliverToBoxAdapter(
             child: Padding(

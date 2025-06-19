@@ -227,14 +227,9 @@ class _HomePageState extends ConsumerState<HomePage> {
       bottomNavigationBar: Consumer(
         builder: (context, ref, _) {
           final theme = ref.watch(appThemeProvider);
-          final overlayActive = ref.watch(overlayHeaderProvider);
           final Color baseColor = theme.colorScheme.primary;
-          final Color barColor = overlayActive
-              ? (theme.brightness == Brightness.dark
-                  ? ElevationOverlay.applyOverlay(context, baseColor, 4)
-                  : Color.alphaBlend(
-                      const Color.fromARGB(46, 0, 0, 0), baseColor))
-              : baseColor;
+          // Flutter-konform: BottomBar immer Basisfarbe, kein Overlay beim Scrollen
+          final Color barColor = baseColor;
           return BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: _onTabSelected,

@@ -8,14 +8,14 @@ class ApiEndpoints {
   // Statische URLs für Podcast-Sammlung und Episoden
   static String get podcastCollection => "$baseUrl?entity=podcast";
 
-  static String podcastEpisodes(int collectionId, {int limit = 3}) {
+  static String podcastEpisodes(int collectionId, {required int limit}) {
     return "$baseUrl?id=$collectionId&entity=podcastEpisode&limit=$limit";
   }
 
   // Flexible Methode für den Podcast Lookup
   static String podcastLookup({
     required int collectionId,
-    int limit = 3,
+    required int limit,
     // Optional: Länderspezifische Ergebnisse
     String? country,
     // Standardmäßig nach Podcast-Episoden suchen
@@ -38,7 +38,7 @@ class ApiEndpoints {
     return url;
   }
 
-  static String podcasts(int collectionId, {int limit = 3}) {
+  static String podcasts(int collectionId, {required int limit}) {
     return "$baseUrl?id=$collectionId&entity=podcastEpisode&limit=$limit";
   }
 }

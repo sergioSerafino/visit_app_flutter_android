@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/simple_section_header.dart';
 import '../../application/providers/overlay_header_provider.dart';
+import '../../core/utils/color_utils.dart';
 
 class OverlayTestPage extends ConsumerStatefulWidget {
   final void Function(bool)? onScrollChanged;
@@ -42,6 +43,8 @@ class _OverlayTestPageState extends ConsumerState<OverlayTestPage> {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = Colors.red;
+    final overlayColor = flutterAppBarOverlayColor(context, baseColor);
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -52,7 +55,7 @@ class _OverlayTestPageState extends ConsumerState<OverlayTestPage> {
             delegate: SimpleSectionHeader(
               title: 'Overlay: ' + (_showOverlay ? 'AKTIV' : 'INAKTIV'),
               showShadow: true,
-              color: Colors.red,
+              color: _showOverlay ? overlayColor : baseColor,
             ),
           ),
           SliverList(

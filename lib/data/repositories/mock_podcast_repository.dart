@@ -11,11 +11,13 @@ class MockPodcastRepository implements PodcastRepository {
 
   @override
   Future<ApiResponse<PodcastCollection>> fetchPodcastCollectionById(
-    int id,
-  ) async {
-    await Future.delayed(
-      fakeDelay,
-    ); // Simulierte Netzwerkwartezeit
+    int id, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
+    await Future.delayed(fakeDelay);
 
     // Mock-Daten mit vollständigem API-Format
     final mockJsonResponse = {
@@ -58,6 +60,12 @@ class MockPodcastRepository implements PodcastRepository {
       ],
     };
 
+    // Limitiere die Ergebnisse, falls limit gesetzt ist
+    final limitedResults = limit != null
+        ? (mockJsonResponse['results'] as List).take(limit).toList()
+        : mockJsonResponse['results'];
+    mockJsonResponse['results'] = limitedResults as List<Object?>;
+
     try {
       final parsed = PodcastCollection.fromApiJson(mockJsonResponse);
       return ApiResponse.success(parsed);
@@ -68,11 +76,13 @@ class MockPodcastRepository implements PodcastRepository {
 
   @override
   Future<ApiResponse<List<PodcastEpisode>>> fetchPodcastEpisodes(
-    int collectionId,
-  ) async {
-    await Future.delayed(
-      fakeDelay * 2,
-    ); // Simuliere eine kurze Wartezeit
+    int collectionId, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
+    await Future.delayed(fakeDelay * 2);
 
     // Beispielhafte Episoden mit vollständigen Details
     final mockEpisodes = [
@@ -122,14 +132,16 @@ class MockPodcastRepository implements PodcastRepository {
       ),
     ];
 
-    return ApiResponse.success(mockEpisodes);
+    // Limitiere die Episoden, falls limit gesetzt ist
+    final limitedEpisodes =
+        limit != null ? mockEpisodes.take(limit).toList() : mockEpisodes;
+    return ApiResponse.success(limitedEpisodes);
   }
 
   @override
-  Future<ApiResponse<PodcastCollection>> fetchPodcastCollection() async {
-    await Future.delayed(
-      const Duration(seconds: 1),
-    ); // Simuliere eine kurze Wartezeit
+  Future<ApiResponse<PodcastCollection>> fetchPodcastCollection(
+      {int? limit, String? country, String? entity, String? media}) async {
+    await Future.delayed(const Duration(seconds: 1));
 
     // API-ähnliches JSON: Map mit `resultCount` und `results`
     final mockJsonResponse = {
@@ -139,7 +151,15 @@ class MockPodcastRepository implements PodcastRepository {
       ],
     };
 
+    // Limitiere die Ergebnisse, falls limit gesetzt ist
+    final limitedResults = limit != null
+        ? (mockJsonResponse['results'] as List).take(limit).toList()
+        : mockJsonResponse['results'];
+    mockJsonResponse['results'] = limitedResults as List<Object?>;
+
     final parsedCollection = PodcastCollection.fromApiJson(mockJsonResponse);
     return ApiResponse.success(parsedCollection);
   }
 }
+
+/// Doku: Das MockRepository unterstützt jetzt alle API-Parameter und verhält sich wie die echten Implementierungen. Siehe README.md und podcast_repository.dart für Details.

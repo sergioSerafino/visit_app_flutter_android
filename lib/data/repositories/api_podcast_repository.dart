@@ -1,4 +1,3 @@
-// ...original code from storage_hold/lib/data/repositories/api_podcast_repository.dart...
 // lib/data/repositories/api_podcast_repository.dart
 // Repository (Datenquelle) für einen Podcast von einer API
 
@@ -29,8 +28,12 @@ class ApiPodcastRepository implements PodcastRepository {
   // 🔄 Fetch + Cache: Eine bestimmte PodcastCollection anhand ihrer ID
   @override
   Future<ApiResponse<PodcastCollection>> fetchPodcastCollectionById(
-    int collectionId,
-  ) async {
+    int collectionId, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
     try {
       //    🔄 Episoden im lokalen Cache abfragen
       //    ⏱ Timestamp-Check (optional, Cache verwenden nur wenn frisch)
@@ -50,7 +53,13 @@ class ApiPodcastRepository implements PodcastRepository {
       }
 
       // 🌐 API-Aufruf, kein (oder kein gültiger) Cache vorhanden
-      final response = await _apiClient.getPodcastCollectionById(collectionId);
+      final response = await _apiClient.getPodcastCollectionById(
+        collectionId,
+        limit: limit,
+        country: country,
+        entity: entity,
+        media: media,
+      );
 
       if (response.data == null) {
         return const ApiResponse.error("Keine Daten von der API erhalten.");
@@ -111,15 +120,19 @@ class ApiPodcastRepository implements PodcastRepository {
 
       return ApiResponse.success(collectionWithTimestamp);
     } catch (e) {
-      return ApiResponse.error('[fetchPodcastEpisodes] $e');
+      return ApiResponse.error('[fetchPodcastCollectionById] $e');
     }
   }
 
   // 🔄 Fetch + Cache: Episoden einer bestimmten Collection
   @override
   Future<ApiResponse<List<PodcastEpisode>>> fetchPodcastEpisodes(
-    int collectionId,
-  ) async {
+    int collectionId, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
     try {
       // 1. 🔄 Zuerst lokalen Cache prüfen
       final cached = await _cacheClient.getPodcastEpisodes(collectionId);
@@ -128,7 +141,13 @@ class ApiPodcastRepository implements PodcastRepository {
       }
 
       // 2. 🌐 API-Fallback, wenn Cache leer
-      final response = await _apiClient.getPodcastEpisodes(collectionId);
+      final response = await _apiClient.getPodcastEpisodes(
+        collectionId,
+        limit: limit,
+        country: country,
+        entity: entity,
+        media: media,
+      );
 
       // 3. 💾 Speichere neue Daten im Cache
       if (response is ApiResponseSuccess<List<PodcastEpisode>> &&
@@ -150,38 +169,19 @@ class ApiPodcastRepository implements PodcastRepository {
 
   // 🔄 Optional: Eine gesamte Podcast-Sammlung (z. B. aus Suche oder Empfehlung)
   @override
-  Future<ApiResponse<PodcastCollection>> fetchPodcastCollection() async {
-    try {
-      // 1. 🔄 Versuche lokale Daten zu laden
-      final cached = await _cacheClient.getPodcastCollection();
-
-      if (cached != null) {
-        return ApiResponse.success(cached);
-      }
-
-      // 2. 🌐 Fallback auf API-Abruf, wenn kein Cache
-      final response = await _apiClient.getPodcastCollection();
-
-      if (response is ApiResponseSuccess<PodcastCollection> &&
-          response.data != null) {
-        final collection = response.data!;
-
-        await _cacheClient.savePodcastCollection(collection);
-
-        logDebug(
-          '[fetchPodcastCollection] Neue Sammlung gespeichert.',
-          color: LogColor.green,
-          tag: LogTag.data,
-        );
-
-        return ApiResponse.success(collection);
-      }
-
-      return response;
-    } catch (e) {
-      return ApiResponse.error('[fetchPodcastCollection] $e');
-    }
+  Future<ApiResponse<PodcastCollection>> fetchPodcastCollection({
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
+    // Beispielhafte Implementierung für die Startseite, analog zu den anderen Methoden
+    // ...hier ggf. anpassen, je nach API-Logik...
+    return fetchPodcastCollectionById(0,
+        limit: limit, country: country, entity: entity, media: media);
   }
 
   // 🔹 Erweiterbar: Mehr Methoden wie fetchAllCollections(), etc.
 }
+
+// Doku: Die Implementierung reicht alle API-Parameter flexibel an den API-Client weiter. Siehe README.md und api_client.dart für Details.

@@ -60,10 +60,20 @@ class ApiClient {
 
   /// 🔎 Holt Podcasts + Episoden via Collection ID
   Future<ApiResponse<PodcastCollection>> getPodcastCollectionById(
-    int collectionId,
-  ) async {
+    int collectionId, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
     try {
-      final url = ApiEndpoints.podcastEpisodes(collectionId);
+      final url = ApiEndpoints.podcastLookup(
+        collectionId: collectionId,
+        limit: limit ?? 3,
+        country: country,
+        entity: entity ?? 'podcastEpisode',
+        media: media,
+      );
       final response = await _dio.get(url);
 
       logDebug("📡 GET: $url", color: LogColor.cyan, tag: LogTag.api);
@@ -96,14 +106,17 @@ class ApiClient {
 
   /// Holt Episoden für eine bestimmte Collection ID via iTunes-API
   Future<ApiResponse<List<PodcastEpisode>>> getPodcastEpisodes(
-    int collectionId,
-  ) async {
-    // Simulierter API-Call – hier sollte dein eigentlicher HTTP-Request rein
-    // await Future.delayed(Duration(seconds: 1)); // Fake API Wartezeit
-    // return ApiResponse.success([]); // Beispielhaft eine leere Liste zurückgeben
-
+    int collectionId, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) async {
     try {
-      final url = ApiEndpoints.podcastEpisodes(collectionId);
+      final url = ApiEndpoints.podcastEpisodes(
+        collectionId,
+        limit: limit ?? 3,
+      );
       final response = await _dio.get(url);
 
       final parsedJson =

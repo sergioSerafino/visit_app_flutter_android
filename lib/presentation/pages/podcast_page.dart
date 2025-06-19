@@ -18,6 +18,8 @@ import '../../../domain/enums/episode_load_state.dart';
 import '../../../core/placeholders/placeholder_loader_service.dart';
 import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
+import '../../core/utils/color_utils.dart';
+import '../../../application/providers/overlay_header_provider.dart';
 
 class PodcastPage extends ConsumerWidget {
   const PodcastPage({super.key});
@@ -59,8 +61,18 @@ class PodcastPage extends ConsumerWidget {
       final placeholderEpisodes =
           PlaceholderLoaderService.podcastCollection.allEpisodes;
 
+      // Flutter-konforme Overlay-Farbe für AppBar (auch im Placeholder-Modus verfügbar machen)
+      final showOverlay = ref.watch(overlayHeaderProvider);
+      final baseColor = Theme.of(context).colorScheme.primary;
+      final appBarColor = showOverlay
+          ? flutterAppBarOverlayColor(context, baseColor)
+          : baseColor;
+
       return Scaffold(
-        appBar: AppBar(title: const Text("📻 Placeholder-Modus")),
+        appBar: AppBar(
+          title: const Text("📻 Placeholder-Modus"),
+          backgroundColor: appBarColor,
+        ),
         body: ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: placeholderEpisodes.length,

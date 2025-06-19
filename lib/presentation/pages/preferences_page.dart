@@ -12,6 +12,7 @@ import '../../application/providers/episode_controller_provider.dart';
 import '../../core/logging/logger_config.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import '../widgets/custom_text_field.dart';
+import '../../application/providers/itunes_result_count_provider.dart';
 
 class PreferencesBottomSheet extends ConsumerWidget {
   const PreferencesBottomSheet({super.key});
@@ -316,6 +317,35 @@ class PreferencesBottomSheet extends ConsumerWidget {
                               ),
                             ],
                           ),
+                        ),
+
+                        // iTunes Ergebnisanzahl
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final count = ref.watch(itunesResultCountProvider);
+                            return ListTile(
+                              leading: const Icon(Icons.format_list_numbered),
+                              title: const Text('Anzahl iTunes-Ergebnisse'),
+                              subtitle: Text('Aktuell: $count'),
+                              trailing: DropdownButton<int>(
+                                value: count,
+                                items: [3, 5, 10, 20, 30]
+                                    .map((e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e.toString()),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    ref
+                                        .read(
+                                            itunesResultCountProvider.notifier)
+                                        .setCount(value);
+                                  }
+                                },
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
