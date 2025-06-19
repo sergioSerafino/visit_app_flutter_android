@@ -74,11 +74,22 @@ class MockPodcastRepository extends _i1.Mock implements _i5.PodcastRepository {
   }
 
   @override
-  _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>> fetchPodcastCollection() =>
+  _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>> fetchPodcastCollection({
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #fetchPodcastCollection,
           [],
+          {
+            #limit: limit,
+            #country: country,
+            #entity: entity,
+            #media: media,
+          },
         ),
         returnValue: _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>>.value(
             _FakeApiResponse_0<_i7.PodcastCollection>(
@@ -86,17 +97,34 @@ class MockPodcastRepository extends _i1.Mock implements _i5.PodcastRepository {
           Invocation.method(
             #fetchPodcastCollection,
             [],
+            {
+              #limit: limit,
+              #country: country,
+              #entity: entity,
+              #media: media,
+            },
           ),
         )),
       ) as _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>>);
 
   @override
   _i6.Future<_i2.ApiResponse<List<_i8.PodcastEpisode>>> fetchPodcastEpisodes(
-          int? collectionId) =>
+    int? collectionId, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #fetchPodcastEpisodes,
           [collectionId],
+          {
+            #limit: limit,
+            #country: country,
+            #entity: entity,
+            #media: media,
+          },
         ),
         returnValue:
             _i6.Future<_i2.ApiResponse<List<_i8.PodcastEpisode>>>.value(
@@ -105,17 +133,34 @@ class MockPodcastRepository extends _i1.Mock implements _i5.PodcastRepository {
           Invocation.method(
             #fetchPodcastEpisodes,
             [collectionId],
+            {
+              #limit: limit,
+              #country: country,
+              #entity: entity,
+              #media: media,
+            },
           ),
         )),
       ) as _i6.Future<_i2.ApiResponse<List<_i8.PodcastEpisode>>>);
 
   @override
   _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>> fetchPodcastCollectionById(
-          int? id) =>
+    int? id, {
+    int? limit,
+    String? country,
+    String? entity,
+    String? media,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #fetchPodcastCollectionById,
           [id],
+          {
+            #limit: limit,
+            #country: country,
+            #entity: entity,
+            #media: media,
+          },
         ),
         returnValue: _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>>.value(
             _FakeApiResponse_0<_i7.PodcastCollection>(
@@ -123,6 +168,12 @@ class MockPodcastRepository extends _i1.Mock implements _i5.PodcastRepository {
           Invocation.method(
             #fetchPodcastCollectionById,
             [id],
+            {
+              #limit: limit,
+              #country: country,
+              #entity: entity,
+              #media: media,
+            },
           ),
         )),
       ) as _i6.Future<_i2.ApiResponse<_i7.PodcastCollection>>);

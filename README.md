@@ -524,3 +524,30 @@ r
 - Es dient als Fallback und Werkzeug für Admin- und Entwicklungsarbeiten, um RSS-Felder (z.  B. E-Mail, Website, Impressum) weiterhin dynamisch und aktuell aus dem Feed anzuzeigen und zu prüfen.
 - Auch nach der Persistenz kann es für Debugging, Migration und initiale Bearbeitung genutzt werden.
 - Siehe auch: `.instructions/adr-001-merge-strategy.md`, `.instructions/howto_merge_decisions_and_field_sources.md`, `.instructions/prd_white_label_podcast_app.md`.
+
+---
+
+## Repository-Pattern & flexible API-Parameter (zukunftssicher)
+
+**Ziel:**
+- Die Steuerung von API-Parametern wie `limit` (z. B. Anzahl der iTunes-Ergebnisse) erfolgt zentral, plattformunabhängig und ist leicht auf andere APIs adaptierbar.
+- Die UI und UseCases sind unabhängig von der konkreten API-Implementierung (iTunes, Spotify, Mock etc.).
+
+**Umsetzung:**
+- Das Interface `PodcastRepository` nimmt alle relevanten API-Parameter (limit, country, entity, media) als optionale Parameter entgegen.
+- Die Implementierungen (`ApiPodcastRepository`, `MockPodcastRepository` etc.) reichen diese Parameter an die jeweilige API oder Mock-Logik weiter.
+- Das Ergebnis-Limit wird immer aus dem zentralen Provider (`itunesResultCountProvider`) geholt und an das Repository übergeben.
+- Die Provider (z. B. `podcastCollectionProvider`, `podcastEpisodeProvider`) sind so gestaltet, dass sie das Limit automatisch weiterreichen.
+- Ein Plattformwechsel (z. B. von iTunes zu Spotify) ist durch Austausch der Repository-Implementierung möglich, ohne die UI oder UseCases anzupassen.
+
+**Querverweise:**
+- `lib/data/repositories/podcast_repository.dart` (Interface)
+- `lib/data/repositories/api_podcast_repository.dart` (API-Implementierung)
+- `lib/data/repositories/mock_podcast_repository.dart` (Mock-Implementierung)
+- `lib/application/providers/itunes_result_count_provider.dart` (zentraler Provider für das Limit)
+- `lib/application/providers/podcast_provider.dart` (Provider-Logik)
+
+**Best Practices:**
+- Siehe Kommentare und Docstrings in den oben genannten Dateien.
+- Die Architektur folgt Clean Architecture und ist für zukünftige API-Erweiterungen vorbereitet.
+- Die Tests und Mocks müssen nach Interface-Änderungen neu generiert werden (siehe Build-Runner-Hinweis).
