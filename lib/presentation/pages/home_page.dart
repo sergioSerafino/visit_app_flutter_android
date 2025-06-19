@@ -25,22 +25,11 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   int _selectedIndex = 0;
-  bool _showHeaderOverlay = false;
-
   bool _snackbarShown = false;
+
   @override
   void initState() {
     super.initState();
-  }
-
-  void _handleHostsScroll(bool show) {
-    print(
-        '[HomePage] _handleHostsScroll: show=$show, _selectedIndex=$_selectedIndex');
-    if (_selectedIndex == 1 && show != _showHeaderOverlay) {
-      setState(() {
-        _showHeaderOverlay = show;
-      });
-    }
   }
 
   void _onTabSelected(int index) {
@@ -74,7 +63,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   : Color.alphaBlend(
                       const Color.fromARGB(46, 0, 0, 0), backgroundColor!))
               : backgroundColor,
-          showOverlay: false, // Overlay jetzt über die Hintergrundfarbe
         ),
         actions: [
           Theme(
@@ -233,7 +221,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         index: _selectedIndex,
         children: [
           const PodcastPage(),
-          HostsPage(onScrollChanged: _handleHostsScroll),
+          const HostsPage(),
         ],
       ),
       bottomNavigationBar: Consumer(
