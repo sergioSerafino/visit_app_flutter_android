@@ -7,14 +7,16 @@ import '../widgets/social_links_bar.dart';
 /// Das Layout, Padding und die Stilistik bleiben wie im Original.
 class HostSocialLinksSection extends StatelessWidget {
   final Map<String, String> socialLinks;
-  const HostSocialLinksSection({super.key, required this.socialLinks});
+  final Color? iconColor;
+  const HostSocialLinksSection(
+      {super.key, required this.socialLinks, this.iconColor});
 
   @override
   Widget build(BuildContext context) {
     // Social Links Bar
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SocialLinksBar(socialLinks: socialLinks),
+      child: SocialLinksBar(socialLinks: socialLinks, iconColor: iconColor),
     );
   }
 }

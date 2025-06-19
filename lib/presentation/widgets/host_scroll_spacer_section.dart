@@ -12,7 +12,7 @@ class HostScrollSpacerSection extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Builder(
         builder: (context) =>
-            SizedBox(height: MediaQuery.of(context).size.height / 2),
+            SizedBox(height: MediaQuery.of(context).size.height / 1.5),
       ),
     );
   }

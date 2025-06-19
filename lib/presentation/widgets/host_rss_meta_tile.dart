@@ -74,7 +74,9 @@ class HostRssMetaTile extends ConsumerWidget {
                       child: Text(
                         value,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: onTap != null ? Colors.blue : null,
+                              color: onTap != null
+                                  ? (Theme.of(context).colorScheme.secondary)
+                                  : null,
                               decoration: onTap != null
                                   ? TextDecoration.underline
                                   : null,

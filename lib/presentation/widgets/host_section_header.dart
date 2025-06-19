@@ -8,8 +8,9 @@ import '../widgets/simple_section_header.dart';
 class HostSectionHeader extends StatelessWidget {
   final String title;
   final bool showShadow;
+  final Color? color;
   const HostSectionHeader(
-      {super.key, required this.title, this.showShadow = false});
+      {super.key, required this.title, this.showShadow = false, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class HostSectionHeader extends StatelessWidget {
       delegate: SimpleSectionHeader(
         title: title,
         showShadow: showShadow,
+        color: color,
       ),
     );
   }

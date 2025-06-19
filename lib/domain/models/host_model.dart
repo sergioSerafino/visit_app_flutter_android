@@ -27,6 +27,7 @@ class Host with _$Host {
     bool? debugOnly,
     DateTime? lastUpdated,
     String? hostImage,
+    Map<String, String>? sectionTitles, // neu: Überschriften aus JSON
   }) = _Host;
 
   factory Host.fromJson(Map<String, dynamic> json) => Host(
@@ -47,6 +48,7 @@ class Host with _$Host {
             ? null
             : DateTime.parse(json['lastUpdated'] as String),
         hostImage: json['hostImage'] as String?,
+        sectionTitles: (json['sectionTitles'] as Map?)?.cast<String, String>(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -63,6 +65,7 @@ class Host with _$Host {
         'debugOnly': debugOnly,
         'lastUpdated': lastUpdated?.toIso8601String(),
         'hostImage': hostImage,
+        if (sectionTitles != null) 'sectionTitles': sectionTitles,
       };
 
   static Host empty() {
@@ -79,6 +82,7 @@ class Host with _$Host {
       debugOnly: false,
       lastUpdated: DateTime.now(),
       hostImage: null,
+      sectionTitles: null,
     );
   }
 }

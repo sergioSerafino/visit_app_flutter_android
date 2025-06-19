@@ -4,7 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SocialLinksBar extends StatelessWidget {
   final Map<String, String> socialLinks;
-  const SocialLinksBar({super.key, required this.socialLinks});
+  final Color? iconColor;
+  const SocialLinksBar({super.key, required this.socialLinks, this.iconColor});
 
   IconData _iconForPlatform(String platform) {
     final p = platform.toLowerCase();
@@ -46,7 +47,9 @@ class SocialLinksBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(icon, size: 40),
+                icon: Icon(icon,
+                    size: 40,
+                    color: iconColor ?? Theme.of(context).colorScheme.primary),
                 tooltip: entry.key,
                 onPressed: () => launchUrl(Uri.parse(entry.value),
                     mode: LaunchMode.externalApplication),

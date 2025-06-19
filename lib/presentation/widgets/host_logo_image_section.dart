@@ -13,13 +13,13 @@ class HostLogoImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // logo (SplashCoverImage) nach der Bio
+    // logo (SplashCoverImage)
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Center(
         child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.5,
-          height: MediaQuery.of(context).size.width * 0.28,
+          width: MediaQuery.of(context).size.width * 0.5 * 1.25,
+          height: MediaQuery.of(context).size.width * 0.28 * 1.25,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Align(

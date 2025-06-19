@@ -17,5 +17,10 @@
   "primaryGenreName": "Unknown",
   "authTokenRequired": false,
   "debugOnly": false,
-  "lastUpdated": "2025-06-01T00:00:00.000Z"
+  "lastUpdated": "2025-06-01T00:00:00.000Z",
+  "sectionTitles": {
+    "about": "Bio / Mission / Persona ",
+    "contact": "Anfahrt / Visit / Kontakt",
+    "portfolio": "Angebote / Entdecken"
+  }
 }

@@ -24,22 +24,59 @@ import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../widgets/host_rss_meta_tile.dart';
 
-class HostsPage extends ConsumerWidget {
-  const HostsPage({super.key});
+class HostsPage extends ConsumerStatefulWidget {
+  final void Function(bool)? onScrollChanged;
+  const HostsPage({super.key, this.onScrollChanged});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HostsPage> createState() => _HostsPageState();
+}
+
+class _HostsPageState extends ConsumerState<HostsPage> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (widget.onScrollChanged != null) {
+      final show = _scrollController.hasClients && _scrollController.offset > 0;
+      print(
+          '[HostsPage] onScrollChanged: show=$show, offset=${_scrollController.offset}');
+      widget.onScrollChanged!(show);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     initializeDateFormatting('de_DE', null);
     // Host-Model aus Provider holen (zentral für alle Abschnitte)
     final host = ref.watch(coll_prov.hostModelProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           // --- StickyHeader: Lokale Host-Informationen ---
-          const HostSectionHeader(
-            title: 'Über Sabine',
+          HostSectionHeader(
+            title: host.sectionTitles?['about'] ??
+                'Bio / Mission / Persona / About',
             showShadow: true,
+            color: host.branding.primaryColorHex != null
+                ? Color(int.parse(
+                    host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
+                : Theme.of(context).colorScheme.primary,
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -90,11 +127,14 @@ class HostsPage extends ConsumerWidget {
                   ),
 
                   // RSS-Beschreibung (aus RSS-Metadaten)
-                  HostRssDescriptionSection(
-                    podcastCollectionAsync: ref.watch(
-                      podcastCollectionProvider(host.collectionId),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 4, 0),
+                    child: HostRssDescriptionSection(
+                      podcastCollectionAsync: ref.watch(
+                        podcastCollectionProvider(host.collectionId),
+                      ),
+                      collectionId: host.collectionId,
                     ),
-                    collectionId: host.collectionId,
                   ),
                   // const SizedBox(height: 20.0),
 
@@ -102,7 +142,7 @@ class HostsPage extends ConsumerWidget {
                   HostLogoSection(
                     collectionId: host.collectionId,
                     assetLogo: host.branding.assetLogo,
-                    scaleFactor: 0.5,
+                    scaleFactor: 0.65,
                   ),
 
                   // Mission-Beschreibung
@@ -123,77 +163,14 @@ class HostsPage extends ConsumerWidget {
           ),
 
           // --- StickyHeader: Anfahrt / Visit / Kontakt ---
-          const HostSectionHeader(
-            title: '(Anfahrt,) Visit & Kontakt',
+          HostSectionHeader(
+            title: host.sectionTitles?['portfolio'] ?? 'Angebote / Entdecken',
+            color: host.branding.primaryColorHex != null
+                ? Color(int.parse(
+                    host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
+                : Theme.of(context).colorScheme.primary,
           ),
 
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Social Links Bar
-                  if (host.contact.socialLinks != null &&
-                      host.contact.socialLinks!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                      child: HostSocialLinksSection(
-                        socialLinks: host.contact.socialLinks!,
-                      ),
-                    ),
-
-                  // E-Mail (aus RSS, dynamisch per Provider)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                    child: HostRssMetaTile(
-                      collectionId: host.collectionId.toString(),
-                      icon: Icons.email,
-                      extractor: (rssMeta) => rssMeta?.contactEmail ?? '',
-                      onTap: (value) => launchUrl(Uri.parse('mailto:$value')),
-                    ),
-                  ),
-
-                  // Host E-Mail (aus HostModel)
-                  if (host.contact.email != null &&
-                      host.contact.email!.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.email,
-                                color: Theme.of(context).colorScheme.primary),
-                            const SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: () => launchUrl(
-                                  Uri.parse('mailto:${host.contact.email!}')),
-                              child: Text(
-                                host.contact.email!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-
-          // --- StickyHeader: Angebote / Portfolio ---
-          const HostSectionHeader(
-            title: 'Portfolio & weitere Angebote',
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -276,7 +253,11 @@ class HostsPage extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.public,
-                              color: Theme.of(context).colorScheme.primary),
+                              color: host.branding.secondaryColorHex != null
+                                  ? Color(int.parse(host
+                                      .branding.secondaryColorHex!
+                                      .replaceFirst('#', '0xff')))
+                                  : Theme.of(context).colorScheme.secondary),
                           const SizedBox(width: 8),
                           GestureDetector(
                             onTap: () =>
@@ -287,7 +268,14 @@ class HostsPage extends ConsumerWidget {
                                   .textTheme
                                   .bodyLarge
                                   ?.copyWith(
-                                    color: Colors.blue,
+                                    color:
+                                        host.branding.secondaryColorHex != null
+                                            ? Color(int.parse(host
+                                                .branding.secondaryColorHex!
+                                                .replaceFirst('#', '0xff')))
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                     decoration: TextDecoration.underline,
                                   ),
                             ),
@@ -302,6 +290,83 @@ class HostsPage extends ConsumerWidget {
             ),
           ),
 
+          // --- StickyHeader: Angebote / Portfolio ---
+          HostSectionHeader(
+            title:
+                host.sectionTitles?['contact'] ?? 'Anfahrt / Visit / Kontakt',
+            color: host.branding.primaryColorHex != null
+                ? Color(int.parse(
+                    host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
+                : Theme.of(context).colorScheme.primary,
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Social Links Bar
+                  if (host.contact.socialLinks != null &&
+                      host.contact.socialLinks!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: HostSocialLinksSection(
+                        socialLinks: host.contact.socialLinks!,
+                        iconColor: host.branding.primaryColorHex != null
+                            ? Color(int.parse(host.branding.secondaryColorHex!
+                                .replaceFirst('#', '0xff')))
+                            : Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+
+                  // E-Mail (aus RSS, dynamisch per Provider)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: HostRssMetaTile(
+                      collectionId: host.collectionId.toString(),
+                      icon: Icons.email,
+                      extractor: (rssMeta) => rssMeta?.contactEmail ?? '',
+                      onTap: (value) => launchUrl(Uri.parse('mailto:$value')),
+                    ),
+                  ),
+
+                  // Host E-Mail (aus HostModel)
+                  // if (host.contact.email != null &&
+                  //     host.contact.email!.isNotEmpty)
+                  //   Padding(
+                  //     padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                  //     child: Center(
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         mainAxisSize: MainAxisSize.min,
+                  //         children: [
+                  //           Icon(Icons.email,
+                  //               color: Theme.of(context).colorScheme.primary),
+                  //           const SizedBox(width: 8),
+                  //           GestureDetector(
+                  //             onTap: () => launchUrl(
+                  //                 Uri.parse('mailto:${host.contact.email!}')),
+                  //             child: Text(
+                  //               host.contact.email!,
+                  //               style: Theme.of(context)
+                  //                   .textTheme
+                  //                   .bodyLarge
+                  //                   ?.copyWith(
+                  //                     color: Colors.blue,
+                  //                     decoration: TextDecoration.underline,
+                  //                   ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                ],
+              ),
+            ),
+          ),
+          const HostScrollSpacerSection(),
+/*
           // --- StickyHeader: Weitere Informationen ---
           const HostScrollSpacerSection(),
           const HostSectionHeader(
@@ -363,7 +428,7 @@ class HostsPage extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     );

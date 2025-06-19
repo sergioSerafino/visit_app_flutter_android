@@ -4,11 +4,13 @@ class SimpleSectionHeader extends SliverPersistentHeaderDelegate {
   final String title;
   final double height;
   final bool showShadow;
+  final Color? color;
 
   SimpleSectionHeader({
     required this.title,
     this.height = 56, // wie in EpisodeDetailPage
     this.showShadow = false,
+    this.color,
   });
 
   @override
@@ -52,7 +54,9 @@ class SimpleSectionHeader extends SliverPersistentHeaderDelegate {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   title,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: color,
+                      ),
                 ),
               ),
             ),

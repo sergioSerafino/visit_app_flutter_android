@@ -23,6 +23,9 @@ _$HostImpl _$$HostImplFromJson(Map<String, dynamic> json) => _$HostImpl(
           ? null
           : DateTime.parse(json['lastUpdated'] as String),
       hostImage: json['hostImage'] as String?,
+      sectionTitles: (json['sectionTitles'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ),
     );
 
 Map<String, dynamic> _$$HostImplToJson(_$HostImpl instance) =>
@@ -40,4 +43,5 @@ Map<String, dynamic> _$$HostImplToJson(_$HostImpl instance) =>
       'debugOnly': instance.debugOnly,
       'lastUpdated': instance.lastUpdated?.toIso8601String(),
       'hostImage': instance.hostImage,
+      'sectionTitles': instance.sectionTitles,
     };
