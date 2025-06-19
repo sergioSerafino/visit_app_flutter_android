@@ -192,24 +192,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ),
                       const PopupMenuItem(
-                        value: "Einstellungen",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Einstellungen",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem(
                         value: "Über",
                         child: Row(
                           children: [
@@ -222,6 +204,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                             Spacer(),
                             Icon(
                               Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: "Einstellungen",
+                        child: Row(
+                          children: [
+                            Text(
+                              "Einstellungen",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.settings,
                               color: Colors.white,
                             ),
                           ],
