@@ -9,7 +9,7 @@ Widget welcomeHeader(String hostName,
   final formattedHost = _formatHostNameForLineBreak(hostName);
 
   return Container(
-    // kein Hintergrund!
+    alignment: Alignment.centerLeft,
     child: RichText(
       text: TextSpan(
         style: TextStyle(

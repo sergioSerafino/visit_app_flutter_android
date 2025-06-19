@@ -6,13 +6,23 @@ import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/theme_provider.dart';
 import '../../application/providers/itunes_result_count_provider.dart';
-import '../widgets/home_header.dart';
+import '../widgets/home_header_material3.dart';
 import 'podcast_page.dart';
 import 'hosts_page.dart';
 import 'preferences_page.dart';
+import 'overlay_test_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Eigene Padding-Constants für HomePage
+class HomePageConstants {
+  static const double headerTop = 20.0;
+  static const double headerLeft = 0.0;
+  static const double headerRight = 4.0;
+  static const double headerBottom = 8.0;
+}
 
 class HomePage extends ConsumerStatefulWidget {
   final bool showMeWelcome;
@@ -26,7 +36,11 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [const PodcastPage(), const HostsPage()];
+  final List<Widget> _pages = [
+    const PodcastPage(),
+    const HostsPage(),
+    const OverlayTestPage()
+  ];
 
   bool _snackbarShown = false;
   @override
@@ -96,18 +110,34 @@ class _HomePageState extends ConsumerState<HomePage> {
             return AppBar(
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                      child: homeHeader(
-                    hostName,
-                    textColor: Colors.white,
-                    backgroundColor: theme.colorScheme.primary,
-                  )),
-                  const SizedBox(width: 12),
-                  // const CollectionInputWrapper(),
-                ],
+              title: Padding(
+                padding: const EdgeInsets.only(
+                  top: HomePageConstants.headerTop,
+                  left: HomePageConstants.headerLeft,
+                  right: HomePageConstants.headerRight,
+                  bottom: HomePageConstants.headerBottom,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: HomeHeaderMaterial3(
+                        hostName: hostName,
+                        baseColor: theme.colorScheme.primary,
+                        surfaceTint: theme.colorScheme.surfaceTint,
+                        overlayActive: false, // ggf. dynamisch setzen
+                        textColor: Colors.white,
+                        height: kToolbarHeight + 30,
+                        actions: null, // Actions werden unten übergeben
+                        textStyle: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                ),
               ),
               actions: [
                 Theme(
@@ -189,7 +219,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
                             Spacer(),
                             Icon(
-                              Icons.info_outline,
+                              Icons.arrow_back,
                               color: Colors.white,
                             ),
                           ],
@@ -221,7 +251,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.podcasts,
-                  //color: Colors.white, // Icon immer weiß
                 ),
                 label: "CastList",
                 backgroundColor: theme.colorScheme.primary,
@@ -229,9 +258,15 @@ class _HomePageState extends ConsumerState<HomePage> {
               BottomNavigationBarItem(
                 icon: const Icon(
                   Icons.person_outline,
-                  //color: Colors.white, // Icon immer weiß
                 ),
                 label: "HostsView",
+                backgroundColor: theme.colorScheme.primary,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.layers,
+                ),
+                label: "OverlayTest",
                 backgroundColor: theme.colorScheme.primary,
               ),
             ],

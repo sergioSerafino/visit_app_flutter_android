@@ -1,8 +1,8 @@
 /// Zentrale Konstanten für die LandingPage
 class LandingPageConstants {
   static const double welcomeHeaderTop = 24.0;
-  static const double welcomeHeaderLeft = 24.0;
-  static const double welcomeHeaderRight = 24.0;
+  static const double welcomeHeaderLeft = 12.0;
+  static const double welcomeHeaderRight = 4.0;
   static const double welcomeHeaderBottom = 8.0;
   static const double coverSpacing = 8.0;
   static const double buttonSpacing = 24.0;

@@ -60,29 +60,32 @@ class HomeHeaderMaterial3 extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(width: 16),
+              const SizedBox(width: 0), // Kein linker Abstand mehr
               Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    style: textStyle ??
-                        Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: effectiveTextColor,
-                            ),
-                    children: [
-                      const TextSpan(text: 'Visit'),
-                      TextSpan(
-                        text: "\n$formattedHost",
-                        style: (textStyle ??
-                                Theme.of(context).textTheme.headlineSmall)
-                            ?.copyWith(
-                          color: effectiveTextColor,
-                          fontWeight: FontWeight.bold,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    text: TextSpan(
+                      style: textStyle ??
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: effectiveTextColor,
+                              ),
+                      children: [
+                        const TextSpan(text: 'Visit'),
+                        TextSpan(
+                          text: "\n$formattedHost",
+                          style: (textStyle ??
+                                  Theme.of(context).textTheme.headlineSmall)
+                              ?.copyWith(
+                            color: effectiveTextColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               if (actions != null) ...actions!,

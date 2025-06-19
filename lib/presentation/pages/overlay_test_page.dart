@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/simple_section_header.dart';
+import '../widgets/home_header_material3.dart';
 import '../../application/providers/overlay_header_provider.dart';
-import '../../core/utils/color_utils.dart';
 
 class OverlayTestPage extends ConsumerStatefulWidget {
   final void Function(bool)? onScrollChanged;
@@ -44,19 +43,26 @@ class _OverlayTestPageState extends ConsumerState<OverlayTestPage> {
   @override
   Widget build(BuildContext context) {
     final baseColor = Colors.red;
-    final overlayColor =
-        flutterAppBarOverlayColorM3(context, baseColor, elevation: 3.0);
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SimpleSectionHeader(
-              title: 'Overlay: ' + (_showOverlay ? 'AKTIV' : 'INAKTIV'),
-              showShadow: true,
-              color: _showOverlay ? overlayColor : baseColor,
+          SliverToBoxAdapter(
+            child: HomeHeaderMaterial3(
+              hostName: 'TestHostName',
+              baseColor: baseColor,
+              surfaceTint: Theme.of(context).colorScheme.surfaceTint,
+              overlayActive: _showOverlay,
+              textColor: Colors.white,
+              height: 80,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.info, color: Colors.white),
+                  onPressed: () {},
+                ),
+              ],
+              textStyle: const TextStyle(fontSize: 22, color: Colors.white),
             ),
           ),
           SliverList(
