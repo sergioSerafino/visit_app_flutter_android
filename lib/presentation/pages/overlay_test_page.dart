@@ -44,7 +44,8 @@ class _OverlayTestPageState extends ConsumerState<OverlayTestPage> {
   @override
   Widget build(BuildContext context) {
     final baseColor = Colors.red;
-    final overlayColor = flutterAppBarOverlayColor(context, baseColor);
+    final overlayColor =
+        flutterAppBarOverlayColorM3(context, baseColor, elevation: 3.0);
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(

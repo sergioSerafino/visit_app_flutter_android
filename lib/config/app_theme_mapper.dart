@@ -3,11 +3,12 @@
 
 import 'package:flutter/material.dart';
 import '../../domain/models/branding_model.dart';
+import '../core/utils/color_scheme_from_branding.dart';
 
 class AppThemeMapper {
   static ThemeData fromBranding(Branding? branding) {
     debugPrint(
-        '[DEBUG] AppThemeMapper.fromBranding: ${branding?.toString() ?? 'null'}');
+        '[DEBUG] AppThemeMapper.fromBranding: \\${branding?.toString() ?? 'null'}');
     final primary = _parseHexColor(branding?.primaryColorHex) ??
         const Color(0xFFCCCCCC); // neutral hellgrau
     final secondary = _parseHexColor(branding?.secondaryColorHex) ??
@@ -17,15 +18,16 @@ class AppThemeMapper {
     final onPrimary = _getContrastColor(primary);
     final onSecondary = _getContrastColor(secondary);
 
+    final brightness = _themeModeToBrightness(branding?.themeMode);
+    var colorScheme = generateColorSchemeFromBranding(
+      primary: primary,
+      secondary: secondary,
+      brightness: brightness,
+    );
+    // surfaceTint auf reines Weiß setzen (maximaler Overlay-Effekt)
+    colorScheme = colorScheme.copyWith(surfaceTint: Colors.white);
     return ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primary,
-        primary: primary,
-        onPrimary: onPrimary,
-        secondary: secondary,
-        onSecondary: onSecondary,
-        brightness: _themeModeToBrightness(branding?.themeMode),
-      ),
+      colorScheme: colorScheme,
       useMaterial3: true,
     );
   }

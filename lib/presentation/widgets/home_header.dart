@@ -2,16 +2,24 @@
 // formatiertes Header-Widget
 
 import 'package:flutter/material.dart';
+import '../../core/utils/color_utils.dart';
 
 Widget homeHeader(String hostName,
     {Color? textColor,
     Color? backgroundColor,
-    BuildContext? context}) {
+    BuildContext? context,
+    bool overlayActive = false}) {
   final theme = context != null ? Theme.of(context) : null;
   final formattedHost = _formatHostNameForLineBreak(hostName);
+  final double elevation = overlayActive ? 3.0 : 0.0;
+  final Color effectiveBackground = (context != null && backgroundColor != null)
+      ? flutterAppBarOverlayColorM3(context, backgroundColor,
+          elevation: elevation)
+      : (backgroundColor ?? Colors.transparent);
 
-  return Container(
-    color: backgroundColor,
+  return Material(
+    color: effectiveBackground,
+    elevation: 0, // AppBar-Optik, kein Schatten
     child: SizedBox(
       height: kToolbarHeight + 30, // gleiche Höhe wie AppBar
       child: Align(
@@ -19,8 +27,7 @@ Widget homeHeader(String hostName,
         child: RichText(
           text: TextSpan(
             style: TextStyle(
-                fontSize: 24,
-                color: textColor ?? theme?.colorScheme.onPrimary),
+                fontSize: 24, color: textColor ?? theme?.colorScheme.onPrimary),
             children: [
               const TextSpan(text: 'Visit'),
               TextSpan(

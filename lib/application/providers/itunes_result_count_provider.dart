@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ItunesResultCountNotifier extends StateNotifier<int> {
-  ItunesResultCountNotifier() : super(3); // Default: 3
+  ItunesResultCountNotifier() : super(5); // Default: 5
 
   void setCount(int value) {
     state = value;

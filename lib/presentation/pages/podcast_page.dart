@@ -20,6 +20,7 @@ import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
 import '../../core/utils/color_utils.dart';
 import '../../../application/providers/overlay_header_provider.dart';
+import '../../../application/providers/overlay_tab_provider.dart';
 
 class PodcastPage extends ConsumerWidget {
   const PodcastPage({super.key});
@@ -62,10 +63,10 @@ class PodcastPage extends ConsumerWidget {
           PlaceholderLoaderService.podcastCollection.allEpisodes;
 
       // Flutter-konforme Overlay-Farbe für AppBar (auch im Placeholder-Modus verfügbar machen)
-      final showOverlay = ref.watch(overlayHeaderProvider);
+      final showOverlay = ref.watch(overlayTabProvider)[0] ?? false;
       final baseColor = Theme.of(context).colorScheme.primary;
       final appBarColor = showOverlay
-          ? flutterAppBarOverlayColor(context, baseColor)
+          ? flutterAppBarOverlayColorM3(context, baseColor)
           : baseColor;
 
       return Scaffold(

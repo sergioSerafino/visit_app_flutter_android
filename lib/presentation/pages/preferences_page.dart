@@ -320,16 +320,26 @@ class PreferencesBottomSheet extends ConsumerWidget {
                         ),
 
                         // iTunes Ergebnisanzahl
+                        const SizedBox(height: 8),
+                        const Divider(),
+                        const SizedBox(height: 8),
                         Consumer(
                           builder: (context, ref, _) {
                             final count = ref.watch(itunesResultCountProvider);
                             return ListTile(
-                              leading: const Icon(Icons.format_list_numbered),
+                              leading: Icon(
+                                Icons.format_list_numbered,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withAlpha(180),
+                                size: 28,
+                              ),
                               title: const Text('Anzahl iTunes-Ergebnisse'),
                               subtitle: Text('Aktuell: $count'),
                               trailing: DropdownButton<int>(
                                 value: count,
-                                items: [3, 5, 10, 20, 30]
+                                items: [5, 3, 10, 20, 30]
                                     .map((e) => DropdownMenuItem(
                                           value: e,
                                           child: Text(e.toString()),

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import '../../core/utils/color_utils.dart';
 import '../widgets/host_bio_section.dart';
 import '../widgets/host_logo_section.dart';
 import '../widgets/host_mission_section.dart';
@@ -25,6 +24,7 @@ import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../widgets/host_rss_meta_tile.dart';
 import '../../application/providers/overlay_header_provider.dart';
+import '../../application/providers/overlay_tab_provider.dart';
 
 class HostsPage extends ConsumerStatefulWidget {
   final void Function(bool)? onScrollChanged;
@@ -47,6 +47,9 @@ class _HostsPageState extends ConsumerState<HostsPage> {
   void _onScroll() {
     final show = _scrollController.hasClients && _scrollController.offset > 0;
     ref.read(overlayHeaderProvider.notifier).setOverlay(show);
+    ref
+        .read(overlayTabProvider.notifier)
+        .setOverlay(1, show); // Tab 1 = HostsPage
     if (widget.onScrollChanged != null) {
       widget.onScrollChanged!(show);
     }
@@ -63,13 +66,11 @@ class _HostsPageState extends ConsumerState<HostsPage> {
   Widget build(BuildContext context) {
     initializeDateFormatting('de_DE', null);
     final host = ref.watch(coll_prov.hostModelProvider);
-    final showOverlay = ref.watch(overlayHeaderProvider);
+    final showOverlay = ref.watch(overlayTabProvider)[1] ?? false;
     final baseColor = host.branding.primaryColorHex != null
         ? Color(
             int.parse(host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
         : Theme.of(context).colorScheme.primary;
-    final appBarColor =
-        showOverlay ? flutterAppBarOverlayColor(context, baseColor) : baseColor;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
@@ -80,8 +81,10 @@ class _HostsPageState extends ConsumerState<HostsPage> {
             title: host.sectionTitles?['about'] ??
                 'Bio / Mission / Persona / About',
             showShadow: true,
-            color: appBarColor,
+            overlayActive: showOverlay,
+            baseColor: baseColor,
           ),
+
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -169,10 +172,8 @@ class _HostsPageState extends ConsumerState<HostsPage> {
           // --- StickyHeader: Anfahrt / Visit / Kontakt ---
           HostSectionHeader(
             title: host.sectionTitles?['portfolio'] ?? 'Angebote / Entdecken',
-            color: host.branding.primaryColorHex != null
-                ? Color(int.parse(
-                    host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
-                : Theme.of(context).colorScheme.primary,
+            overlayActive: showOverlay,
+            baseColor: baseColor,
           ),
 
           SliverToBoxAdapter(
@@ -298,10 +299,8 @@ class _HostsPageState extends ConsumerState<HostsPage> {
           HostSectionHeader(
             title:
                 host.sectionTitles?['contact'] ?? 'Anfahrt / Visit / Kontakt',
-            color: host.branding.primaryColorHex != null
-                ? Color(int.parse(
-                    host.branding.primaryColorHex!.replaceFirst('#', '0xff')))
-                : Theme.of(context).colorScheme.primary,
+            overlayActive: showOverlay,
+            baseColor: baseColor,
           ),
           SliverToBoxAdapter(
             child: Padding(
