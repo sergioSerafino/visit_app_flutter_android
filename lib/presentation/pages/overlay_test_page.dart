@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widgets/simple_section_header.dart';
+import '../../application/providers/overlay_header_provider.dart';
 
-class OverlayTestPage extends StatefulWidget {
+class OverlayTestPage extends ConsumerStatefulWidget {
   final void Function(bool)? onScrollChanged;
   const OverlayTestPage({Key? key, this.onScrollChanged}) : super(key: key);
 
   @override
-  State<OverlayTestPage> createState() => _OverlayTestPageState();
+  ConsumerState<OverlayTestPage> createState() => _OverlayTestPageState();
 }
 
-class _OverlayTestPageState extends State<OverlayTestPage> {
+class _OverlayTestPageState extends ConsumerState<OverlayTestPage> {
   late final ScrollController _scrollController;
+  bool _showOverlay = false;
 
   @override
   void initState() {
@@ -19,12 +23,14 @@ class _OverlayTestPageState extends State<OverlayTestPage> {
   }
 
   void _onScroll() {
+    final show = _scrollController.hasClients && _scrollController.offset > 0;
+    ref.read(overlayHeaderProvider.notifier).setOverlay(show);
     if (widget.onScrollChanged != null) {
-      final show = _scrollController.hasClients && _scrollController.offset > 0;
-      print(
-          '[OverlayTestPage] onScrollChanged: show=$show, offset=${_scrollController.offset}');
       widget.onScrollChanged!(show);
     }
+    setState(() {
+      _showOverlay = show;
+    });
   }
 
   @override
@@ -38,12 +44,26 @@ class _OverlayTestPageState extends State<OverlayTestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView.builder(
+      body: CustomScrollView(
         controller: _scrollController,
-        itemCount: 50,
-        itemBuilder: (context, index) => ListTile(
-          title: Text('Testeintrag $index'),
-        ),
+        slivers: [
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: SimpleSectionHeader(
+              title: 'Overlay: ' + (_showOverlay ? 'AKTIV' : 'INAKTIV'),
+              showShadow: true,
+              color: Colors.red,
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => ListTile(
+                title: Text('Testeintrag $index'),
+              ),
+              childCount: 50,
+            ),
+          ),
+        ],
       ),
     );
   }

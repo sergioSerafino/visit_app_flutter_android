@@ -6,45 +6,35 @@ import 'package:flutter/material.dart';
 Widget homeHeader(String hostName,
     {Color? textColor,
     Color? backgroundColor,
-    BuildContext? context,
-    bool showOverlay = false}) {
+    BuildContext? context}) {
   final theme = context != null ? Theme.of(context) : null;
   final formattedHost = _formatHostNameForLineBreak(hostName);
 
-  return Stack(
-    children: [
-      Container(
-        color: backgroundColor,
-        child: SizedBox(
-          height: kToolbarHeight + 30, // gleiche Höhe wie AppBar
-          child: Align(
-            alignment: Alignment.centerLeft, // Links ausrichten
-            child: RichText(
-              text: TextSpan(
+  return Container(
+    color: backgroundColor,
+    child: SizedBox(
+      height: kToolbarHeight + 30, // gleiche Höhe wie AppBar
+      child: Align(
+        alignment: Alignment.centerLeft, // Links ausrichten
+        child: RichText(
+          text: TextSpan(
+            style: TextStyle(
+                fontSize: 24,
+                color: textColor ?? theme?.colorScheme.onPrimary),
+            children: [
+              const TextSpan(text: 'Visit'),
+              TextSpan(
+                text: "\n$formattedHost",
                 style: TextStyle(
                     fontSize: 24,
+                    fontWeight: FontWeight.bold,
                     color: textColor ?? theme?.colorScheme.onPrimary),
-                children: [
-                  const TextSpan(text: 'Visit'),
-                  TextSpan(
-                    text: "\n$formattedHost",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: textColor ?? theme?.colorScheme.onPrimary),
-                  ),
-                ],
               ),
-            ),
+            ],
           ),
         ),
       ),
-      if (showOverlay && context != null && backgroundColor != null)
-        Container(
-          height: kToolbarHeight + 30,
-          color: Colors.red.withOpacity(0.8), // Noch auffälligerer Overlay-Test
-        ),
-    ],
+    ),
   );
 }
 
@@ -61,4 +51,11 @@ String _formatHostNameForLineBreak(String hostName, {int threshold = 30}) {
     }
   }
   return hostName;
+}
+
+Color _darkenColor(Color color, double amount) {
+  // amount: 0.0 (keine Änderung) bis 1.0 (schwarz)
+  final hsl = HSLColor.fromColor(color);
+  final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+  return hslDark.toColor();
 }

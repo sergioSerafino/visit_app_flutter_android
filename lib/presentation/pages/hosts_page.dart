@@ -23,6 +23,7 @@ import '../../application/providers/podcast_provider.dart';
 import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../widgets/host_rss_meta_tile.dart';
+import '../../application/providers/overlay_header_provider.dart';
 
 class HostsPage extends ConsumerStatefulWidget {
   final void Function(bool)? onScrollChanged;
@@ -43,10 +44,9 @@ class _HostsPageState extends ConsumerState<HostsPage> {
   }
 
   void _onScroll() {
+    final show = _scrollController.hasClients && _scrollController.offset > 0;
+    ref.read(overlayHeaderProvider.notifier).setOverlay(show);
     if (widget.onScrollChanged != null) {
-      final show = _scrollController.hasClients && _scrollController.offset > 0;
-      print(
-          '[HostsPage] onScrollChanged: show=$show, offset=${_scrollController.offset}');
       widget.onScrollChanged!(show);
     }
   }

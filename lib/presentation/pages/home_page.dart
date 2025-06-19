@@ -5,11 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/theme_provider.dart';
+import '../../application/providers/overlay_header_provider.dart';
 import '../widgets/home_header.dart';
 import 'podcast_page.dart';
 import 'hosts_page.dart';
 import 'preferences_page.dart';
-import 'overlay_test_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,20 +47,34 @@ class _HomePageState extends ConsumerState<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
+    // Overlay-Status beim Tabwechsel zurücksetzen, wenn Tab keinen Overlay benötigt
+    if (index == 0 /* PodcastPage */) {
+      ref.read(overlayHeaderProvider.notifier).setOverlay(false);
+    }
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, String hostName,
-      Color? backgroundColor, Color? foregroundColor) {
+      Color? backgroundColor, Color? foregroundColor, bool overlayActive) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(90),
       child: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: overlayActive
+            ? (Theme.of(context).brightness == Brightness.dark
+                ? ElevationOverlay.applyOverlay(context, backgroundColor!, 4)
+                : Color.alphaBlend(
+                    const Color.fromARGB(46, 0, 0, 0), backgroundColor!))
+            : backgroundColor,
         foregroundColor: foregroundColor,
         title: homeHeader(
           hostName,
           textColor: Colors.white,
-          backgroundColor: backgroundColor,
-          showOverlay: _showHeaderOverlay,
+          backgroundColor: overlayActive
+              ? (Theme.of(context).brightness == Brightness.dark
+                  ? ElevationOverlay.applyOverlay(context, backgroundColor!, 4)
+                  : Color.alphaBlend(
+                      const Color.fromARGB(46, 0, 0, 0), backgroundColor!))
+              : backgroundColor,
+          showOverlay: false, // Overlay jetzt über die Hintergrundfarbe
         ),
         actions: [
           Theme(
@@ -161,6 +175,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final overlayActive = ref.watch(overlayHeaderProvider);
     if (!_snackbarShown) {
       _snackbarShown = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -212,27 +227,30 @@ class _HomePageState extends ConsumerState<HomePage> {
             host.branding.secondaryColorHex!.replaceFirst('#', '0xff')))
         : Theme.of(context).colorScheme.onPrimary;
     return Scaffold(
-      appBar: _buildAppBar(context, hostName, backgroundColor, foregroundColor),
+      appBar: _buildAppBar(
+          context, hostName, backgroundColor, foregroundColor, overlayActive),
       body: IndexedStack(
         index: _selectedIndex,
         children: [
           const PodcastPage(),
           HostsPage(onScrollChanged: _handleHostsScroll),
-          OverlayTestPage(onScrollChanged: (show) {
-            print('[OverlayTestPage] onScrollChanged: show=$show');
-            setState(() {
-              _showHeaderOverlay = show;
-            });
-          }),
         ],
       ),
       bottomNavigationBar: Consumer(
         builder: (context, ref, _) {
           final theme = ref.watch(appThemeProvider);
+          final overlayActive = ref.watch(overlayHeaderProvider);
+          final Color baseColor = theme.colorScheme.primary;
+          final Color barColor = overlayActive
+              ? (theme.brightness == Brightness.dark
+                  ? ElevationOverlay.applyOverlay(context, baseColor, 4)
+                  : Color.alphaBlend(
+                      const Color.fromARGB(46, 0, 0, 0), baseColor))
+              : baseColor;
           return BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: _onTabSelected,
-            backgroundColor: theme.colorScheme.primary,
+            backgroundColor: barColor,
             selectedItemColor: Colors.white, // Labels und Icons immer weiß
             unselectedItemColor:
                 Colors.white.withAlpha(70), // Unselected mit Transparenz
@@ -253,13 +271,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   //color: Colors.white, // Icon immer weiß
                 ),
                 label: "HostsView",
-                backgroundColor: theme.colorScheme.primary,
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.bug_report,
-                ),
-                label: "OverlayTest",
                 backgroundColor: theme.colorScheme.primary,
               ),
             ],
