@@ -53,7 +53,7 @@ class HomeHeaderMaterial3 extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: Material(
-        color: effectiveColor,
+        color: Colors.transparent, // Hintergrund transparent für Overlay-Effekt
         elevation: 0,
         child: SizedBox(
           height: height,
