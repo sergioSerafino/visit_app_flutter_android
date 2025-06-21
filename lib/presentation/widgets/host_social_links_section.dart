@@ -15,7 +15,7 @@ class HostSocialLinksSection extends StatelessWidget {
   Widget build(BuildContext context) {
     // Social Links Bar
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 0),
       child: SocialLinksBar(socialLinks: socialLinks, iconColor: iconColor),
     );
   }
