@@ -6,6 +6,7 @@ import '../../application/providers/audio_player_provider.dart';
 import '../../application/providers/current_episode_provider.dart';
 import '../../core/services/audio_player_bloc.dart';
 import '../widgets/cast_airplay_button.dart';
+import '../widgets/episode_play_button.dart';
 import '../../core/messaging/snackbar_manager.dart';
 
 /// Button-Row für EpisodeDetailPage: Favorisieren, Download, Cast, Play/Pause
@@ -87,36 +88,12 @@ class EpisodeActionRow extends ConsumerWidget {
           iconColor: Colors.grey[400],
           iconSize: 44,
         ),
-        SizedBox(
-          width: 56,
-          height: 56,
-          child: Center(
-            child: IconButton(
-              icon: Icon(
-                isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-                color: playIconColor,
-                size: 56,
-              ),
-              iconSize: 56,
-              padding: EdgeInsets.zero,
-              alignment: Alignment.center,
-              constraints: const BoxConstraints(),
-              onPressed: isEnabled
-                  ? () {
-                      final notifier =
-                          ref.read(currentEpisodeProvider.notifier);
-                      if (!isActiveEpisode) {
-                        audioBloc.add(Stop());
-                        notifier.state = episode;
-                        audioBloc.add(PlayEpisode(episode.episodeUrl));
-                      } else {
-                        audioBloc.add(TogglePlayPause());
-                      }
-                    }
-                  : null,
-              tooltip: isPlaying ? 'Pause' : 'Wiedergabe starten',
-            ),
-          ),
+        // Play/Pause-Button ausgelagert
+        EpisodePlayButton(
+          episode: episode,
+          iconSize: 56,
+          iconColor: playIconColor,
+          padding: EdgeInsets.zero,
         ),
       ],
     );

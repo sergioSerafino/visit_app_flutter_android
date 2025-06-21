@@ -339,7 +339,7 @@ class PreferencesBottomSheet extends ConsumerWidget {
                               subtitle: Text('Aktuell: $count'),
                               trailing: DropdownButton<int>(
                                 value: count,
-                                items: [5, 3, 10, 20, 30]
+                                items: [5, 15, 50, 200]
                                     .map((e) => DropdownMenuItem(
                                           value: e,
                                           child: Text(e.toString()),

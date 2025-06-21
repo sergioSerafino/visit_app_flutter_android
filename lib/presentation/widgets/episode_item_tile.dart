@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../domain/models/podcast_episode_model.dart';
 import '../../core/utils/episode_item_tile_constants.dart';
 import '../../core/utils/episode_format_utils.dart';
+import 'episode_play_button.dart';
 
 class EpisodeItemTile extends StatelessWidget {
   final PodcastEpisode episode;
@@ -87,7 +88,17 @@ class EpisodeItemTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 8),
+
+                // Play-Button unterhalb der Dauer
+                EpisodePlayButton(
+                  episode: episode,
+                  iconSize: 36,
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.all(0),
+                ),
+                // const SizedBox(height: 8),
+
                 SizedBox(
                   height: 50,
                   child: Align(

@@ -202,7 +202,7 @@ class PodcastPage extends ConsumerWidget {
                 }
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
             // 🔽 Episodenliste mit Async Builder
             Expanded(
@@ -283,7 +283,6 @@ class PodcastPage extends ConsumerWidget {
                 },
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),

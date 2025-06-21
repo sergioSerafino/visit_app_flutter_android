@@ -13,6 +13,8 @@ import 'preferences_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import '../../core/utils/scroll_shadow_controller.dart';
+import '../../core/services/audio_player_bloc.dart';
+import '../../application/providers/audio_player_provider.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -64,6 +66,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final showOverlay = _selectedIndex == 0
         ? _podcastScrollShadowController.showShadow
         : _hostsScrollShadowController.showShadow;
@@ -245,41 +248,84 @@ class _HomePageState extends ConsumerState<HomePage> {
           HostsPage(scrollController: _hostsScrollShadowController.controller),
         ],
       ),
-      bottomNavigationBar: Consumer(
-        builder: (context, ref, _) {
-          final theme = ref.watch(appThemeProvider);
-          return BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: _onTabSelected,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onTabSelected,
+        backgroundColor: theme.colorScheme.primary,
+        selectedItemColor: Colors.white, // Labels und Icons immer weiß
+        unselectedItemColor:
+            Colors.white.withAlpha(70), // Unselected mit Transparenz
+        selectedLabelStyle: const TextStyle(color: Colors.white),
+        unselectedLabelStyle: const TextStyle(color: Colors.white),
+        items: [
+          BottomNavigationBarItem(
+            icon: Consumer(
+              builder: (context, ref, _) {
+                final audioStateAsync = ref.watch(audioPlayerStateProvider);
+                final audioState = audioStateAsync.asData?.value;
+                final isPlaying = audioState is Playing;
+                final isSelected = _selectedIndex == 0;
+                Color? iconColor;
+                if (isSelected) {
+                  iconColor = Colors.white;
+                } else {
+                  iconColor = null; // Standardfarbe für unselected
+                }
+                return Icon(
+                  isPlaying ? Icons.pause_circle_filled : Icons.play_arrow,
+                  color: iconColor,
+                );
+              },
+            ),
+            label: "Podcast",
             backgroundColor: theme.colorScheme.primary,
-            selectedItemColor: Colors.white, // Labels und Icons immer weiß
-            unselectedItemColor:
-                Colors.white.withAlpha(70), // Unselected mit Transparenz
-            selectedLabelStyle: const TextStyle(color: Colors.white),
-            unselectedLabelStyle: const TextStyle(color: Colors.white),
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  _selectedIndex == 0 ? Icons.play_arrow : Icons.play_arrow,
-                ),
-                label: "Podcast",
-                backgroundColor: theme.colorScheme.primary,
-              ),
-              BottomNavigationBarItem(
-                icon: /*Transform.rotate(
-                  angle: 1.5708, // 90 Grad im Bogenmaß, play_circle
-                  child:*/
-                    Icon(
-                  _selectedIndex == 1 ? Icons.person : Icons.person,
-                  // ),
-                ),
-                label: "Host",
-                backgroundColor: theme.colorScheme.primary,
-              ),
-            ],
-          );
-        },
+          ),
+          BottomNavigationBarItem(
+            icon: _selectedIndex == 1
+                ? const Icon(Icons.person)
+                : /*Transform.rotate(
+                    angle: 1.5708, // 90 Grad im Bogenmaß, play_arrow
+                    child: */
+                const Icon(Icons.person),
+            // ),
+            label: "Visit",
+            backgroundColor: theme.colorScheme.primary,
+          ),
+        ],
       ),
     );
   }
 }
+
+// // Custom Widget für BottomNavigationBarLabel
+// class VistTabLabel extends StatelessWidget {
+//   final bool selected;
+//   const VistTabLabel({required this.selected, super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       mainAxisSize: MainAxisSize.min,
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: [
+//         Transform.rotate(
+//           angle: 1.5708, // 90 Grad im Bogenmaß
+//           child: Icon(
+//             Icons.play_arrow,
+//             size: 18,
+//             color: selected ? Colors.white : Colors.white.withAlpha(90),
+//           ),
+//         ),
+//         const SizedBox(width: 2),
+//         Text(
+//           'isit',
+//           style: TextStyle(
+//             color: selected ? Colors.white : Colors.white.withAlpha(90),
+//             fontSize: 12,
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
