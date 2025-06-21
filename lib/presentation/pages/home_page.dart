@@ -15,6 +15,8 @@ import '../../core/messaging/snackbar_manager.dart';
 import '../../core/utils/scroll_shadow_controller.dart';
 import '../../core/services/audio_player_bloc.dart';
 import '../../application/providers/audio_player_provider.dart';
+import '../../application/providers/current_episode_provider.dart';
+import '../widgets/bottom_player_widget.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -135,7 +137,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         textColor: Colors.white,
                         height: kToolbarHeight + 30,
                         actions: null,
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontSize: 24,
                           color: Colors.white,
                         ),

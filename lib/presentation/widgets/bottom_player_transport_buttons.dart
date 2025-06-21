@@ -43,7 +43,9 @@ class BottomPlayerTransportButtons extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.refresh,
                 color: isActiveEpisode
-                    ? theme.colorScheme.primary.withAlpha(140)
+                    ? BottomPlayerTransportButtonsConstants.neutralIconColor
+                        .withAlpha(BottomPlayerTransportButtonsConstants
+                            .neutralIconAlpha)
                     : theme.disabledColor),
             iconSize: BottomPlayerTransportButtonsConstants.resetButtonSize,
             tooltip: 'Player zurücksetzen',
@@ -66,7 +68,11 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(Icons.replay_10,
                             color: isActiveEpisode
-                                ? theme.colorScheme.primary.withAlpha(140)
+                                ? BottomPlayerTransportButtonsConstants
+                                    .neutralIconColor
+                                    .withAlpha(
+                                        BottomPlayerTransportButtonsConstants
+                                            .neutralIconAlpha)
                                 : theme.disabledColor),
                         iconSize: BottomPlayerTransportButtonsConstants
                             .iconButtonSize,
@@ -148,7 +154,11 @@ class BottomPlayerTransportButtons extends StatelessWidget {
                       child: IconButton(
                         icon: Icon(Icons.forward_10,
                             color: isActiveEpisode
-                                ? theme.colorScheme.primary.withAlpha(140)
+                                ? BottomPlayerTransportButtonsConstants
+                                    .neutralIconColor
+                                    .withAlpha(
+                                        BottomPlayerTransportButtonsConstants
+                                            .neutralIconAlpha)
                                 : theme.disabledColor),
                         iconSize: BottomPlayerTransportButtonsConstants
                             .iconButtonSize,
@@ -170,7 +180,9 @@ class BottomPlayerTransportButtons extends StatelessWidget {
             child: IconTheme(
               data: IconThemeData(
                 color: isActiveEpisode
-                    ? theme.colorScheme.primary.withAlpha(140)
+                    ? BottomPlayerTransportButtonsConstants.neutralIconColor
+                        .withAlpha(BottomPlayerTransportButtonsConstants
+                            .neutralIconAlpha)
                     : theme.disabledColor, // Wie die anderen Buttons
               ),
               child: volumeButton,

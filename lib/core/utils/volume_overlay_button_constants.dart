@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
 /// Zentrale Konstanten für das VolumeOverlayButton-Widget
 class VolumeOverlayButtonConstants {
-  static const double iconButtonSize =
-      36.0; // wie BottomPlayerWidgetConstants.buttonSize
+  static const double iconButtonSize = 24.0; // wie Reset-Button
   static const int iconColorAlpha = 140;
+  static const Color neutralIconColor = Color(0xFF888888); // neutrales Grau
   static const double overlayElevation = 8.0;
   static const double overlayWidth = 72.0;
   static const double overlayHeight = 240.0;

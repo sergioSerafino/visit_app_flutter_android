@@ -181,6 +181,62 @@ class PreferencesBottomSheet extends ConsumerWidget {
                         const Divider(),
                         const SizedBox(height: 8),
 
+                        // iTunes Ergebnisanzahl
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final count = ref.watch(itunesResultCountProvider);
+                            final limits = [200, 50, 15, 3];
+                            final showCurrent = !limits.contains(count);
+                            final items = showCurrent
+                                ? [
+                                    DropdownMenuItem(
+                                      value: count,
+                                      child: Text(
+                                        '$count (aktuell)',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    ...limits.map((e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e.toString()),
+                                        ))
+                                  ]
+                                : limits
+                                    .map((e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e.toString()),
+                                        ))
+                                    .toList();
+                            return ListTile(
+                              leading: Icon(
+                                Icons.format_list_numbered,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withAlpha(180),
+                                size: 28,
+                              ),
+                              title: const Text('Anzahl iTunes-Ergebnisse'),
+                              subtitle: Text('Aktuell: $count'),
+                              trailing: DropdownButton<int>(
+                                value: count,
+                                items: items,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    ref
+                                        .read(
+                                            itunesResultCountProvider.notifier)
+                                        .setCount(value);
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                        ),
+
+                        // Eingabe iTunes API (Admin-Input)
+                        // const SizedBox(height: 8),
                         ListTile(
                           leading: Icon(
                             Icons.numbers,
@@ -318,45 +374,6 @@ class PreferencesBottomSheet extends ConsumerWidget {
                             ],
                           ),
                         ),
-
-                        // iTunes Ergebnisanzahl
-                        const SizedBox(height: 8),
-                        const Divider(),
-                        const SizedBox(height: 8),
-                        Consumer(
-                          builder: (context, ref, _) {
-                            final count = ref.watch(itunesResultCountProvider);
-                            return ListTile(
-                              leading: Icon(
-                                Icons.format_list_numbered,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withAlpha(180),
-                                size: 28,
-                              ),
-                              title: const Text('Anzahl iTunes-Ergebnisse'),
-                              subtitle: Text('Aktuell: $count'),
-                              trailing: DropdownButton<int>(
-                                value: count,
-                                items: [5, 15, 50, 200]
-                                    .map((e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(e.toString()),
-                                        ))
-                                    .toList(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    ref
-                                        .read(
-                                            itunesResultCountProvider.notifier)
-                                        .setCount(value);
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        ),
                       ],
                     ),
                   ),
@@ -365,10 +382,10 @@ class PreferencesBottomSheet extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, st) => Center(
+          error: (e, st) => const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(Icons.error_outline, color: Colors.red, size: 32),
                 SizedBox(height: 8),
                 Text('Fehler beim Laden der Einstellungen'),

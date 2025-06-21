@@ -206,12 +206,6 @@ class PodcastPage extends ConsumerWidget {
             const SizedBox(height: 12),
 
             // 🔽 Episodenliste mit Async Builder
-            // Scroll-Indikator
-            if (scrollController != null)
-              PodcastScrollIndicator(scrollController: scrollController!),
-
-            const SizedBox(height: 12),
-
             Expanded(
               child: Builder(
                 builder: (context) {
@@ -295,6 +289,11 @@ class PodcastPage extends ConsumerWidget {
                 },
               ),
             ),
+            // ProgressBar und Abstand jetzt unterhalb der Liste
+            if (scrollController != null) ...[
+              const SizedBox(height: 12),
+              PodcastScrollIndicator(scrollController: scrollController!),
+            ],
           ],
         ),
       ),

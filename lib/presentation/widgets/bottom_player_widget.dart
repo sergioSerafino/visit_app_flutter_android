@@ -454,9 +454,8 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.volume_up,
-          color: widget.theme.colorScheme.primary.withAlpha(
-              VolumeOverlayButtonConstants
-                  .iconColorAlpha)), // Branding-Farbe wie Transportfeld und Progressbar
+          color: VolumeOverlayButtonConstants.neutralIconColor.withAlpha(
+              VolumeOverlayButtonConstants.iconColorAlpha)), // neutrales Grau
       iconSize: VolumeOverlayButtonConstants.iconButtonSize,
       tooltip: 'Lautstärke',
       onPressed: _toggleSlider,
