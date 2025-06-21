@@ -21,14 +21,12 @@ class HostLogoImageSection extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.5 * 1.25,
           height: MediaQuery.of(context).size.width * 0.28 * 1.25,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            // borderRadius: BorderRadius.circular(8),
             child: Align(
               alignment: Alignment.center,
               heightFactor: 0.7, // schneidet oben und unten ab
               child: SafeImage(
                 imageUrl: TenantAssetLoader(collectionId).imagePath(),
-                width: MediaQuery.of(context).size.width * 0.5 * 1.25,
-                height: MediaQuery.of(context).size.width * 0.28 * 1.25,
                 fit: BoxFit.cover,
                 isAsset: true,
               ),

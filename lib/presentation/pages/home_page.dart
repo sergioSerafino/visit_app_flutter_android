@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/theme_provider.dart';
+import '../../core/messaging/snackbar_event.dart';
 import '../widgets/home_header_material3.dart';
 import 'podcast_page.dart';
 import 'hosts_page.dart';
@@ -137,7 +138,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    // const SizedBox(width: 12),
                   ],
                 ),
               ),
@@ -258,17 +259,21 @@ class _HomePageState extends ConsumerState<HomePage> {
             unselectedLabelStyle: const TextStyle(color: Colors.white),
             items: [
               BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.podcasts,
+                icon: Icon(
+                  _selectedIndex == 0 ? Icons.play_arrow : Icons.play_arrow,
                 ),
-                label: "CastList",
+                label: "Podcast",
                 backgroundColor: theme.colorScheme.primary,
               ),
               BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.person_outline,
+                icon: /*Transform.rotate(
+                  angle: 1.5708, // 90 Grad im Bogenmaß, play_circle
+                  child:*/
+                    Icon(
+                  _selectedIndex == 1 ? Icons.person : Icons.person,
+                  // ),
                 ),
-                label: "HostsView",
+                label: "Host",
                 backgroundColor: theme.colorScheme.primary,
               ),
             ],

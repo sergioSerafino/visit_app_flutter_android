@@ -83,7 +83,7 @@ class HomeHeaderMaterial3 extends StatelessWidget {
                         ),
                       ],
                     ),
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
