@@ -20,6 +20,7 @@ import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
 import '../../core/utils/color_utils.dart';
 import '../../../application/providers/overlay_tab_provider.dart';
+import './_podcast_scroll_indicator.dart';
 
 class PodcastPage extends ConsumerWidget {
   final ScrollController? scrollController;
@@ -202,9 +203,15 @@ class PodcastPage extends ConsumerWidget {
                 }
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
 
             // 🔽 Episodenliste mit Async Builder
+            // Scroll-Indikator
+            if (scrollController != null)
+              PodcastScrollIndicator(scrollController: scrollController!),
+
+            const SizedBox(height: 12),
+
             Expanded(
               child: Builder(
                 builder: (context) {
@@ -214,29 +221,34 @@ class PodcastPage extends ConsumerWidget {
                         child: CircularProgressIndicator(color: Colors.black12),
                       );
                     case EpisodeLoadState.placeholder:
-                      return ListView.builder(
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey.shade300,
-                            highlightColor: Colors.grey.shade100,
-                            child: EpisodeItemTile(
-                              episode: PodcastEpisode(
-                                wrapperType: "",
-                                trackId: index,
-                                trackName: "Lade Folge\n", // ${index + 1}",
-                                artworkUrl600: "",
-                                description:
-                                    "Beschreibungs-Text des Platzhalter-Inhaltes dieser Folge.",
-                                trackTimeMillis: 1150000,
-                                episodeUrl: "",
-                                episodeFileExtension: "mp3",
-                                releaseDate: DateTime.now(),
+                      return Scrollbar(
+                        controller: scrollController,
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: 4,
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: EpisodeItemTile(
+                                episode: PodcastEpisode(
+                                  wrapperType: "",
+                                  trackId: index,
+                                  trackName: "Lade Folge\n", // ${index + 1}",
+                                  artworkUrl600: "",
+                                  description:
+                                      "Beschreibungs-Text des Platzhalter-Inhaltes dieser Folge.",
+                                  trackTimeMillis: 1150000,
+                                  episodeUrl: "",
+                                  episodeFileExtension: "mp3",
+                                  releaseDate: DateTime.now(),
+                                ),
+                                onTap: () {},
                               ),
-                              onTap: () {},
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       );
                     case EpisodeLoadState.loaded:
                       return AnimatedSwitcher(
