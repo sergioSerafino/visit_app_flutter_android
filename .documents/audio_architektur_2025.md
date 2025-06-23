@@ -124,13 +124,38 @@ void main() {
 
 ---
 
-**Quellen:**  
+## Umsetzungs-Stand: Produktives Audio-Playback (Stand: 23.06.2025)
+
+### Architektur & Code
+- AudioPlayerBloc (lib/core/services/audio_player_bloc.dart) implementiert Events/States für Play, Pause, Seek, Speed, Volume, Fehler, Preload etc.
+- Nutzt IAudioPlayerBackend für die eigentliche Audio-Logik (Austauschbarkeit, Testbarkeit).
+- Fehlerbehandlung, Resume, State-Maschine und Testbarkeit sind umgesetzt.
+- Produktiv-Backend (just_audio) ist vorbereitet, aber im Provider aktuell noch nicht als Default aktiv.
+- AudioPlayerSyncService nutzt just_audio und synchronisiert Streams für Position, Duration, Speed, Volume.
+- Provider-Pattern (audioPlayerBlocProvider) ermöglicht flexiblen Austausch des Backends (Mock, produktiv, Test).
+- audioHandlerProvider für Systemintegration (audio_service) ist vorbereitet, aber noch nicht produktiv angebunden.
+- UI (BottomPlayerWidget) nutzt BLoC/Provider für State und Events, Transport-Buttons, Progressbar, Speed/Volume-Control, Fehler- und Ladeanzeigen sind vorhanden.
+
+### Dokumentation
+- Architektur und Best Practices sind in `.documents/audio_architektur_2025.md`, `.documents/audio_player_best_practices_2025.md` und `.documents/audio_architektur_flow.mmd` dokumentiert.
+- Die Teststrategie und Lessons Learned sind dokumentiert.
+- Die PRD-Liste und ToDos in `.documents/prd_white_label_podcast_app.md` listen das produktive Audio-Playback als offenes Kern-Feature.
+
+### Offene ToDos
+- [ ] Produktives Backend (just_audio) als Default aktivieren
+- [ ] Systemintegration mit audio_service (Hintergrund, Lockscreen, Headset) produktiv anbinden
+- [ ] E2E- und Offline-Tests für Audio-Playback
+- [ ] Download/Offline-Playback umsetzen
+- [ ] UX-Feinschliff: Fehlerfälle, Snackbar, Resume, Speed/Volume-UX
+
+**Quellen:**
+
 - [just_audio](https://pub.dev/packages/just_audio)
 - [audio_service](https://pub.dev/packages/audio_service)
 - [audio_session](https://pub.dev/packages/audio_session)
 - [flutter_bloc](https://pub.dev/packages/flutter_bloc)
-
----
-
-**Hinweis:**  
-Diese Architektur ist optimal für moderne Flutter-Projekte mit Fokus auf Testbarkeit, Wartbarkeit und Systemintegration.
+- `.documents/prd_white_label_podcast_app.md` (PRD, ToDos)
+- `.documents/audio_architektur_2025.md` (Architektur)
+- `.documents/audio_player_best_practices_2025.md` (Best Practices)
+- `lib/core/services/audio_player_bloc.dart`, `audio_player_sync_service.dart`, `i_audio_player.dart`
+- `lib/application/providers/audio_player_provider.dart`

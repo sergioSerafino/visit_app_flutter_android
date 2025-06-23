@@ -32,6 +32,8 @@ Diese Matrix bietet eine zentrale Übersicht aller wichtigen Doku-, HowTo- und E
 | Setup            | setup.md | Setup-Anleitung für das Projekt | GETTING_STARTED.md |
 | Update (31.05.2025) | architecture_clean_architecture.md, project_structure_best_practices.md | Architektur- und Projektstruktur-Update für die Weiterentwicklung, verbindliche Layer-Trennung, Doku-Pflege | alle |
 | Teststrategie & Lessons Learned | decisions/adr-003-teststrategie.md | Teststrategie, Lessons Learned, Doku-Integration aus Migration | status_report.md, howto_merge_caching.md |
+| State Mgmt/Caching | state_management_caching_multitenant.md | Offenes ToDo: Analyse & Optimierung von State-Management, Caching und RSS-Abruf im Multi-Tenant-Setup | README.md, howto_merge_caching.md, prd_white_label_podcast_app.md |
+| Audio-Playback Produktiv | audio_architektur_2025.md | Umsetzungs-Stand, offene ToDos und Architektur für produktives Audio-Playback (just_audio, audio_service) | prd_white_label_podcast_app.md, audio_player_best_practices_2025.md |
 
 **Hinweis:**
 - Diese Matrix ist zentraler Einstiegspunkt für alle Doku- und HowTo-Dateien.

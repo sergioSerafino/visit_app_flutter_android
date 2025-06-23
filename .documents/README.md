@@ -39,4 +39,6 @@ Hier werden weiterführende Dokumentationen abgelegt, z.B.:
 - Lessons Learned und Teststrategie werden laufend dokumentiert und gepflegt.
 - Siehe auch die Hinweise in `.instructions/README.md` und `.instructions/project_structure_best_practices.md`.
 
+- **Offenes ToDo:** Siehe `.documents/state_management_caching_multitenant.md` für die laufende Analyse und Optimierung von State-Management, Caching und RSS-Abruf im Multi-Tenant-Setup. Dieses Thema ist projektweit offen und wird in den nächsten Meilensteinen weiterverfolgt.
+
 Siehe auch [docs/audio_architektur_2025.md](../docs/audio_architektur_2025.md) für die aktuelle Architekturübersicht und Best Practices zum Audio-Streaming-Stack (BLoC, Backend, AudioHandler, Testbarkeit, Provider-Pattern).

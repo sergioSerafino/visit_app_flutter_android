@@ -21,17 +21,17 @@
 - [x] Accessibility: Semantics-Labels für Transport-Buttons und Slider im Player
 - [x] Tests: Alle State-Wechsel (Idle, Loading, Playing, Paused, Error) und Fehlerfälle abgedeckt
 - [ ] Produktive Integration von just_audio-Backend (kein Mock im Release)
-- [ ] UI/UX: Mini-Player in allen States sichtbar und bedienbar, konsistentes Feedback (Snackbar, Ladeindikator)
+- [x] UI/UX: Mini-Player in allen States sichtbar und bedienbar, konsistentes Feedback (Snackbar, Ladeindikator)
 - [ ] Automatisierte Widget-/Integrationstests für alle State-Wechsel und Fehlerfälle
 - [ ] Manuelle Tests auf echten Geräten (Android/iOS)
 - [ ] Dokumentation und Lessons Learned ergänzen (laufend)
 - [ ] **Neue Features vorbereiten:**
-    - [ ] Speed Control (Abspielgeschwindigkeit)
+    - [x] Speed Control (Abspielgeschwindigkeit)
     - [ ] Download/Offline-Playback
-    - [ ] Resume (Wiedergabe an letzter Position fortsetzen)
+    - [x] Resume (Wiedergabe an letzter Position fortsetzen)
     - [ ] AirPlay/Cast-Unterstützung
     - [ ] E2E-Tests für Audio-Playback und Download
-    - [ ] **Lautstärke-Kontrolle im BottomPlayerWidget**
+    - [x] **Lautstärke-Kontrolle im BottomPlayerWidget**
 
 ### Download/Offline-Playback (PRIO 2)
 - [ ] Download-Service für Episoden-Audio implementieren
@@ -123,13 +123,13 @@ Eine White-Labeling-App zur Unterstützung einer Podcast-Recording-Dienstleistun
 
 ## Audio-Feature-Checkliste (Stand 06/2025)
 - [x] Audio-Playback (Streaming, Fehlerhandling, UX, Tests)
-- [ ] Speed Control (Abspielgeschwindigkeit wählbar, UI/UX, State, Test)
+- [x] Speed Control (Abspielgeschwindigkeit wählbar, UI/UX, State, Test)
 - [ ] Download/Offline-Playback (Service, Speicher, Caching, State, Test)
-- [ ] Resume (Wiedergabe an letzter Position, Persistenz, State, Test)
+- [x] Resume (Wiedergabe an letzter Position, Persistenz, State, Test)
 - [ ] AirPlay/Cast (Events, States, Backend, UI)
 - [ ] E2E-Tests für alle Audio-Features (Playback, Download, Resume, Fehlerfälle)
 - [ ] Accessibility-Tests für alle Audio-Features
-- [ ] **Lautstärke-Kontrolle im BottomPlayerWidget**
+- [x] **Lautstärke-Kontrolle im BottomPlayerWidget**
 
 ## Lessons Learned (Audio-Playback, Stand 06/2025)
 - Die Migration auf Dart 3 sealed/final class für Events und States erhöht die Wartbarkeit und Typsicherheit.
@@ -148,3 +148,9 @@ Eine White-Labeling-App zur Unterstützung einer Podcast-Recording-Dienstleistun
 - Die Lautstärke-Kontrolle wird als rudimentäres Feature im BottomPlayerWidget ergänzt und getestet.
 - Die Backend-/AudioHandler-Architektur bleibt erweiterbar für Speed Control, Download/Offline, Resume und AirPlay/Cast.
 - Nach Abschluss dieser Schritte erfolgt ein erneuter Review und die Priorisierung der MVP-Features für den nächsten Sprint.
+
+---
+
+# ToDo-Liste (PRD-Dokumentation)
+
+- [ ] Produktives Audio-Playback (just_audio, audio_service) vollständig aktivieren und testen (siehe audio_architektur_2025.md)
