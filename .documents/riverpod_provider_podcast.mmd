@@ -1,0 +1,12 @@
+%% PODCAST-Provider
+flowchart TD
+  podcastRepositoryProvider["podcastRepositoryProvider(Provider)"]
+  itunesResultCountProvider["itunesResultCountProvider(StateNotifierProvider)"]
+  podcastCollectionProvider["podcastCollectionProvider(FutureProvider.family)"]
+  podcastEpisodeProvider["podcastEpisodeProvider(FutureProvider.family)"]
+  episodePagingProvider["episodePagingProvider(StateNotifierProvider.autoDispose)"]
+  podcastRepositoryProvider --> podcastCollectionProvider
+  podcastRepositoryProvider --> podcastEpisodeProvider
+  itunesResultCountProvider --> podcastCollectionProvider
+  itunesResultCountProvider --> podcastEpisodeProvider
+  podcastCollectionProvider --> episodePagingProvider

@@ -1,0 +1,89 @@
+%% Riverpod Provider Architektur – Übersicht
+%% Kompaktes, lauffähiges Gesamt-Diagramm ohne fehlerhafte Kanten oder YAML-Header
+flowchart TD
+  subgraph AUDIO
+    direction TB
+    audioPlayerBlocProvider["`audioPlayerBlocProvider Provider`"]
+    audioPlayerStateProvider["`audioPlayerStateProvider StreamProvider`"]
+    audioHandlerProvider["`audioHandlerProvider Provider`"]
+    audioPlayerBlocProvider --> audioPlayerStateProvider
+    %% audioHandlerProvider ist unabhängig
+  end
+
+  subgraph PODCAST
+    direction TB
+    podcastRepositoryProvider["`podcastRepositoryProvider Provider`"]
+    itunesResultCountProvider["`itunesResultCountProvider StateNotifier`"]
+    podcastCollectionProvider["`podcastCollectionProvider FutureProvider.family`"]
+    podcastEpisodeProvider["`podcastEpisodeProvider FutureProvider.family`"]
+    episodePagingProvider["`episodePagingProvider StateNotifier.autoDispose`"]
+    podcastRepositoryProvider --> podcastCollectionProvider
+    podcastRepositoryProvider --> podcastEpisodeProvider
+    itunesResultCountProvider --> podcastCollectionProvider
+    itunesResultCountProvider --> podcastEpisodeProvider
+    podcastCollectionProvider --> episodePagingProvider
+  end
+
+  subgraph UI_BRANDING
+    direction TB
+    collectionIdProvider["`collectionIdProvider StateNotifier`"]
+    hostModelProvider["`hostModelProvider StateProvider`"]
+    brandingProvider["`brandingProvider StateNotifier`"]
+    themeModeProvider["`themeModeProvider Provider`"]
+    featureFlagsProvider["`featureFlagsProvider StateNotifier.autoDispose`"]
+    collectionIdProvider --> hostModelProvider
+    collectionIdProvider --> brandingProvider
+    collectionIdProvider --> featureFlagsProvider
+    brandingProvider --> themeModeProvider
+  end
+
+  subgraph OVERLAY_TABS
+    direction TB
+    overlayTabProvider["`overlayTabProvider StateNotifier`"]
+    overlayHeaderProvider["`overlayHeaderProvider StateNotifier`"]
+  end
+
+  subgraph CAST_AIRPLAY
+    direction TB
+    castAirPlayServiceProvider["`castAirPlayServiceProvider Provider`"]
+    castDevicesProvider["`castDevicesProvider StateNotifier`"]
+    connectedCastDeviceProvider["`connectedCastDeviceProvider StateNotifier`"]
+    castAirPlayServiceProvider --> castDevicesProvider
+    castAirPlayServiceProvider --> connectedCastDeviceProvider
+  end
+
+  subgraph ONBOARDING_PREFS
+    direction TB
+    onboardingStatusProvider["`onboardingStatusProvider AsyncNotifier`"]
+  end
+
+  subgraph RSS_META
+    direction TB
+    rssMetadataProvider["`rssMetadataProvider FutureProvider.family`"]
+  end
+
+  %% Farben für maximale Lesbarkeit: weißer Hintergrund, schwarze Schrift, kräftige Rahmen
+  classDef audio fill:#fff,stroke:#1976d2,stroke-width:3px,color:#111,font-weight:bold;
+  classDef podcast fill:#fff,stroke:#fbc02d,stroke-width:3px,color:#111,font-weight:bold;
+  classDef ui fill:#fff,stroke:#388e3c,stroke-width:3px,color:#111,font-weight:bold;
+  classDef overlay fill:#fff,stroke:#8e24aa,stroke-width:3px,color:#111,font-weight:bold;
+  classDef cast fill:#fff,stroke:#c2185b,stroke-width:3px,color:#111,font-weight:bold;
+  classDef onboarding fill:#fff,stroke:#00838f,stroke-width:3px,color:#111,font-weight:bold;
+  classDef rss fill:#fff,stroke:#d84315,stroke-width:3px,color:#111,font-weight:bold;
+
+  class audioPlayerBlocProvider,audioPlayerStateProvider,audioHandlerProvider audio;
+  class podcastRepositoryProvider,itunesResultCountProvider,podcastCollectionProvider,podcastEpisodeProvider,episodePagingProvider podcast;
+  class collectionIdProvider,hostModelProvider,brandingProvider,themeModeProvider,featureFlagsProvider ui;
+  class overlayTabProvider,overlayHeaderProvider overlay;
+  class castAirPlayServiceProvider,castDevicesProvider,connectedCastDeviceProvider cast;
+  class onboardingStatusProvider onboarding;
+  class rssMetadataProvider rss;
+
+  %% Hinweise (als Kommentar, nicht als Note im Diagramm)
+  %% AUDIO: Audio-Player State/Events
+  %% PODCAST: Podcast-Daten & Episoden
+  %% UI_BRANDING: Multi-Tenant/Branding
+  %% OVERLAY_TABS: Overlay-Status pro Tab
+  %% CAST_AIRPLAY: AirPlay/Cast Discovery
+  %% ONBOARDING_PREFS: Onboarding-Status
+  %% RSS_META: RSS-Metadaten

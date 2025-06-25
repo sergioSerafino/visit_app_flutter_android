@@ -1,0 +1,7 @@
+%% AUDIO-Provider
+flowchart TD
+  audioPlayerBlocProvider["audioPlayerBlocProvider(Provider)"]
+  audioPlayerStateProvider["audioPlayerStateProvider(StreamProvider)"]
+  audioHandlerProvider["audioHandlerProvider(Provider)"]
+  audioPlayerBlocProvider --> audioPlayerStateProvider
+  %% audioHandlerProvider ist unabhängig, keine direkte Verbindung

@@ -1,0 +1,7 @@
+%% Cast/AirPlay-Provider
+flowchart TD
+  castAirPlayServiceProvider["castAirPlayServiceProvider(Provider)"]
+  castDevicesProvider["castDevicesProvider(StateNotifierProvider)"]
+  connectedCastDeviceProvider["connectedCastDeviceProvider(StateNotifierProvider)"]
+  castAirPlayServiceProvider --> castDevicesProvider
+  castAirPlayServiceProvider --> connectedCastDeviceProvider

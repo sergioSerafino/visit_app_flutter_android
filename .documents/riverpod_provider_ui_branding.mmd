@@ -1,0 +1,11 @@
+%% UI/Branding-Provider
+flowchart TD
+  collectionIdProvider["collectionIdProvider(StateNotifierProvider)"]
+  hostModelProvider["hostModelProvider(StateProvider)"]
+  brandingProvider["brandingProvider(StateNotifierProvider)"]
+  themeModeProvider["themeModeProvider(Provider)"]
+  featureFlagsProvider["featureFlagsProvider(StateNotifierProvider.autoDispose)"]
+  collectionIdProvider --> hostModelProvider
+  collectionIdProvider --> brandingProvider
+  collectionIdProvider --> featureFlagsProvider
+  brandingProvider --> themeModeProvider

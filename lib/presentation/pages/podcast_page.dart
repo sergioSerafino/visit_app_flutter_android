@@ -20,7 +20,7 @@ import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
 import '../../core/utils/color_utils.dart';
 import '../../../application/providers/overlay_tab_provider.dart';
-import './_podcast_scroll_indicator.dart';
+import './podcast_scroll_indicator.dart';
 
 class PodcastPage extends ConsumerWidget {
   final ScrollController? scrollController;
