@@ -20,7 +20,8 @@ void main() {
       // Arrange
       final tempDir = Directory.systemTemp.createTempSync();
       Hive.init(tempDir.path);
-      final apiClient = ApiClient();
+      final dio = Dio();
+      final apiClient = ApiClient.withDio(dio);
       final testBox = await Hive.openBox('test_cache');
       final cacheClient = LocalCacheClient(testBox);
       final podcastRepo = ApiPodcastRepository(

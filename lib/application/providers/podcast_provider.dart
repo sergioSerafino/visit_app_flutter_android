@@ -4,6 +4,7 @@ import '../../domain/models/podcast_collection_model.dart';
 import '../../domain/models/podcast_episode_model.dart';
 import 'repository_provider.dart';
 import 'itunes_result_count_provider.dart';
+import '../../core/placeholders/placeholder_content.dart';
 
 /// Lädt eine gesamte PodcastCollection anhand der Collection-ID
 final podcastCollectionProvider =
@@ -11,8 +12,14 @@ final podcastCollectionProvider =
   (ref, collectionId) async {
     final repository = ref.watch(podcastRepositoryProvider);
     final limit = ref.watch(itunesResultCountProvider);
-    return await repository.fetchPodcastCollectionById(collectionId,
-        limit: limit);
+    final response =
+        await repository.fetchPodcastCollectionById(collectionId, limit: limit);
+    // --- Fallback auf Placeholder, wenn API und Cache fehlschlagen ---
+    if (!response.isSuccess || response.data == null) {
+      // Logik: PlaceholderContent wird als Notlösung zurückgegeben
+      return ApiResponse.success(PlaceholderContent.podcastCollection);
+    }
+    return response;
   },
 );
 
@@ -24,11 +31,10 @@ final podcastEpisodeProvider =
   final response =
       await repository.fetchPodcastEpisodes(collectionId, limit: limit);
 
+  // --- Fallback auf Placeholder-Episoden, wenn API und Cache fehlschlagen ---
   if (!response.isSuccess || response.data == null) {
-    throw Exception(
-      "Fehler beim Laden der Episoden: " +
-          (response.errorMessage ?? "Unbekannter Fehler"),
-    );
+    // Logik: PlaceholderContent wird als Notlösung zurückgegeben
+    return PlaceholderContent.podcastCollection.podcasts.first.episodes;
   }
 
   return response.data!;

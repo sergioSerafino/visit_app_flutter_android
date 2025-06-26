@@ -5,28 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/theme_provider.dart';
-import '../../core/messaging/snackbar_event.dart';
-import '../widgets/home_header_material3.dart';
+import '../widgets/home_header.dart';
 import 'podcast_page.dart';
 import 'hosts_page.dart';
 import 'preferences_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
-import '../../core/utils/scroll_shadow_controller.dart';
-import '../../core/services/audio_player_bloc.dart';
-import '../../application/providers/audio_player_provider.dart';
-import '../../application/providers/current_episode_provider.dart';
-import '../widgets/bottom_player_widget.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// Eigene Padding-Constants für HomePage
-class HomePageConstants {
-  static const double headerTop = 20.0;
-  static const double headerLeft = 0.0;
-  static const double headerRight = 4.0;
-  static const double headerBottom = 8.0;
-}
 
 class HomePage extends ConsumerStatefulWidget {
   final bool showMeWelcome;
@@ -40,24 +25,20 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   int _selectedIndex = 0;
 
-  // Für jeden Tab ein eigener Controller
-  late final ScrollShadowController _podcastScrollShadowController;
-  late final ScrollShadowController _hostsScrollShadowController;
+  final List<Widget> _pages = [const PodcastPage(), const HostsPage()];
 
   bool _snackbarShown = false;
-
   @override
   void initState() {
     super.initState();
-    _podcastScrollShadowController = ScrollShadowController();
-    _hostsScrollShadowController = ScrollShadowController();
-  }
-
-  @override
-  void dispose() {
-    _podcastScrollShadowController.dispose();
-    _hostsScrollShadowController.dispose();
-    super.dispose();
+    // _checkOnboardingRestartedSnackbar();
+    // if (widget.showMeWelcome) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     Future.delayed(const Duration(milliseconds: 1500), () {
+    //       ref.read(snackbarManagerProvider.notifier).showByKey('welcome_back');
+    //     });
+    //   });
+    // }
   }
 
   void _onTabSelected(int index) {
@@ -68,10 +49,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final showOverlay = _selectedIndex == 0
-        ? _podcastScrollShadowController.showShadow
-        : _hostsScrollShadowController.showShadow;
     if (!_snackbarShown) {
       _snackbarShown = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -91,7 +68,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90),
+        preferredSize: const Size.fromHeight(90), // <- konstante Höhe!
         child: Consumer(
           builder: (context, ref, _) {
             final theme = ref.watch(appThemeProvider);
@@ -100,14 +77,14 @@ class _HomePageState extends ConsumerState<HomePage> {
               podcastCollectionProvider(collectionId),
             );
 
-            String hostName = "artistName";
+            String hostName = "artistName"; //"collectionName";
 
             collectionAsync.whenData((apiResponse) {
               apiResponse.when(
                 success: (collection) {
                   final podcast = collection.podcasts.firstOrNull;
                   if (podcast != null) {
-                    hostName = podcast.artistName;
+                    hostName = podcast.artistName; //collectionName;
                   }
                 },
                 error: (_) {},
@@ -118,34 +95,18 @@ class _HomePageState extends ConsumerState<HomePage> {
             return AppBar(
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,
-              title: Padding(
-                padding: const EdgeInsets.only(
-                  top: HomePageConstants.headerTop,
-                  left: HomePageConstants.headerLeft,
-                  right: HomePageConstants.headerRight,
-                  bottom: HomePageConstants.headerBottom,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: HomeHeaderMaterial3(
-                        hostName: hostName,
-                        baseColor: theme.colorScheme.primary,
-                        surfaceTint: theme.colorScheme.surfaceTint,
-                        overlayActive: showOverlay, // <- dynamisch!
-                        textColor: Colors.white,
-                        height: kToolbarHeight + 30,
-                        actions: null,
-                        textStyle: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    // const SizedBox(width: 12),
-                  ],
-                ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                      child: homeHeader(
+                    hostName,
+                    textColor: Colors.white,
+                    backgroundColor: theme.colorScheme.primary,
+                  )),
+                  const SizedBox(width: 12),
+                  // const CollectionInputWrapper(),
+                ],
               ),
               actions: [
                 Theme(
@@ -176,11 +137,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                           AppRoutes.landingRoute,
                           arguments: {"isReturningUser": true},
                         );
+                        debugPrint("Über diese App");
                       }
                     },
                     itemBuilder: (BuildContext context) => [
                       const PopupMenuItem(
-                        value: "Light/Dark -Mode",
+                        value: "Über",
                         child: Row(
                           children: [
                             Text(
@@ -192,24 +154,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                             Spacer(),
                             Icon(
                               Icons.light_mode,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem(
-                        value: "Über",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Über diese App",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.arrow_back,
                               color: Colors.white,
                             ),
                           ],
@@ -233,6 +177,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
                       ),
+                      const PopupMenuItem(
+                        value: "Über",
+                        child: Row(
+                          children: [
+                            Text(
+                              "Über diese App",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -242,92 +204,40 @@ class _HomePageState extends ConsumerState<HomePage> {
           },
         ),
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          PodcastPage(
-              scrollController: _podcastScrollShadowController.controller),
-          HostsPage(scrollController: _hostsScrollShadowController.controller),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onTabSelected,
-        backgroundColor: theme.colorScheme.primary,
-        selectedItemColor: Colors.white, // Labels und Icons immer weiß
-        unselectedItemColor:
-            Colors.white.withAlpha(70), // Unselected mit Transparenz
-        selectedLabelStyle: const TextStyle(color: Colors.white),
-        unselectedLabelStyle: const TextStyle(color: Colors.white),
-        items: [
-          BottomNavigationBarItem(
-            icon: Consumer(
-              builder: (context, ref, _) {
-                final audioStateAsync = ref.watch(audioPlayerStateProvider);
-                final audioState = audioStateAsync.asData?.value;
-                final isPlaying = audioState is Playing;
-                final isSelected = _selectedIndex == 0;
-                Color? iconColor;
-                if (isSelected) {
-                  iconColor = Colors.white;
-                } else {
-                  iconColor = null; // Standardfarbe für unselected
-                }
-                return Icon(
-                  isPlaying ? Icons.pause_circle_filled : Icons.play_arrow,
-                  color: iconColor,
-                );
-              },
-            ),
-            label: "Podcast",
+      body: IndexedStack(index: _selectedIndex, children: _pages),
+      bottomNavigationBar: Consumer(
+        builder: (context, ref, _) {
+          final theme = ref.watch(appThemeProvider);
+          return BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onTabSelected,
             backgroundColor: theme.colorScheme.primary,
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 1
-                ? const Icon(Icons.person)
-                : /*Transform.rotate(
-                    angle: 1.5708, // 90 Grad im Bogenmaß, play_arrow
-                    child: */
-                const Icon(Icons.person),
-            // ),
-            label: "Visit",
-            backgroundColor: theme.colorScheme.primary,
-          ),
-        ],
+            selectedItemColor: Colors.white, // Labels und Icons immer weiß
+            unselectedItemColor:
+                Colors.white.withAlpha(70), // Unselected mit Transparenz
+            selectedLabelStyle: const TextStyle(color: Colors.white),
+            unselectedLabelStyle: const TextStyle(color: Colors.white),
+            items: [
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.podcasts,
+                  //color: Colors.white, // Icon immer weiß
+                ),
+                label: "CastList",
+                backgroundColor: theme.colorScheme.primary,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(
+                  Icons.person_outline,
+                  //color: Colors.white, // Icon immer weiß
+                ),
+                label: "HostsView",
+                backgroundColor: theme.colorScheme.primary,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 }
-
-// // Custom Widget für BottomNavigationBarLabel
-// class VistTabLabel extends StatelessWidget {
-//   final bool selected;
-//   const VistTabLabel({required this.selected, super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       mainAxisSize: MainAxisSize.min,
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         Transform.rotate(
-//           angle: 1.5708, // 90 Grad im Bogenmaß
-//           child: Icon(
-//             Icons.play_arrow,
-//             size: 18,
-//             color: selected ? Colors.white : Colors.white.withAlpha(90),
-//           ),
-//         ),
-//         const SizedBox(width: 2),
-//         Text(
-//           'isit',
-//           style: TextStyle(
-//             color: selected ? Colors.white : Colors.white.withAlpha(90),
-//             fontSize: 12,
-//             fontWeight: FontWeight.w600,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

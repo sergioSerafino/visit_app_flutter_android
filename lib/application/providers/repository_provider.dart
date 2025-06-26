@@ -14,7 +14,7 @@ import 'package:hive/hive.dart';
 /// Liefert den passenden PodcastRepository je nach Modus
 final podcastRepositoryProvider = Provider<PodcastRepository>((ref) {
   final mode = ref.watch(dataSourceProvider);
-  final apiClient = ApiClient(); // könnte ref.watch(apiClientProvider) sein
+  final apiClient = ref.watch(apiClientProvider);
   final cacheClient = LocalCacheClient(Hive.box('podcastBox'));
 
   return mode == RepositorySourceType.api

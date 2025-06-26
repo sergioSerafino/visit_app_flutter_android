@@ -62,7 +62,8 @@ dependencies:
   url_launcher: ^6.2.5
   auto_hyphenating_text: ^0.3.0
   flex_color_scheme: ^8.2.0
-
+  connectivity_plus: ^6.1.4
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

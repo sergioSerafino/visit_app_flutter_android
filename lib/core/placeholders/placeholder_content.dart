@@ -54,28 +54,78 @@ class PlaceholderContent {
           Podcast(
             wrapperType: "track",
             collectionId: -1,
-            collectionName: "Noch keine Sammlung geladen",
-            artistName: "Unbekannter Host",
-            primaryGenreName: "Unbekannt",
+            collectionName: "Sammlung noch nicht geladen",
+            artistName: "Host noch nicht geladen",
+            primaryGenreName: "Genre",
             artworkUrl600: "assets/placeholder/podcast.png",
             feedUrl: "",
-            episodes: [placeholderEpisode],
+            episodes: placeholderEpisodes,
           ),
         ],
       );
 
-  static PodcastEpisode get placeholderEpisode => PodcastEpisode(
-        wrapperType: "podcastEpisode",
-        trackId: -1,
-        trackName: "Noch keine Episode verfügbar",
-        artworkUrl600: "assets/placeholder/episode.png",
-        description:
-            "Sobald neue Episoden verfügbar sind, findest du sie hier.",
-        episodeUrl: "",
-        trackTimeMillis: 0,
-        episodeFileExtension: "mp3",
-        releaseDate: DateTime.now(),
-      );
+  static List<PodcastEpisode> get placeholderEpisodes => [
+        PodcastEpisode(
+          wrapperType: "podcastEpisode",
+          trackId: -1,
+          trackName: "Inhalte noch nicht verfügbar",
+          artworkUrl600: "assets/placeholder/episode.png",
+          description:
+              "Sobald neue Episoden verfügbar sind, werden diese hier angezeigt.",
+          episodeUrl: "",
+          trackTimeMillis: 0,
+          episodeFileExtension: "mp3",
+          releaseDate: DateTime.now(),
+        ),
+        PodcastEpisode(
+          wrapperType: "podcastEpisode",
+          trackId: -2,
+          trackName: "Inhalte noch nicht verfügbar",
+          artworkUrl600: "assets/placeholder/episode.png",
+          description:
+              "Sobald neue Episoden verfügbar sind, werden diese hier angezeigt.",
+          episodeUrl: "",
+          trackTimeMillis: 0,
+          episodeFileExtension: "mp3",
+          releaseDate: DateTime.now(),
+        ),
+        PodcastEpisode(
+          wrapperType: "podcastEpisode",
+          trackId: -3,
+          trackName: "Inhalte noch nicht verfügbar",
+          artworkUrl600: "assets/placeholder/episode.png",
+          description:
+              "Sobald neue Episoden verfügbar sind, werden diese hier angezeigt.",
+          episodeUrl: "",
+          trackTimeMillis: 0,
+          episodeFileExtension: "mp3",
+          releaseDate: DateTime.now(),
+        ),
+        PodcastEpisode(
+          wrapperType: "podcastEpisode",
+          trackId: -4,
+          trackName: "Inhalte noch nicht verfügbar",
+          artworkUrl600: "assets/placeholder/episode.png",
+          description:
+              "Sobald neue Episoden verfügbar sind, werden diese hier angezeigt.",
+          episodeUrl: "",
+          trackTimeMillis: 0,
+          episodeFileExtension: "mp3",
+          releaseDate: DateTime.now(),
+        ),
+        PodcastEpisode(
+          wrapperType: "podcastEpisode",
+          trackId: -5,
+          trackName: "Inhalte noch nicht verfügbar",
+          artworkUrl600: "assets/placeholder/episode.png",
+          description:
+              "Sobald neue Episoden verfügbar sind, werden diese hier angezeigt.",
+          episodeUrl: "",
+          trackTimeMillis: 0,
+          episodeFileExtension: "mp3",
+          releaseDate: DateTime.now(),
+        ),
+      ];
 
   //Bonus: Wenn du model.isPlaceholder brauchst, prüfe auf collectionId == -1 oder trackId == -1.
 }

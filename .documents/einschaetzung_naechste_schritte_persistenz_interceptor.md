@@ -5,7 +5,7 @@
 - Hive ist als persistente Datenbank integriert (lib/main.dart, lib/core/services/* , lib/data/api/local_cache_client.dert).
 - Lokale Caching-Services:
 	- LocalCacheClient (lib/data/api/local_cache_client.dart): Zentrale Klasse für das Lesen/Schreiben von Collections und Episoden in Hive.
-	- NetworkCacheManager/ HiveCache$torage (lib/core/utils/network_cache_manager.dart ): Für RSS- und Netzwerkdaten.
+	- NetworkCacheManager/ HiveCacheStorage (lib/core/utils/network_cache_manager.dart ): Für RSS- und Netzwerkdaten.
 	- Diverse Services für Feature—Flags, Paging, Collection-Ds, etc. (z.B. feature_flags_cache_service.dart , collection_id_storage.dart, merged_collection_cache_service.dart ).
 - Repositories:
 	- api_podcast_repository.dert und cached_podcast_repository.dart nutzen explizit den lokalen Cache als Fallback, wenn keine frischen Daten aus dem Netz kommen.

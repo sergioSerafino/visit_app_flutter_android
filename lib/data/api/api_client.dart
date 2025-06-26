@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../../core/logging/logger_config.dart';
 import '../../../core/utils/podcast_collection_parser.dart';
 import 'package:http/http.dart' as http;
@@ -13,15 +14,26 @@ import '../../../domain/common/api_response.dart';
 import '../../../data/api/api_endpoints.dart';
 import '../../../domain/models/podcast_collection_model.dart';
 import '../../../domain/models/podcast_episode_model.dart';
+import '../../core/utils/retry_on_connection_change_interceptor.dart';
+import '../../core/messaging/feedback_notifier.dart';
+import '../../presentation/feedback/snackbar_feedback_notifier.dart';
+
+final apiClientProvider = Provider<ApiClient>((ref) {
+  final dio = Dio();
+  final feedbackNotifier = ref.read(feedbackNotifierProvider);
+  dio.interceptors.add(
+    RetryOnConnectionChangeInterceptor(
+      dio: dio,
+      connectivity: Connectivity(),
+      feedbackNotifier: feedbackNotifier,
+    ),
+  );
+  return ApiClient.withDio(dio);
+});
 
 class ApiClient {
-  // ToDo:
-  // ApiClient als Singleton oder injectable machen: später testbarer und DI-ready
-  // Dann einfach überall nutzen via: ref.watch(apiClientProvider
-
-  final Dio _dio = Dio();
-
-  final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
+  final Dio _dio;
+  ApiClient.withDio(this._dio);
 
   /// 🔎 Holt alle Podcasts + Episoden aus der iTunes Collection
   Future<ApiResponse<PodcastCollection>> getPodcastCollection() async {

@@ -18,15 +18,10 @@ import '../../../domain/enums/episode_load_state.dart';
 import '../../../core/placeholders/placeholder_loader_service.dart';
 import '../../../application/providers/episode_controller_provider.dart';
 import '../../../domain/enums/collection_load_state.dart';
-import '../../core/utils/color_utils.dart';
-import '../../../application/providers/overlay_tab_provider.dart';
-import './podcast_scroll_indicator.dart';
+import '../../../application/providers/current_episode_provider.dart';
 
 class PodcastPage extends ConsumerWidget {
-  final ScrollController? scrollController;
-  final double? initialScrollOffset;
-  const PodcastPage(
-      {super.key, this.scrollController, this.initialScrollOffset});
+  const PodcastPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,18 +60,8 @@ class PodcastPage extends ConsumerWidget {
       final placeholderEpisodes =
           PlaceholderLoaderService.podcastCollection.allEpisodes;
 
-      // Flutter-konforme Overlay-Farbe für AppBar (auch im Placeholder-Modus verfügbar machen)
-      final showOverlay = ref.watch(overlayTabProvider)[0] ?? false;
-      final baseColor = Theme.of(context).colorScheme.primary;
-      final appBarColor = showOverlay
-          ? flutterAppBarOverlayColorM3(context, baseColor)
-          : baseColor;
-
       return Scaffold(
-        appBar: AppBar(
-          title: const Text("📻 Placeholder-Modus"),
-          backgroundColor: appBarColor,
-        ),
+        appBar: AppBar(title: const Text("📻 Placeholder-Modus")),
         body: ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: placeholderEpisodes.length,
@@ -88,15 +73,6 @@ class PodcastPage extends ConsumerWidget {
     }
 
     // final isLoading = podcastResponse.isLoading || episodeResponse.isLoading;
-
-    if (initialScrollOffset != null && scrollController != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (scrollController!.hasClients &&
-            scrollController!.offset != initialScrollOffset) {
-          scrollController!.jumpTo(initialScrollOffset!);
-        }
-      });
-    }
 
     return Scaffold(
       body: Padding(
@@ -173,23 +149,15 @@ class PodcastPage extends ConsumerWidget {
                             ),
                           );
                         },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
+                        loading: () => const CircularProgressIndicator(
+                          color: Colors.black12,
+                        ),
                         error: (msg) => AsyncUIHelper.error(msg),
                       ),
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (e, _) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.error_outline,
-                                color: Colors.red, size: 32),
-                            SizedBox(height: 8),
-                            Text('Fehler beim Laden der Podcast-Daten'),
-                          ],
-                        ),
+                      loading: () => const CircularProgressIndicator(
+                        color: Colors.black12,
                       ),
+                      error: (e, _) => const Text("Fehler beim Laden"),
                     );
 
                   case CollectionLoadState.error:
@@ -203,7 +171,7 @@ class PodcastPage extends ConsumerWidget {
                 }
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             // 🔽 Episodenliste mit Async Builder
             Expanded(
@@ -215,34 +183,29 @@ class PodcastPage extends ConsumerWidget {
                         child: CircularProgressIndicator(color: Colors.black12),
                       );
                     case EpisodeLoadState.placeholder:
-                      return Scrollbar(
-                        controller: scrollController,
-                        thumbVisibility: true,
-                        child: ListView.builder(
-                          controller: scrollController,
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey.shade300,
-                              highlightColor: Colors.grey.shade100,
-                              child: EpisodeItemTile(
-                                episode: PodcastEpisode(
-                                  wrapperType: "",
-                                  trackId: index,
-                                  trackName: "Lade Folge\n", // ${index + 1}",
-                                  artworkUrl600: "",
-                                  description:
-                                      "Beschreibungs-Text des Platzhalter-Inhaltes dieser Folge.",
-                                  trackTimeMillis: 1150000,
-                                  episodeUrl: "",
-                                  episodeFileExtension: "mp3",
-                                  releaseDate: DateTime.now(),
-                                ),
-                                onTap: () {},
+                      return ListView.builder(
+                        itemCount: 4,
+                        itemBuilder: (context, index) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: EpisodeItemTile(
+                              episode: PodcastEpisode(
+                                wrapperType: "",
+                                trackId: index,
+                                trackName: "Lade Folge\n", // ${index + 1}",
+                                artworkUrl600: "",
+                                description:
+                                    "Beschreibungs-Text des Platzhalter-Inhaltes dieser Folge.",
+                                trackTimeMillis: 1150000,
+                                episodeUrl: "",
+                                episodeFileExtension: "mp3",
+                                releaseDate: DateTime.now(),
                               ),
-                            );
-                          },
-                        ),
+                              onTap: () {},
+                            ),
+                          );
+                        },
                       );
                     case EpisodeLoadState.loaded:
                       return AnimatedSwitcher(
@@ -259,14 +222,17 @@ class PodcastPage extends ConsumerWidget {
                               );
                             }
                             return ListView.builder(
-                              controller: scrollController, // <- NEU
                               itemCount: episodes.length,
                               itemBuilder: (context, index) {
                                 final episode = episodes[index];
                                 return EpisodeItemTile(
                                   episode: episode,
                                   onTap: () {
-                                    // KEIN automatisches Setzen der Episode mehr!
+                                    // Aktuelle Episode global setzen
+                                    ref
+                                        .read(currentEpisodeProvider.notifier)
+                                        .state = episode;
+                                    // KEIN automatisches Play mehr! Navigation zur Detailseite
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -289,11 +255,7 @@ class PodcastPage extends ConsumerWidget {
                 },
               ),
             ),
-            // ProgressBar und Abstand jetzt unterhalb der Liste
-            if (scrollController != null) ...[
-              const SizedBox(height: 12),
-              PodcastScrollIndicator(scrollController: scrollController!),
-            ],
+            const SizedBox(height: 20),
           ],
         ),
       ),

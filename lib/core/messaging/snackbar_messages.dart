@@ -6,7 +6,7 @@ const Map<String, String> snackbarMessages = {
   'collection_invalid': 'Ungültige collectionId – bitte prüfen.',
   // Handlungszweck "Keine Verbindung verfügbar"
   'network_no_connection':
-      'Keine Verbindung verfügbar – bitte später erneut versuchen.',
+      'Bitte prüfe deine Internetverbindung oder versuche es bitte später erneut.',
   // Handlungszweck "Offline-Modus aktiviert"
   'network_offline_mode': 'Offline-Modus aktiviert.',
   // Handlungszweck "Audio erfolgreich offline gespeichert"

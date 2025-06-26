@@ -2,21 +2,53 @@
 // Episode Kachel für Listen
 
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:shimmer/shimmer.dart';
 import '../../domain/models/podcast_episode_model.dart';
 import '../../core/utils/episode_item_tile_constants.dart';
 import '../../core/utils/episode_format_utils.dart';
 import 'episode_play_button.dart';
 
-class EpisodeItemTile extends StatelessWidget {
+class EpisodeItemTile extends StatefulWidget {
   final PodcastEpisode episode;
   final VoidCallback? onTap;
 
   const EpisodeItemTile({super.key, required this.episode, this.onTap});
 
   @override
+  State<EpisodeItemTile> createState() => _EpisodeItemTileState();
+}
+
+class _EpisodeItemTileState extends State<EpisodeItemTile> {
+  bool _showShimmer = false;
+  Timer? _shimmerTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.episode.trackId < 0) {
+      _showShimmer = true;
+      _shimmerTimer = Timer(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            _showShimmer = false;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _shimmerTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap ?? () {}, // fallback, falls null
+    final isPlaceholder = widget.episode.trackId < 0;
+    final tileContent = InkWell(
+      onTap: widget.onTap ?? () {},
       child: Container(
         padding: EpisodeItemTileConstants.padding,
         decoration: BoxDecoration(
@@ -27,9 +59,9 @@ class EpisodeItemTile extends StatelessWidget {
             // Cover-Bild
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: episode.artworkUrl600.isNotEmpty
+              child: widget.episode.artworkUrl600.isNotEmpty
                   ? Image.network(
-                      episode.artworkUrl600,
+                      widget.episode.artworkUrl600,
                       width: EpisodeItemTileConstants.coverSize,
                       height: EpisodeItemTileConstants.coverSize,
                       fit: BoxFit.cover,
@@ -38,9 +70,7 @@ class EpisodeItemTile extends StatelessWidget {
                     )
                   : _buildPlaceholder(context),
             ),
-
             const SizedBox(width: 16),
-
             // Titel + Beschreibung
             Expanded(
               flex: 3,
@@ -48,7 +78,7 @@ class EpisodeItemTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    episode.trackName,
+                    widget.episode.trackName,
                     style: EpisodeItemTileConstants.titleStyle.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -57,7 +87,8 @@ class EpisodeItemTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    episode.description ?? "Keine Beschreibung verfügbar",
+                    widget.episode.description ??
+                        "Keine Beschreibung verfügbar",
                     style: EpisodeItemTileConstants.descriptionStyle.copyWith(
                         color: Theme.of(context)
                             .colorScheme
@@ -69,9 +100,7 @@ class EpisodeItemTile extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(width: 8),
-
             // Zeit + Icon
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -79,7 +108,7 @@ class EpisodeItemTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 15),
                   child: Text(
-                    _formatDuration(episode.trackTimeMillis),
+                    _formatDuration(widget.episode.trackTimeMillis),
                     style: EpisodeItemTileConstants.durationStyle.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -89,16 +118,13 @@ class EpisodeItemTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-
                 // Play-Button unterhalb der Dauer
                 EpisodePlayButton(
-                  episode: episode,
+                  episode: widget.episode,
                   iconSize: 36,
                   iconColor: Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.all(0),
                 ),
-                // const SizedBox(height: 8),
-
                 SizedBox(
                   height: 50,
                   child: Align(
@@ -126,6 +152,14 @@ class EpisodeItemTile extends StatelessWidget {
         ),
       ),
     );
+    if (isPlaceholder && _showShimmer) {
+      return Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: tileContent,
+      );
+    }
+    return tileContent;
   }
 
   Widget _buildPlaceholder(BuildContext context) {
@@ -133,10 +167,9 @@ class EpisodeItemTile extends StatelessWidget {
     return Container(
       width: EpisodeItemTileConstants.coverSize,
       height: EpisodeItemTileConstants.coverSize,
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: Icon(Icons.music_note,
+      child: Icon(Icons.podcasts,
           size: EpisodeItemTileConstants.placeholderIconSize,
-          color: theme.colorScheme.primary.withAlpha(180)),
+          color: theme.colorScheme.primary.withAlpha(140)),
     );
   }
 
