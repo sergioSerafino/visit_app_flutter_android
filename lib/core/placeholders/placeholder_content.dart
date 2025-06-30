@@ -67,14 +67,29 @@ class PlaceholderContent {
   static PodcastEpisode get placeholderEpisode => PodcastEpisode(
         wrapperType: "podcastEpisode",
         trackId: -1,
-        trackName: "Noch keine Episode verfügbar",
+        trackName: "Aktuell keine Inhalte verfügbar.",
         artworkUrl600: "assets/placeholder/episode.png",
-        description:
-            "Sobald neue Episoden verfügbar sind, findest du sie hier.",
+        description: "Sobald neue Episoden abrufbar sind, findest du sie hier.",
         episodeUrl: "",
         trackTimeMillis: 0,
         episodeFileExtension: "mp3",
         releaseDate: DateTime.now(),
+      );
+
+  static List<PodcastEpisode> get placeholderEpisodes => List.generate(
+        5,
+        (index) => PodcastEpisode(
+          wrapperType: "podcastEpisode",
+          trackId: -1 - index, // Eindeutige negative IDs für Platzhalter
+          trackName: "Aktuell keine Inhalte verfügbar (Folge ${index + 1}).",
+          artworkUrl600: "assets/placeholder/episode.png",
+          description:
+              "Sobald neue Episoden abrufbar sind, findest du sie hier.",
+          episodeUrl: "",
+          trackTimeMillis: 0,
+          episodeFileExtension: "mp3",
+          releaseDate: DateTime.now(),
+        ),
       );
 
   //Bonus: Wenn du model.isPlaceholder brauchst, prüfe auf collectionId == -1 oder trackId == -1.
