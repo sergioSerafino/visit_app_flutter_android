@@ -21,6 +21,7 @@ import '../../../domain/enums/collection_load_state.dart';
 import '../../core/utils/color_utils.dart';
 import '../../../application/providers/overlay_tab_provider.dart';
 import './podcast_scroll_indicator.dart';
+import '../../../core/placeholders/placeholder_content.dart';
 
 class PodcastPage extends ConsumerWidget {
   final ScrollController? scrollController;
@@ -175,7 +176,17 @@ class PodcastPage extends ConsumerWidget {
                         },
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
-                        error: (msg) => AsyncUIHelper.error(msg),
+                        error: (msg) => Builder(
+                          builder: (context) {
+                            // Fallback: PlaceholderCollection anzeigen
+                            final placeholder = PlaceholderContent.podcastCollection.podcasts.first;
+                            return ImageWithBanner(
+                              key: const ValueKey("placeholder"),
+                              imageUrl: placeholder.artworkUrl600,
+                              label: placeholder.primaryGenreName,
+                            );
+                          },
+                        ),
                       ),
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),

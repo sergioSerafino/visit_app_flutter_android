@@ -116,8 +116,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                   }
                 },
                 error: (_) {
-                  hostName = PlaceholderContent
-                      .podcastCollection.podcasts.first.artistName;
+                  // Fallback: PlaceholderCollection und Episoden anzeigen
+                  hostName = PlaceholderContent.podcastCollection.podcasts.first.artistName;
+                  // Optional: Hier könnte auch die Episodenliste im Fallback gesetzt werden, falls benötigt
                 },
                 loading: () {},
               );
