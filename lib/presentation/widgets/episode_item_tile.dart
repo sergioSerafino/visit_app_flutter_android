@@ -15,6 +15,10 @@ class EpisodeItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPlaceholder = episode.trackId < 0;
+    final textColor = isPlaceholder
+        ? Colors.grey[500]?.withAlpha(180)
+        : Theme.of(context).colorScheme.onSurface;
     return InkWell(
       onTap: onTap ?? () {}, // fallback, falls null
       child: Container(
@@ -50,7 +54,7 @@ class EpisodeItemTile extends StatelessWidget {
                   Text(
                     episode.trackName,
                     style: EpisodeItemTileConstants.titleStyle.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: textColor,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -58,11 +62,7 @@ class EpisodeItemTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     episode.description ?? "Keine Beschreibung verfügbar",
-                    style: EpisodeItemTileConstants.descriptionStyle.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(180)),
+                    style: TextStyle(color: textColor, fontSize: 13),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -80,12 +80,7 @@ class EpisodeItemTile extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     _formatDuration(episode.trackTimeMillis),
-                    style: EpisodeItemTileConstants.durationStyle.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withAlpha(140),
-                    ),
+                    style: TextStyle(color: textColor, fontSize: 12),
                   ),
                 ),
                 const SizedBox(height: 8),
