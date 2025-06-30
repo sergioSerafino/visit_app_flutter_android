@@ -109,13 +109,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                 success: (collection) {
                   final podcast = collection.podcasts.firstOrNull;
                   if (collection.isPlaceholder) {
-                    hostName = PlaceholderContent.podcastCollection.podcasts.first.artistName;
+                    hostName = PlaceholderContent
+                        .podcastCollection.podcasts.first.artistName;
                   } else if (podcast != null) {
                     hostName = podcast.artistName;
                   }
                 },
                 error: (_) {
-                  hostName = PlaceholderContent.podcastCollection.podcasts.first.artistName;
+                  hostName = PlaceholderContent
+                      .podcastCollection.podcasts.first.artistName;
                 },
                 loading: () {},
               );
