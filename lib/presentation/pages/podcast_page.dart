@@ -179,7 +179,8 @@ class PodcastPage extends ConsumerWidget {
                         error: (msg) => Builder(
                           builder: (context) {
                             // Fallback: PlaceholderCollection anzeigen
-                            final placeholder = PlaceholderContent.podcastCollection.podcasts.first;
+                            final placeholder = PlaceholderContent
+                                .podcastCollection.podcasts.first;
                             return ImageWithBanner(
                               key: const ValueKey("placeholder"),
                               imageUrl: placeholder.artworkUrl600,
@@ -222,16 +223,12 @@ class PodcastPage extends ConsumerWidget {
                 builder: (context) {
                   switch (episodeState) {
                     case EpisodeLoadState.loading:
-                      return const Center(
-                        child: CircularProgressIndicator(color: Colors.black12),
-                      );
-                    case EpisodeLoadState.placeholder:
                       return Scrollbar(
                         controller: scrollController,
                         thumbVisibility: true,
                         child: ListView.builder(
                           controller: scrollController,
-                          itemCount: 4,
+                          itemCount: 5,
                           itemBuilder: (context, index) {
                             return Shimmer.fromColors(
                               baseColor: Colors.grey.shade300,
@@ -255,29 +252,70 @@ class PodcastPage extends ConsumerWidget {
                           },
                         ),
                       );
+                    case EpisodeLoadState.placeholder:
+                      return Scrollbar(
+                        controller: scrollController,
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return EpisodeItemTile(
+                              episode:
+                                  PlaceholderContent.placeholderEpisodes[index],
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      );
                     case EpisodeLoadState.loaded:
+                      // Zeige solange Placeholder, bis echte Daten da sind
+                      if (episodeResponse.isLoading) {
+                        return Scrollbar(
+                          controller: scrollController,
+                          thumbVisibility: true,
+                          child: ListView.builder(
+                            controller: scrollController,
+                            itemCount: 5,
+                            itemBuilder: (context, index) {
+                              return EpisodeItemTile(
+                                episode: PlaceholderContent
+                                    .placeholderEpisodes[index],
+                                onTap: () {},
+                              );
+                            },
+                          ),
+                        );
+                      }
                       return AnimatedSwitcher(
                         duration: const Duration(milliseconds: 1500),
                         switchInCurve: Curves.easeIn,
-                        // switchOutCurve: Curves.easeOut,
                         child: AsyncValueWidget<List<PodcastEpisode>>(
                           key: ValueKey(episodeResponse.hashCode),
                           value: episodeResponse,
                           data: (episodes) {
                             if (episodes.isEmpty) {
-                              return const Center(
-                                child: Text("Keine Episoden gefunden."),
+                              // Fallback: Placeholder-Episoden anzeigen
+                              return ListView.builder(
+                                controller: scrollController,
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return EpisodeItemTile(
+                                    episode: PlaceholderContent
+                                        .placeholderEpisodes[index],
+                                    onTap: () {},
+                                  );
+                                },
                               );
                             }
                             return ListView.builder(
-                              controller: scrollController, // <- NEU
+                              controller: scrollController,
                               itemCount: episodes.length,
                               itemBuilder: (context, index) {
                                 final episode = episodes[index];
                                 return EpisodeItemTile(
                                   episode: episode,
                                   onTap: () {
-                                    // KEIN automatisches Setzen der Episode mehr!
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -292,9 +330,23 @@ class PodcastPage extends ConsumerWidget {
                               },
                             );
                           },
+                          error: (e, st) {
+                            // Fallback: Placeholder-Episoden anzeigen
+                            return ListView.builder(
+                              controller: scrollController,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return EpisodeItemTile(
+                                  episode: PlaceholderContent
+                                      .placeholderEpisodes[index],
+                                  onTap: () {},
+                                );
+                              },
+                            );
+                          },
                         ),
                       );
-                    default:
+                    case EpisodeLoadState.initial:
                       return const SizedBox.shrink();
                   }
                 },
