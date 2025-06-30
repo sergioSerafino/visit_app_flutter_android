@@ -84,9 +84,9 @@ class ApiPodcastRepository implements PodcastRepository {
         );
       }
 
-      // Wenn leer zurückkam, trotzdem klarer Fehler
+      // Wenn leer zurückkam, trotzdem klarer Fallback auf Placeholder
       if (collection.podcasts.isEmpty) {
-        return const ApiResponse.error("API-Response enthält keine Podcasts.");
+        return ApiResponse.success(PlaceholderContent.podcastCollection);
       }
 
       collection.debugPrettyPrint();

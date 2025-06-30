@@ -58,7 +58,7 @@ Alle Testfälle, Testschritte und Beobachtungen werden in `TESTSTRATEGIE_OFFLINE
 
 ## 6. Quellen & Referenzen
 - Reso Coder: Dio Interceptor Retry Tutorial
-- Eigene HowTos und Architektur-Dokumente (`.instructions/howto_dio_interceptor_offline_retry.md`)
+- Eigene HowTos und Architektur-Dokumente (`.instructions/howto_dio_interceptor_offline_retry.md`,`.instructions\howto_placeholder_fallback.md`)
 - Teststrategie: `TESTSTRATEGIE_OFFLINE_RETRY.md`
 
 ---

@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/title_format_utils.dart';
 import '../../core/utils/landing_page_constants.dart';
 import '../../domain/models/podcast_collection_model.dart';
+import '../../core/placeholders/placeholder_content.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   const LandingPage({super.key});
@@ -84,8 +85,14 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                   data: (apiResponse) => apiResponse.when(
                     success: (collection) {
                       final podcast = collection.podcasts.firstOrNull;
-                      final dynamicHostName =
-                          podcast?.collectionName ?? "Gastgeber-Format";
+                      if (collection.isPlaceholder) {
+                        debugPrint('[LandingPage] Placeholder artistName: '
+                            '${collection.podcasts.first.artistName}');
+                      }
+                      final dynamicHostName = collection.isPlaceholder
+                          ? PlaceholderContent
+                              .podcastCollection.podcasts.first.artistName
+                          : (podcast?.collectionName ?? "Gastgeber-Format");
                       return Padding(
                         padding: const EdgeInsets.only(
                             top: LandingPageConstants.welcomeHeaderTop,
@@ -101,7 +108,11 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                           left: LandingPageConstants.welcomeHeaderLeft,
                           right: LandingPageConstants.welcomeHeaderRight,
                           bottom: LandingPageConstants.welcomeHeaderBottom),
-                      child: welcomeHeader("dynamicHostName", context: context),
+                      child: welcomeHeader(
+                        PlaceholderContent
+                            .podcastCollection.podcasts.first.artistName,
+                        context: context,
+                      ),
                     ),
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
@@ -114,7 +125,11 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                         left: LandingPageConstants.welcomeHeaderLeft,
                         right: LandingPageConstants.welcomeHeaderRight,
                         bottom: LandingPageConstants.welcomeHeaderBottom),
-                    child: welcomeHeader("Fehler beim Laden", context: context),
+                    child: welcomeHeader(
+                      PlaceholderContent
+                          .podcastCollection.podcasts.first.artistName,
+                      context: context,
+                    ),
                   ),
                 ),
                 // Cover
