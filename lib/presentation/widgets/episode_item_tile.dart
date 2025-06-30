@@ -129,14 +129,16 @@ class EpisodeItemTile extends StatelessWidget {
   }
 
   Widget _buildPlaceholder(BuildContext context) {
-    final theme = Theme.of(context);
+    // Gleiches Grau und Icon wie ImageWithBanner, aber noch etwas kleiner
     return Container(
       width: EpisodeItemTileConstants.coverSize,
       height: EpisodeItemTileConstants.coverSize,
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: Icon(Icons.music_note,
-          size: EpisodeItemTileConstants.placeholderIconSize,
-          color: theme.colorScheme.primary.withAlpha(180)),
+      color: Colors.grey[300],
+      child: Icon(
+        Icons.podcasts,
+        size: 32, // noch kleiner für dezenteres Listen-Design
+        color: Colors.grey[500],
+      ),
     );
   }
 
