@@ -89,7 +89,9 @@ class EpisodeItemTile extends StatelessWidget {
                 EpisodePlayButton(
                   episode: episode,
                   iconSize: 36,
-                  iconColor: Theme.of(context).colorScheme.primary,
+                  iconColor: isPlaceholder
+                      ? Colors.grey[500]
+                      : Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.all(0),
                 ),
                 // const SizedBox(height: 8),
@@ -104,14 +106,18 @@ class EpisodeItemTile extends StatelessWidget {
                       icon: Icon(
                         Icons.more_horiz,
                         size: EpisodeItemTileConstants.iconSize,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(140),
+                        color: isPlaceholder
+                            ? Colors.grey[500]
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withAlpha(140),
                       ),
-                      onPressed: () {
-                        // Optional: show modal / actions
-                      },
+                      onPressed: isPlaceholder
+                          ? null
+                          : () {
+                              // Optional: show modal / actions
+                            },
                     ),
                   ),
                 ),

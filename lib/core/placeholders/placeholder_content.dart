@@ -81,12 +81,12 @@ class PlaceholderContent {
         (index) => PodcastEpisode(
           wrapperType: "podcastEpisode",
           trackId: -1 - index, // Eindeutige negative IDs für Platzhalter
-          trackName: "Aktuell keine Inhalte verfügbar (Folge ${index + 1}).",
+          trackName: "Aktuell keine neuen Inhalte abgerufen.",
           artworkUrl600: "assets/placeholder/episode.png",
           description:
-              "Sobald neue Episoden abrufbar sind, findest du sie hier.",
+              "Sobald neue Episoden verfügbar sind, findest du sie hier.",
           episodeUrl: "",
-          trackTimeMillis: 0,
+          trackTimeMillis: -1000,
           episodeFileExtension: "mp3",
           releaseDate: DateTime.now(),
         ),
