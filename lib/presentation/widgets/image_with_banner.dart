@@ -69,7 +69,7 @@ class ImageWithBanner extends StatelessWidget {
       width: 250,
       height: 250,
       color: Colors.grey[300],
-      child: Icon(Icons.image, size: 80, color: Colors.grey[500]),
+      child: Icon(Icons.podcasts, size: 80, color: Colors.grey[500]),
     );
   }
 }
