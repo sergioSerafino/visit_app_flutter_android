@@ -9,6 +9,7 @@ import '../../data/api/local_cache_client.dart';
 import '../../domain/models/podcast_collection_model.dart';
 import '../../domain/models/podcast_episode_model.dart';
 import '../../data/repositories/podcast_repository.dart';
+import '../../core/placeholders/placeholder_content.dart';
 
 class ApiPodcastRepository implements PodcastRepository {
   final ApiClient _apiClient;
@@ -120,7 +121,8 @@ class ApiPodcastRepository implements PodcastRepository {
 
       return ApiResponse.success(collectionWithTimestamp);
     } catch (e) {
-      return ApiResponse.error('[fetchPodcastCollectionById] $e');
+      // Fallback auf Placeholder bei Fehler
+      return ApiResponse.success(PlaceholderContent.podcastCollection);
     }
   }
 
@@ -163,7 +165,8 @@ class ApiPodcastRepository implements PodcastRepository {
 
       return response;
     } catch (e) {
-      return ApiResponse.error('[fetchPodcastEpisodes] $e');
+      // Fallback auf Placeholder-Episode bei Fehler
+      return ApiResponse.success([PlaceholderContent.placeholderEpisode]);
     }
   }
 

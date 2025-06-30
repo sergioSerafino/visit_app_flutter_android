@@ -73,3 +73,8 @@ class PodcastCollection with _$PodcastCollection {
   // Falls kein Datenstrom vorhanden ist, gib eine leere Collection zurück
   factory PodcastCollection.empty() => const PodcastCollection(podcasts: []);
 }
+
+// Erweiterung: isPlaceholder-Getter für PodcastCollection
+extension PodcastCollectionX on PodcastCollection {
+  bool get isPlaceholder => podcasts.any((p) => p.collectionId == -1);
+}

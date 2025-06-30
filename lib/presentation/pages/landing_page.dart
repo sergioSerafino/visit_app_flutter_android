@@ -16,6 +16,7 @@ import '../../domain/common/api_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/title_format_utils.dart';
 import '../../core/utils/landing_page_constants.dart';
+import '../../domain/models/podcast_collection_model.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   const LandingPage({super.key});
@@ -55,11 +56,17 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     final collectionId = ref.watch(collectionIdProvider);
     final collectionAsync = ref.watch(podcastCollectionProvider(collectionId));
 
-    // Zeige die Seite nur, wenn die Daten wirklich da sind
-    final isReady = collectionAsync is AsyncData &&
-        collectionAsync.value != null &&
-        collectionAsync.value!.isSuccess;
-    if (!isReady) {
+    // Prüfe auf Placeholder-Modus
+    final isPlaceholder = collectionAsync.maybeWhen(
+      data: (apiResponse) => apiResponse.maybeWhen(
+        success: (collection) => collection.isPlaceholder,
+        orElse: () => false,
+      ),
+      orElse: () => false,
+    );
+
+    // Zeige die Seite immer, sobald irgendein Modell (auch Placeholder) geliefert wird
+    if (collectionAsync is! AsyncData || collectionAsync.value == null) {
       // Noch keine Daten: Zeige leeres Scaffold (keine UI, kein Flackern)
       return const Scaffold(body: SizedBox.shrink());
     }

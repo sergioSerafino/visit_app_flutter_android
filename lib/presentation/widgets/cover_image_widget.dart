@@ -72,7 +72,7 @@ class CoverImageWidget extends StatelessWidget {
           child: Icon(
             Icons.podcasts,
             size: iconSize,
-            color: CoverImageWidgetConstants.iconColor,
+            color: Colors.grey[300],
           ),
         ),
         if (showLabel)
@@ -82,7 +82,7 @@ class CoverImageWidget extends StatelessWidget {
             bottom: labelBottomOffset,
             child: Center(
               child: Text(
-                'Podcast',
+                'Podcast Cover',
                 style: TextStyle(
                   color: CoverImageWidgetConstants.labelColor,
                   fontWeight: FontWeight.bold,
