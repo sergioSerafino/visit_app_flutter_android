@@ -63,7 +63,10 @@ class ApiPodcastRepository implements PodcastRepository {
       );
 
       if (response.data == null) {
-        return const ApiResponse.error("Keine Daten von der API erhalten.");
+        return ApiResponse.error(
+          "Keine Daten von der API erhalten." +
+              (response.errorMessage ?? "Unbekannter Fehler"),
+        );
       }
 
       // 🧠 Entweder liefert die API schon ein fertiges Objekt (Mock),

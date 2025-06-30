@@ -72,7 +72,7 @@ class CoverImageWidget extends StatelessWidget {
           child: Icon(
             Icons.podcasts,
             size: iconSize,
-            color: Colors.grey[300],
+            color: CoverImageWidgetConstants.iconColor,
           ),
         ),
         if (showLabel)
