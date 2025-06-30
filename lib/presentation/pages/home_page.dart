@@ -17,6 +17,8 @@ import '../../core/services/audio_player_bloc.dart';
 import '../../application/providers/audio_player_provider.dart';
 import '../../application/providers/current_episode_provider.dart';
 import '../widgets/bottom_player_widget.dart';
+import '../../core/placeholders/placeholder_content.dart';
+import '../../domain/models/podcast_collection_model.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -106,11 +108,15 @@ class _HomePageState extends ConsumerState<HomePage> {
               apiResponse.when(
                 success: (collection) {
                   final podcast = collection.podcasts.firstOrNull;
-                  if (podcast != null) {
+                  if (collection.isPlaceholder) {
+                    hostName = PlaceholderContent.podcastCollection.podcasts.first.artistName;
+                  } else if (podcast != null) {
                     hostName = podcast.artistName;
                   }
                 },
-                error: (_) {},
+                error: (_) {
+                  hostName = PlaceholderContent.podcastCollection.podcasts.first.artistName;
+                },
                 loading: () {},
               );
             });
@@ -133,7 +139,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         hostName: hostName,
                         baseColor: theme.colorScheme.primary,
                         surfaceTint: theme.colorScheme.surfaceTint,
-                        overlayActive: showOverlay, // <- dynamisch!
+                        overlayActive: showOverlay,
                         textColor: Colors.white,
                         height: kToolbarHeight + 30,
                         actions: null,
