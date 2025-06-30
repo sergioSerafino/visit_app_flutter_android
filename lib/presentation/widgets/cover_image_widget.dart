@@ -88,13 +88,13 @@ class CoverImageWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize:
                       iconSize * CoverImageWidgetConstants.labelFontSizeFactor,
-                  shadows: const [
-                    Shadow(
-                      blurRadius: CoverImageWidgetConstants.labelShadowBlur,
-                      color: CoverImageWidgetConstants.labelShadowColor,
-                      offset: CoverImageWidgetConstants.labelShadowOffset,
-                    ),
-                  ],
+                  // shadows: const [
+                  //   Shadow(
+                  //     blurRadius: CoverImageWidgetConstants.labelShadowBlur,
+                  //     color: CoverImageWidgetConstants.labelShadowColor,
+                  //     offset: CoverImageWidgetConstants.labelShadowOffset,
+                  //   ),
+                  // ],
                 ),
               ),
             ),
