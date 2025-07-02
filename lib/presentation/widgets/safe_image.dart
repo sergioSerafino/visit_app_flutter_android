@@ -8,6 +8,7 @@ class SafeImage extends StatelessWidget {
   final BoxFit fit;
   final bool isAsset;
   final Widget? fallback;
+  final double borderRadius;
 
   const SafeImage({
     super.key,
@@ -17,6 +18,7 @@ class SafeImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.isAsset = false,
     this.fallback,
+    this.borderRadius = 8,
   });
 
   @override
@@ -29,20 +31,26 @@ class SafeImage extends StatelessWidget {
           child: const Icon(Icons.broken_image, color: Colors.grey, size: 32),
         );
     if (isAsset) {
-      return Image.asset(
-        imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) => errorWidget,
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Image.asset(
+          imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => errorWidget,
+        ),
       );
     } else {
-      return Image.network(
-        imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) => errorWidget,
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Image.network(
+          imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => errorWidget,
+        ),
       );
     }
   }

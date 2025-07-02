@@ -20,9 +20,9 @@ class HostImageSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Image.asset(
             'lib/tenants/collection_${collectionId}/assets/${hostImage}',
-            width: 290,
-            height: 220,
-            fit: BoxFit.cover,
+            width: 200, // vorher 290
+            height: 230, // vorher 220
+            fit: BoxFit.contain,
           ),
         ),
       ),

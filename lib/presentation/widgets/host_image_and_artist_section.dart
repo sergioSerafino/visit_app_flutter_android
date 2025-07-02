@@ -26,15 +26,36 @@ class HostImageAndArtistSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
           child: Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: SafeImage(
-                imageUrl:
-                    'lib/tenants/collection_${collectionId}/assets/${hostImage}',
-                width: 290,
-                height: 220,
-                fit: BoxFit.cover,
-                isAsset: true,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withAlpha(200), // links
+                    Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withAlpha(250), // rechts, dunkler
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: SafeImage(
+                  imageUrl:
+                      'lib/tenants/collection_${collectionId}/assets/${hostImage}',
+                  isAsset: true,
+                  width: 200,
+                  height: 230,
+                  fit: BoxFit.cover,
+                  borderRadius: 8,
+                ),
               ),
             ),
           ),
