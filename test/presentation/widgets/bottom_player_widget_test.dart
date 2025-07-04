@@ -141,7 +141,8 @@ void main() {
     stubAllBackendMethods(mockBackend);
     final bloc = AudioPlayerBloc(backend: mockBackend);
     // Setze initialen State mit Volume 0.2, damit Drag garantiert Wert ändert
-    bloc.emit(Playing(const Duration(), const Duration(seconds: 60), volume: 0.2));
+    bloc.emit(
+        Playing(const Duration(), const Duration(seconds: 60), volume: 0.2));
     await tester.pumpWidget(
       ProviderScope(
         overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
@@ -153,7 +154,8 @@ void main() {
     final volumeButtonFinder = find.byTooltip('Lautstärke');
     expect(volumeButtonFinder, findsOneWidget);
     await tester.tap(volumeButtonFinder);
-    await tester.pumpAndSettle(const Duration(milliseconds: 500)); // Overlay sicher sichtbar
+    await tester.pumpAndSettle(
+        const Duration(milliseconds: 500)); // Overlay sicher sichtbar
     // Finde den Slider im Overlay
     final sliderFinder = find.byType(Slider).last;
     expect(sliderFinder, findsOneWidget);
@@ -231,12 +233,13 @@ void main() {
           true // Temporär deaktiviert wegen Pending-Timer-Fehler durch Marquee-Widget. Siehe README.md und audio_player_best_practices_2025.md
       );
 
-  testWidgets(
-      'BottomPlayerWidget: Lautstärke-Overlay öffnet und zeigt Slider', (tester) async {
+  testWidgets('BottomPlayerWidget: Lautstärke-Overlay öffnet und zeigt Slider',
+      (tester) async {
     final mockBackend = MockAudioPlayerBackend();
     stubAllBackendMethods(mockBackend);
     final bloc = AudioPlayerBloc(backend: mockBackend);
-    bloc.emit(Playing(const Duration(), const Duration(seconds: 60), volume: 0.2));
+    bloc.emit(
+        Playing(const Duration(), const Duration(seconds: 60), volume: 0.2));
     await tester.pumpWidget(
       ProviderScope(
         overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
@@ -248,7 +251,8 @@ void main() {
     final volumeButtonFinder = find.byTooltip('Lautstärke');
     expect(volumeButtonFinder, findsOneWidget);
     await tester.tap(volumeButtonFinder);
-    await tester.pumpAndSettle(const Duration(milliseconds: 500)); // Overlay sicher sichtbar
+    await tester.pumpAndSettle(
+        const Duration(milliseconds: 500)); // Overlay sicher sichtbar
     // Finde den Slider im Overlay
     final sliderFinder = find.byType(Slider).last;
     expect(sliderFinder, findsOneWidget);
@@ -261,11 +265,13 @@ void main() {
   }, skip: true);
 
   testWidgets(
-      'BottomPlayerWidget: Lautstärke-Slider bleibt synchron bei externem Volume-Update', (tester) async {
+      'BottomPlayerWidget: Lautstärke-Slider bleibt synchron bei externem Volume-Update',
+      (tester) async {
     final mockBackend = MockAudioPlayerBackend();
     stubAllBackendMethods(mockBackend);
     final bloc = AudioPlayerBloc(backend: mockBackend);
-    bloc.emit(Playing(const Duration(seconds: 5), const Duration(seconds: 60), volume: 0.2));
+    bloc.emit(Playing(const Duration(seconds: 5), const Duration(seconds: 60),
+        volume: 0.2));
     await tester.pumpWidget(
       ProviderScope(
         overrides: [audioPlayerBlocProvider.overrideWithValue(bloc)],
@@ -277,15 +283,18 @@ void main() {
     final volumeButtonFinder = find.byTooltip('Lautstärke');
     expect(volumeButtonFinder, findsOneWidget);
     await tester.tap(volumeButtonFinder);
-    await tester.pumpAndSettle(const Duration(milliseconds: 500)); // Overlay sicher sichtbar
+    await tester.pumpAndSettle(
+        const Duration(milliseconds: 500)); // Overlay sicher sichtbar
     // Finde den Slider im Overlay
     final sliderFinder = find.byType(Slider).last;
     expect(sliderFinder, findsOneWidget);
     // Simuliere externes Volume-Update (z.B. durch Backend)
-    bloc.emit(Playing(const Duration(seconds: 5), const Duration(seconds: 60), volume: 0.8));
+    bloc.emit(Playing(const Duration(seconds: 5), const Duration(seconds: 60),
+        volume: 0.8));
     await tester.pumpAndSettle(const Duration(milliseconds: 400));
     final sliderWidget2 = tester.widget<Slider>(sliderFinder);
-    expect(sliderWidget2.value, closeTo(0.8, 0.01), reason: 'Slider muss synchron auf externes Volume-Update reagieren');
+    expect(sliderWidget2.value, closeTo(0.8, 0.01),
+        reason: 'Slider muss synchron auf externes Volume-Update reagieren');
     // Overlay schließen
     await tester.pumpWidget(Container());
     await tester.pumpAndSettle();
