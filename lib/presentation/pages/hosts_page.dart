@@ -19,7 +19,6 @@ import '../widgets/host_website_tile.dart';
 import '../widgets/host_section_header.dart';
 import '../widgets/host_scroll_spacer_section.dart';
 import '../../application/providers/podcast_provider.dart';
-import '../../domain/common/api_response.dart';
 import '../../application/providers/collection_provider.dart' as coll_prov;
 import '../widgets/host_rss_meta_tile.dart';
 import '../../application/providers/overlay_header_provider.dart';
@@ -119,16 +118,21 @@ class _HostsPageState extends ConsumerState<HostsPage> {
                           );
                           final apiResponse =
                               podcastCollectionAsync.asData?.value;
-                          if (apiResponse == null ||
-                              !apiResponse.isSuccess ||
-                              apiResponse.data == null ||
-                              apiResponse.data!.podcasts.isEmpty) {
+                          if (apiResponse == null) {
                             return null;
                           }
-                          final podcast = apiResponse.data!.podcasts.first;
-                          return podcast.artistName.isNotEmpty
-                              ? podcast.artistName
-                              : null;
+                          // Sicheres Pattern Matching statt isSuccess-Getter
+                          return apiResponse.when(
+                            success: (data) {
+                              if (data.podcasts.isEmpty) return null;
+                              final podcast = data.podcasts.first;
+                              return podcast.artistName.isNotEmpty
+                                  ? podcast.artistName
+                                  : null;
+                            },
+                            error: (_) => null,
+                            loading: () => null,
+                          );
                         })(),
                       ),
                     ),
@@ -206,34 +210,36 @@ class _HostsPageState extends ConsumerState<HostsPage> {
                       );
                       return podcastCollectionAsync.when(
                         data: (apiResponse) {
-                          if (!apiResponse.isSuccess ||
-                              apiResponse.data == null) {
-                            return const SizedBox.shrink();
-                          }
-                          final podcast = apiResponse.data!.podcasts.isNotEmpty
-                              ? apiResponse.data!.podcasts.first
-                              : null;
-                          if (podcast == null ||
-                              podcast.artworkUrl600.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 16, 0, 12),
-                            child: Center(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: SafeImage(
-                                  imageUrl: podcast.artworkUrl600,
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
+                          // Pattern Matching statt isSuccess
+                          return apiResponse.when(
+                            success: (data) {
+                              if (data.podcasts.isEmpty)
+                                return const SizedBox.shrink();
+                              final podcast = data.podcasts.first;
+                              if (podcast.artworkUrl600.isEmpty)
+                                return const SizedBox.shrink();
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 16, 0, 12),
+                                child: Center(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: SafeImage(
+                                      imageUrl: podcast.artworkUrl600,
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
+                            error: (_) => const SizedBox.shrink(),
+                            loading: () => const SizedBox.shrink(),
                           );
                         },
+                        error: (_, __) => const SizedBox.shrink(),
                         loading: () => const SizedBox.shrink(),
-                        error: (e, st) => const SizedBox.shrink(),
                       );
                     },
                   ),
@@ -402,36 +408,32 @@ class _HostsPageState extends ConsumerState<HostsPage> {
                       );
                       return podcastCollectionAsync.when(
                         data: (apiResponse) {
-                          if (!apiResponse.isSuccess ||
-                              apiResponse.data == null) {
-                            return const Text(
-                                'Keine PodcastCollection geladen');
-                          }
-                          final podcast =
-                              apiResponse.data!.podcasts.firstOrNull;
-                          if (podcast == null)
-                            return const Text('Kein Podcast gefunden');
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // für dynamische Inline-Ersetzung
-                              InfoTile(
-                                  label: 'Podcast Titel',
-                                  value: podcast.collectionName),
-                              //PERFEKT: als 'hostName' (=='artistName' -> dann speichern)
-                              InfoTile(
-                                  label: 'Artist', value: podcast.artistName),
-                              // für Admin (direkter Zugriff, keine Provider-Logik)
-                              // InfoTile(
-                              //     label: 'Feed URL', value: podcast.feedUrl ?? '-'),
-                              // InfoTile(
-                              //     label: 'PodcastId',
-                              //     value: podcast.collectionId.toString()),
-                            ],
+                          return apiResponse.when(
+                            success: (data) {
+                              if (data.podcasts.isEmpty) return const Text('Keine PodcastCollection geladen');
+                              final podcast = data.podcasts.firstOrNull;
+                              if (podcast == null) return const Text('Kein Podcast gefunden');
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InfoTile(label: 'Podcast Titel', value: podcast.collectionName),
+                                  //PERFEKT: als 'hostName' (=='artistName' -> dann speichern)
+                                  InfoTile(label: 'Artist', value: podcast.artistName),
+                                  // für Admin (direkter Zugriff, keine Provider-Logik)
+                                  // InfoTile(
+                                  //     label: 'Feed URL', value: podcast.feedUrl ?? '-'),
+                                  // InfoTile(
+                                  //     label: 'PodcastId',
+                                  //     value: podcast.collectionId.toString()),
+                                ],
+                              );
+                            },
+                            error: (_) => const Text('Keine PodcastCollection geladen'),
+                            loading: () => const Text('Lade PodcastCollection...'),
                           );
                         },
-                        loading: () => const SizedBox.shrink(),
-                        error: (e, st) => const SizedBox.shrink(),
+                        error: (_, __) => const Text('Keine PodcastCollection geladen'),
+                        loading: () => const Text('Lade PodcastCollection...'),
                       );
                     },
                   ),

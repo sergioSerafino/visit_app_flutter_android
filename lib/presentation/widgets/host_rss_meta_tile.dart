@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/podcast_provider.dart';
 import '../../application/providers/rss_metadata_provider.dart';
-import '../../domain/common/api_response.dart';
 
 /// Universelles Widget für die Anzeige eines RSS-Metadatenfelds (z. B. E-Mail, Website) aus dem RSS-Provider.
 ///
@@ -31,68 +30,75 @@ class HostRssMetaTile extends ConsumerWidget {
     final podcastCollectionAsync =
         ref.watch(podcastCollectionProvider(int.parse(collectionId)));
     return podcastCollectionAsync.when(
-      loading: () => const SizedBox.shrink(),
-      error: (e, st) => const SizedBox.shrink(),
       data: (apiResponse) {
-        if (!apiResponse.isSuccess || apiResponse.data == null) {
-          return const SizedBox.shrink();
-        }
-        final podcasts = apiResponse.data!.podcasts;
-        if (podcasts.isEmpty) return const SizedBox.shrink();
-        final podcast = podcasts.first;
-        final feedUrl = podcast.feedUrl ?? '';
-        final rssMetaAsync = ref.watch(rssMetadataProvider(feedUrl));
-        return rssMetaAsync.when(
-          data: (rssMeta) {
-            final value = extractor(rssMeta);
-            final originalValue = originalValueExtractor != null
-                ? originalValueExtractor!(rssMeta)
-                : value;
-            if (value == null || value.isEmpty) return const SizedBox.shrink();
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (icon != null)
-                      Icon(icon, color: Theme.of(context).colorScheme.primary),
-                    if (icon != null) const SizedBox(width: 8),
-                    if (label != null)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Text(
-                          '$label:',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                    GestureDetector(
-                      onTap: onTap != null && originalValue != null
-                          ? () => onTap!(originalValue)
-                          : null,
-                      child: Text(
-                        value,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: onTap != null
-                                  ? (Theme.of(context).colorScheme.secondary)
-                                  : null,
-                              decoration: onTap != null
-                                  ? TextDecoration.underline
-                                  : null,
+        return apiResponse.when(
+          success: (data) {
+            if (data.podcasts.isEmpty) return const SizedBox.shrink();
+            final podcast = data.podcasts.first;
+            final feedUrl = podcast.feedUrl ?? '';
+            final rssMetaAsync = ref.watch(rssMetadataProvider(feedUrl));
+            return rssMetaAsync.when(
+              data: (rssMeta) {
+                final value = extractor(rssMeta);
+                final originalValue = originalValueExtractor != null
+                    ? originalValueExtractor!(rssMeta)
+                    : value;
+                if (value == null || value.isEmpty)
+                  return const SizedBox.shrink();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (icon != null)
+                          Icon(icon,
+                              color: Theme.of(context).colorScheme.primary),
+                        if (icon != null) const SizedBox(width: 8),
+                        if (label != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              '$label:',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                        textAlign: TextAlign.center,
-                      ),
+                          ),
+                        GestureDetector(
+                          onTap: onTap != null && originalValue != null
+                              ? () => onTap!(originalValue)
+                              : null,
+                          child: Text(
+                            value,
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: onTap != null
+                                          ? (Theme.of(context)
+                                              .colorScheme
+                                              .secondary)
+                                          : null,
+                                      decoration: onTap != null
+                                          ? TextDecoration.underline
+                                          : null,
+                                    ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (e, st) => const SizedBox.shrink(),
             );
           },
+          error: (_) => const SizedBox.shrink(),
           loading: () => const SizedBox.shrink(),
-          error: (e, st) => const SizedBox.shrink(),
         );
       },
+      loading: () => const SizedBox.shrink(),
+      error: (e, st) => const SizedBox.shrink(),
     );
   }
 }

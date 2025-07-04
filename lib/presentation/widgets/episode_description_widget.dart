@@ -15,10 +15,15 @@ class EpisodeDescriptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Fallback: Wenn keine Beschreibung vorhanden, zeige einen dezenten Placeholder-Text
+    final String displayText =
+        (description == null || description!.trim().isEmpty)
+            ? "Keine Beschreibung verfügbar."
+            : description!;
     return Padding(
       padding: padding ?? EpisodeDescriptionWidgetConstants.defaultPadding,
       child: Text(
-        description ?? "",
+        displayText,
         style: style ??
             EpisodeDescriptionWidgetConstants.defaultStyle.copyWith(
               color: Theme.of(context).colorScheme.onSurface,

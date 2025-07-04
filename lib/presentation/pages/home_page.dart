@@ -102,27 +102,35 @@ class _HomePageState extends ConsumerState<HomePage> {
               podcastCollectionProvider(collectionId),
             );
 
-            String hostName = "artistName";
+            String hostName =
+                PlaceholderContent.podcastCollection.podcasts.first.artistName;
 
-            collectionAsync.whenData((apiResponse) {
-              apiResponse.when(
-                success: (collection) {
-                  final podcast = collection.podcasts.firstOrNull;
-                  if (collection.isPlaceholder) {
+            // Robust: Kein whenData, sondern direkt when auf collectionAsync
+            collectionAsync.when(
+              data: (apiResponse) {
+                apiResponse.when(
+                  success: (collection) {
+                    final podcast = collection.podcasts.firstOrNull;
+                    if (collection.isPlaceholder) {
+                      hostName = PlaceholderContent
+                          .podcastCollection.podcasts.first.artistName;
+                    } else if (podcast != null) {
+                      hostName = podcast.artistName;
+                    }
+                  },
+                  error: (_) {
                     hostName = PlaceholderContent
                         .podcastCollection.podcasts.first.artistName;
-                  } else if (podcast != null) {
-                    hostName = podcast.artistName;
-                  }
-                },
-                error: (_) {
-                  // Fallback: PlaceholderCollection und Episoden anzeigen
-                  hostName = PlaceholderContent.podcastCollection.podcasts.first.artistName;
-                  // Optional: Hier könnte auch die Episodenliste im Fallback gesetzt werden, falls benötigt
-                },
-                loading: () {},
-              );
-            });
+                  },
+                  loading: () {},
+                );
+              },
+              error: (e, st) {
+                hostName = PlaceholderContent
+                    .podcastCollection.podcasts.first.artistName;
+              },
+              loading: () {},
+            );
 
             return AppBar(
               backgroundColor: theme.colorScheme.primary,

@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'collection_provider.dart';
 import '../../core/services/episode_paging_cache_service.dart';
 import '../../domain/models/podcast_episode_model.dart';
+import '../../core/placeholders/placeholder_content.dart';
 
 class EpisodePagingState {
   final List<PodcastEpisode> episodes;
@@ -82,7 +83,10 @@ class EpisodePagingNotifier extends StateNotifier<EpisodePagingState> {
         episodes = await fetchPage(pageIndex, pageSize);
         await cacheService.savePage(collectionId, pageIndex, episodes);
       }
-      if (episodes == null) throw Exception('Keine Episoden gefunden');
+      // Fallback: Wenn keine Episoden gefunden oder Fehler, Placeholder zurückgeben
+      if (episodes == null || episodes.isEmpty) {
+        episodes = PlaceholderContent.placeholderEpisodes;
+      }
       final allEpisodes = List<PodcastEpisode>.from(state.episodes);
       final start = pageIndex * pageSize;
       if (allEpisodes.length < start) {
@@ -102,7 +106,13 @@ class EpisodePagingNotifier extends StateNotifier<EpisodePagingState> {
         hasMore: episodes.length == pageSize,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      // Fehlerfall: Immer konsistente Placeholder-Episoden zurückgeben
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+        episodes: PlaceholderContent.placeholderEpisodes,
+        hasMore: false,
+      );
     }
   }
 }

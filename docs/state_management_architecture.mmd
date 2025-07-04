@@ -1,0 +1,31 @@
+%%{init: { 'themeVariables': { 'fontSize': '18px', 'fontFamily': 'Inter, Arial, sans-serif', 'fontWeight': 'bold', 'textColor': '#fff', 'nodeTextColor': '#fff', 'edgeLabelBackground':'#222', 'primaryColor': '#222', 'secondaryColor': '#333', 'tertiaryColor': '#444' } } }%%
+flowchart TD
+    User["User Interaktion"] -->|UI Event| Widget["Widget (z.B. HostsPage)"]
+    Widget -->|Provider lesen| Provider["Riverpod Provider"]
+    Provider -->|liefert| AsyncValue["AsyncValue<ApiResponse<T>>"]
+    AsyncValue -->|.when: loading| Loading["Ladezustand: Shimmer/Spinner"]
+    AsyncValue -->|.when: error| Error["Fehler: Placeholder/Fallback"]
+    AsyncValue -->|.when: data| Data["Erfolgreiche Daten"]
+    Data -->|an Widget| UI["UI zeigt Daten"]
+    Error -->|an Widget| UI
+    Loading -->|an Widget| UI
+    Provider -->|holt Daten| Repository["Repository (API, Cache, Fallback)"]
+    Repository -->|liefert| ApiResponse["ApiResponse<T>"]
+    ApiResponse -->|success| Data
+    ApiResponse -->|error| Error
+    ApiResponse -->|loading| Loading
+    Repository -->|liefert Fallback| Placeholder["PlaceholderContent"]
+    Placeholder -->|als ApiResponse| ApiResponse
+    subgraph Test
+      TestWidget["Test-Widget"] -->|ProviderOverride| Provider
+    end
+    style Placeholder fill:#222,stroke:#888,stroke-width:2px
+    style Error fill:#400,stroke:#f00,stroke-width:2px
+    style Loading fill:#003,stroke:#00f,stroke-width:2px
+    style Data fill:#080,stroke:#fff,stroke-width:2px
+    style Provider fill:#333,stroke:#fff,stroke-width:2px
+    style Repository fill:#333,stroke:#fff,stroke-width:2px
+    style ApiResponse fill:#222,stroke:#fff,stroke-width:2px
+    style Widget fill:#222,stroke:#fff,stroke-width:2px
+    style UI fill:#222,stroke:#fff,stroke-width:2px
+    style TestWidget fill:#222,stroke:#fff,stroke-width:2px

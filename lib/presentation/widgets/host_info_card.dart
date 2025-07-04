@@ -182,27 +182,30 @@ class HostInfoCard extends ConsumerWidget {
                   );
                   return podcastCollectionAsync.when(
                     data: (apiResponse) {
-                      if (!apiResponse.isSuccess || apiResponse.data == null) {
-                        return const InfoTile(label: 'E-Mail', value: '-');
-                      }
-                      final podcast = apiResponse.data!.podcasts.isNotEmpty
-                          ? apiResponse.data!.podcasts.first
-                          : null;
-                      if (podcast == null) {
-                        return const InfoTile(label: 'E-Mail', value: '-');
-                      }
-                      final feedUrl = podcast.feedUrl ?? '';
-                      final rssMetaAsync =
-                          ref.watch(rssMetadataProvider(feedUrl));
-                      return rssMetaAsync.when(
-                        data: (rssMeta) => InfoTile(
-                          label: 'E-Mail',
-                          value: rssMeta?.contactEmail ?? '-',
-                        ),
+                      return apiResponse.when(
+                        success: (data) {
+                          if (data.podcasts.isEmpty) {
+                            return const InfoTile(label: 'E-Mail', value: '-');
+                          }
+                          final podcast = data.podcasts.first;
+                          final feedUrl = podcast.feedUrl ?? '';
+                          final rssMetaAsync =
+                              ref.watch(rssMetadataProvider(feedUrl));
+                          return rssMetaAsync.when(
+                            data: (rssMeta) => InfoTile(
+                              label: 'E-Mail',
+                              value: rssMeta?.contactEmail ?? '-',
+                            ),
+                            loading: () =>
+                                const InfoTile(label: 'E-Mail', value: '...'),
+                            error: (e, st) =>
+                                const InfoTile(label: 'E-Mail', value: '-'),
+                          );
+                        },
+                        error: (_) =>
+                            const InfoTile(label: 'E-Mail', value: '-'),
                         loading: () =>
                             const InfoTile(label: 'E-Mail', value: '...'),
-                        error: (e, st) =>
-                            const InfoTile(label: 'E-Mail', value: '-'),
                       );
                     },
                     loading: () =>
@@ -227,34 +230,37 @@ class HostInfoCard extends ConsumerWidget {
                   );
                   return podcastCollectionAsync.when(
                     data: (apiResponse) {
-                      if (!apiResponse.isSuccess || apiResponse.data == null) {
-                        return const SizedBox.shrink();
-                      }
-                      final podcast = apiResponse.data!.podcasts.isNotEmpty
-                          ? apiResponse.data!.podcasts.first
-                          : null;
-                      if (podcast == null) {
-                        return const SizedBox.shrink();
-                      }
-                      final feedUrl = podcast.feedUrl ?? '';
-                      final rssMetaAsync =
-                          ref.watch(rssMetadataProvider(feedUrl));
-                      return rssMetaAsync.when(
-                        data: (rssMeta) {
-                          final website =
-                              rssMeta?.websiteUrl?.isNotEmpty == true
-                                  ? rssMeta!.websiteUrl!
-                                  : (host.contact.websiteUrl ?? '-');
-                          return WebsiteTile(
-                            label: 'Website',
-                            url: website,
+                      return apiResponse.when(
+                        success: (data) {
+                          if (data.podcasts.isEmpty)
+                            return const SizedBox.shrink();
+                          final podcast = data.podcasts.first;
+                          final feedUrl = podcast.feedUrl ?? '';
+                          final rssMetaAsync =
+                              ref.watch(rssMetadataProvider(feedUrl));
+                          return rssMetaAsync.when(
+                            data: (rssMeta) {
+                              final website =
+                                  rssMeta?.websiteUrl?.isNotEmpty == true
+                                      ? rssMeta!.websiteUrl!
+                                      : (host.contact.websiteUrl ?? '-');
+                              return WebsiteTile(
+                                label: 'Website',
+                                url: website,
+                              );
+                            },
+                            loading: () =>
+                                const InfoTile(label: 'Website', value: '...'),
+                            error: (e, st) => InfoTile(
+                                label: 'Website',
+                                value: host.contact.websiteUrl ?? '-'),
                           );
                         },
-                        loading: () =>
-                            const InfoTile(label: 'Website', value: '...'),
-                        error: (e, st) => InfoTile(
+                        error: (_) => InfoTile(
                             label: 'Website',
                             value: host.contact.websiteUrl ?? '-'),
+                        loading: () =>
+                            const InfoTile(label: 'Website', value: '...'),
                       );
                     },
                     loading: () =>

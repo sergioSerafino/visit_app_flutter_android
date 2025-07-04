@@ -22,7 +22,7 @@
   },
   "features": { "showPortfolioTab": true },
   "localization": { "defaultLanguageCode": "de", "localizedTexts": {} },
-  "content": { "bio": "... sie ist Vereinstätige, eine etablierte Größe\u00A0im\u00A0spirituellen\u00A0Buchhandel, ModeratorIn, BeraterIn, durch ihre\u00A0Beiträge\u00A0aus\u00A0Social-Media weitreichend\u00A0bekannt und stets gerne auch als Hörbuch gehört. \n- seit Anfang 2021 ist Sabine mit dem eigens\u00A0produzierten\u00A0Podcast-\u00A0Format 'Opalia\u00A0Talk\u00A0-\u00A0Seelenprofiling' präsent auf den Streaming-Platformen und unterhält regelmäßig ihre Zuhörerschaft mit episodischen Gesprächen, wechselnden Gästen und spannenden Themen.", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, inspirierende, vielschichtige Themenbereiche logisch und nüchtern, Leverkusener Consulting-Betrieb in der Opalia\u00A0Praxis", "rss": null, "links": [] },
+  "content": { "bio": "Bio -Txt", "mission": "Einzigartige Kartensysteme, lebendige Unterhaltung, inspirierende, vielschichtige Themenbereiche logisch\u00A0und\u00A0nüchtern erklärt,\nOpalia\u00A0Praxis in Leverkusen", "rss": null, "links": [] },
   "primaryGenreName": "Business",
   "authTokenRequired": false,
   "debugOnly": false,
