@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/core/services/cast_airplay_service.dart';
+import 'package:visit_app_flutter_android/core/services/cast_airplay_service.dart';
 
 void main() {
   group('CastAirPlayServiceMock', () {

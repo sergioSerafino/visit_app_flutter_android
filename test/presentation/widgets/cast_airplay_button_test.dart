@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/presentation/widgets/cast_airplay_button.dart';
+import 'package:visit_app_flutter_android/presentation/widgets/cast_airplay_button.dart';
 import 'package:flutter/material.dart';
 
 void main() {

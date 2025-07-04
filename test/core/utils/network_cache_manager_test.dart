@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:empty_flutter_template/core/utils/network_cache_manager.dart';
+import 'package:visit_app_flutter_android/core/utils/network_cache_manager.dart';
 
 import 'network_cache_manager_test.mocks.dart';
 

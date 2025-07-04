@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/core/services/merge_service.dart';
-import 'package:empty_flutter_template/core/services/merged_collection_cache_service.dart';
-import 'package:empty_flutter_template/core/placeholders/placeholder_loader_service.dart';
-import 'package:empty_flutter_template/core/utils/rss_service.dart';
-import 'package:empty_flutter_template/data/repositories/api_podcast_repository.dart';
-import 'package:empty_flutter_template/data/api/api_client.dart';
+import 'package:visit_app_flutter_android/core/services/merge_service.dart';
+import 'package:visit_app_flutter_android/core/services/merged_collection_cache_service.dart';
+import 'package:visit_app_flutter_android/core/placeholders/placeholder_loader_service.dart';
+import 'package:visit_app_flutter_android/core/utils/rss_service.dart';
+import 'package:visit_app_flutter_android/data/repositories/api_podcast_repository.dart';
+import 'package:visit_app_flutter_android/data/api/api_client.dart';
 import 'package:hive/hive.dart';
-import 'package:empty_flutter_template/data/api/local_cache_client.dart';
+import 'package:visit_app_flutter_android/data/api/local_cache_client.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
 

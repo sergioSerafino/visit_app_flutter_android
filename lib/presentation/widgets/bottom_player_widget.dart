@@ -323,10 +323,8 @@ class _VolumeOverlayButtonState extends State<_VolumeOverlayButton> {
                           } else if (state is Loading) {
                             stateVolume = state.volume;
                           }
-                          // Nur bei aktivem Stream synchronisieren
-                          if (isActive &&
-                              !_isDragging &&
-                              _pendingVolume == null) {
+                          // Synchronisiere _currentVolume IMMER, wenn kein Drag aktiv ist
+                          if (!_isDragging && _pendingVolume == null) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (mounted) {
                                 setState(() => _currentVolume = stateVolume);

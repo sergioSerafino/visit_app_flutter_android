@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/core/services/audio_player_sync_service.dart';
+import 'package:visit_app_flutter_android/core/services/audio_player_sync_service.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mocktail/mocktail.dart';
 

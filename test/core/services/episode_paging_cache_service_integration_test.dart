@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/core/services/episode_paging_cache_service.dart';
-import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
+import 'package:visit_app_flutter_android/core/services/episode_paging_cache_service.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_episode_model.dart';
 import 'package:hive/hive.dart';
 import 'dart:io';
 

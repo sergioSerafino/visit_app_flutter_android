@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/domain/models/merge_models.dart';
-import 'package:empty_flutter_template/core/utils/rss_parser_service.dart';
+import 'package:visit_app_flutter_android/domain/models/merge_models.dart';
+import 'package:visit_app_flutter_android/core/utils/rss_parser_service.dart';
 import 'package:xml/xml.dart';
 
 void main() {

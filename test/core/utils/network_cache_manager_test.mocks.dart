@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:empty_flutter_template/core/utils/network_cache_manager.dart'
+import 'package:visit_app_flutter_android/core/utils/network_cache_manager.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 

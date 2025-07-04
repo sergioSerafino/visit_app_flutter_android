@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/application/providers/theme_provider.dart'
+import 'package:visit_app_flutter_android/application/providers/collection_provider.dart';
+import 'package:visit_app_flutter_android/application/providers/theme_provider.dart'
     as theme_prov;
-import 'package:empty_flutter_template/core/services/collection_id_storage.dart';
+import 'package:visit_app_flutter_android/core/services/collection_id_storage.dart';
 
 class FakeCollectionIdStorage extends CollectionIdStorage {
   int? _id;

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:empty_flutter_template/core/services/audio_player_bloc.dart';
-import 'package:empty_flutter_template/core/services/i_audio_player.dart';
+import 'package:visit_app_flutter_android/core/services/audio_player_bloc.dart';
+import 'package:visit_app_flutter_android/core/services/i_audio_player.dart';
 import 'dart:async';
 
 class MockAudioPlayerBackend extends Mock implements IAudioPlayerBackend {}

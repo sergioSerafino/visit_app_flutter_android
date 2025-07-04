@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/core/utils/rss_service.dart';
+import 'package:visit_app_flutter_android/core/utils/rss_service.dart';
 import 'package:dio/dio.dart';
 
 void main() {

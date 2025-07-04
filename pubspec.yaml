@@ -1,4 +1,4 @@
-name: empty_flutter_template
+name: visit_app_flutter_android
 description: Ein neutrales Flutter-Template als Ausgangsbasis für neue Projekte.
 # Die folgende Zeile verhindert, dass das Paket versehentlich mit
 # `flutter pub publish` nach pub.dev veröffentlicht wird. Dies ist für private Pakete bevorzugt.

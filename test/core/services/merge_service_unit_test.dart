@@ -1,18 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:empty_flutter_template/domain/models/podcast_model.dart';
-import 'package:empty_flutter_template/domain/common/api_response.dart';
-import 'package:empty_flutter_template/domain/models/podcast_collection_model.dart';
-import 'package:empty_flutter_template/data/repositories/podcast_repository.dart';
-import 'package:empty_flutter_template/core/utils/rss_service.dart';
-import 'package:empty_flutter_template/core/placeholders/placeholder_loader_service.dart';
-import 'package:empty_flutter_template/core/services/merge_service.dart';
-import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
-import 'package:empty_flutter_template/core/services/merged_collection_cache_service.dart';
-import 'package:empty_flutter_template/domain/models/podcast_host_collection_model.dart'
+import 'package:visit_app_flutter_android/domain/models/podcast_model.dart';
+import 'package:visit_app_flutter_android/domain/common/api_response.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_collection_model.dart';
+import 'package:visit_app_flutter_android/data/repositories/podcast_repository.dart';
+import 'package:visit_app_flutter_android/core/utils/rss_service.dart';
+import 'package:visit_app_flutter_android/core/placeholders/placeholder_loader_service.dart';
+import 'package:visit_app_flutter_android/core/services/merge_service.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_episode_model.dart';
+import 'package:visit_app_flutter_android/core/services/merged_collection_cache_service.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_host_collection_model.dart'
     as phc;
-import 'package:empty_flutter_template/domain/models/merge_models.dart'
+import 'package:visit_app_flutter_android/domain/models/merge_models.dart'
     show LocalJsonData, RssData;
 import 'merge_service_unit_test.mocks.dart';
 

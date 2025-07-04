@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:hive/hive.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/application/providers/feature_flags_provider.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
-import 'package:empty_flutter_template/domain/models/feature_flags_model.dart';
-import 'package:empty_flutter_template/core/services/feature_flags_cache_service.dart';
-import 'package:empty_flutter_template/core/services/collection_id_storage.dart';
+import 'package:visit_app_flutter_android/application/providers/feature_flags_provider.dart';
+import 'package:visit_app_flutter_android/application/providers/collection_provider.dart';
+import 'package:visit_app_flutter_android/domain/models/feature_flags_model.dart';
+import 'package:visit_app_flutter_android/core/services/feature_flags_cache_service.dart';
+import 'package:visit_app_flutter_android/core/services/collection_id_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FakeCacheService extends FeatureFlagsCacheService {

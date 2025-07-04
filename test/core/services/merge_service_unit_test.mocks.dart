@@ -5,17 +5,19 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i6;
 
-import 'package:empty_flutter_template/core/placeholders/placeholder_loader_service.dart'
+import 'package:visit_app_flutter_android/core/placeholders/placeholder_loader_service.dart'
     as _i11;
-import 'package:empty_flutter_template/core/utils/rss_service.dart' as _i9;
-import 'package:empty_flutter_template/data/repositories/podcast_repository.dart'
+import 'package:visit_app_flutter_android/core/utils/rss_service.dart' as _i9;
+import 'package:visit_app_flutter_android/data/repositories/podcast_repository.dart'
     as _i5;
-import 'package:empty_flutter_template/domain/common/api_response.dart' as _i2;
-import 'package:empty_flutter_template/domain/models/host_model.dart' as _i3;
-import 'package:empty_flutter_template/domain/models/merge_models.dart' as _i4;
-import 'package:empty_flutter_template/domain/models/podcast_collection_model.dart'
+import 'package:visit_app_flutter_android/domain/common/api_response.dart'
+    as _i2;
+import 'package:visit_app_flutter_android/domain/models/host_model.dart' as _i3;
+import 'package:visit_app_flutter_android/domain/models/merge_models.dart'
+    as _i4;
+import 'package:visit_app_flutter_android/domain/models/podcast_collection_model.dart'
     as _i7;
-import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart'
+import 'package:visit_app_flutter_android/domain/models/podcast_episode_model.dart'
     as _i8;
 import 'package:flutter_riverpod/flutter_riverpod.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;

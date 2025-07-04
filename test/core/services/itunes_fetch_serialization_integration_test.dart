@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:empty_flutter_template/domain/models/podcast_collection_model.dart';
-import 'package:empty_flutter_template/domain/models/podcast_model.dart';
-import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_collection_model.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_model.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_episode_model.dart';
 
 void main() {
   group('iTunes-Fetch Serialisierung/Deserialisierung', () {

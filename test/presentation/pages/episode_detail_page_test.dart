@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:empty_flutter_template/presentation/pages/episode_detail_page.dart';
-import 'package:empty_flutter_template/core/services/audio_player_bloc.dart';
-import 'package:empty_flutter_template/core/services/i_audio_player.dart';
-import 'package:empty_flutter_template/application/providers/audio_player_provider.dart';
+import 'package:visit_app_flutter_android/presentation/pages/episode_detail_page.dart';
+import 'package:visit_app_flutter_android/core/services/audio_player_bloc.dart';
+import 'package:visit_app_flutter_android/core/services/i_audio_player.dart';
+import 'package:visit_app_flutter_android/application/providers/audio_player_provider.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:empty_flutter_template/domain/models/podcast_episode_model.dart';
+import 'package:visit_app_flutter_android/domain/models/podcast_episode_model.dart';
 import '../../test_hive_init.dart';
 
 class MockAudioPlayerBackend extends Mock implements IAudioPlayerBackend {}

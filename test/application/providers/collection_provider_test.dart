@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:empty_flutter_template/application/providers/collection_provider.dart';
+import 'package:visit_app_flutter_android/application/providers/collection_provider.dart';
 
 void main() {
   group('collectionIdProvider', () {
