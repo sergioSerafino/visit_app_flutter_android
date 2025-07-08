@@ -10,6 +10,7 @@ import '../widgets/home_header_material3.dart';
 import 'podcast_page.dart';
 import 'hosts_page.dart';
 import 'preferences_page.dart';
+import 'favorites_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import '../../core/utils/scroll_shadow_controller.dart';
@@ -262,6 +263,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
+          FavoritesPage(),
           PodcastPage(
               scrollController: _podcastScrollShadowController.controller),
           HostsPage(scrollController: _hostsScrollShadowController.controller),
@@ -278,12 +280,17 @@ class _HomePageState extends ConsumerState<HomePage> {
         unselectedLabelStyle: const TextStyle(color: Colors.white),
         items: [
           BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: "Favoriten",
+            backgroundColor: theme.colorScheme.primary,
+          ),
+          BottomNavigationBarItem(
             icon: Consumer(
               builder: (context, ref, _) {
                 final audioStateAsync = ref.watch(audioPlayerStateProvider);
                 final audioState = audioStateAsync.asData?.value;
                 final isPlaying = audioState is Playing;
-                final isSelected = _selectedIndex == 0;
+                final isSelected = _selectedIndex == 1;
                 Color? iconColor;
                 if (isSelected) {
                   iconColor = Colors.white;
@@ -300,13 +307,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             backgroundColor: theme.colorScheme.primary,
           ),
           BottomNavigationBarItem(
-            icon: _selectedIndex == 1
+            icon: _selectedIndex == 2
                 ? const Icon(Icons.person)
-                : /*Transform.rotate(
-                    angle: 1.5708, // 90 Grad im Bogenmaß, play_arrow
-                    child: */
-                const Icon(Icons.person),
-            // ),
+                : const Icon(Icons.person),
             label: "Visit",
             backgroundColor: theme.colorScheme.primary,
           ),
