@@ -42,6 +42,8 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  // GlobalKey für Scaffold, damit das Drawer gezielt geöffnet werden kann
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
   // Für jeden Tab ein eigener Controller
@@ -98,6 +100,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const Drawer(
+        child: FavoritesDrawerContent(),
+      ),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: Consumer(
@@ -141,146 +147,134 @@ class _HomePageState extends ConsumerState<HomePage> {
             return AppBar(
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,
+              automaticallyImplyLeading: false,
+              titleSpacing: 0,
               title: Padding(
-                padding: const EdgeInsets.only(
-                  top: HomePageConstants.headerTop,
-                  left: HomePageConstants.headerLeft,
-                  right: HomePageConstants.headerRight,
-                  bottom: HomePageConstants.headerBottom,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: HomeHeaderMaterial3(
-                        hostName: hostName,
-                        baseColor: theme.colorScheme.primary,
-                        surfaceTint: theme.colorScheme.surfaceTint,
-                        overlayActive: showOverlay,
-                        textColor: Colors.white,
-                        height: kToolbarHeight + 30,
-                        actions: null,
-                        textStyle: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    // const SizedBox(width: 12),
-                  ],
+                padding: const EdgeInsets.only(left: 8.0),
+                child: HomeHeaderMaterial3(
+                  hostName: hostName,
+                  baseColor: theme.colorScheme.primary,
+                  surfaceTint: theme.colorScheme.surfaceTint,
+                  overlayActive: showOverlay,
+                  textColor: Colors.white,
+                  height: kToolbarHeight + 30,
+                  actions: null,
+                  textStyle: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               actions: [
-                Theme(
-                  data: theme.copyWith(
-                    popupMenuTheme: theme.popupMenuTheme.copyWith(
-                      color: theme.colorScheme.primary,
-                      textStyle: TextStyle(color: theme.colorScheme.onPrimary),
+                Builder(
+                  builder: (popupContext) => Theme(
+                    data: theme.copyWith(
+                      popupMenuTheme: theme.popupMenuTheme.copyWith(
+                        color: theme.colorScheme.primary,
+                        textStyle:
+                            TextStyle(color: theme.colorScheme.onPrimary),
+                      ),
+                      iconTheme:
+                          IconThemeData(color: theme.colorScheme.onPrimary),
                     ),
-                    iconTheme:
-                        IconThemeData(color: theme.colorScheme.onPrimary),
-                  ),
-                  child: PopupMenuButton<String>(
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    ),
-                    onSelected: (value) {
-                      if (value == "Einstellungen") {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const PreferencesBottomSheet();
-                          },
-                        );
-                      } else if (value == "Über") {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.landingRoute,
-                          arguments: {"isReturningUser": true},
-                        );
-                      } else if (value == "Favoriten") {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const FavoritesPage(),
+                    child: PopupMenuButton<String>(
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                      onSelected: (value) {
+                        if (value == "Einstellungen") {
+                          showModalBottomSheet(
+                            context: popupContext,
+                            builder: (BuildContext context) {
+                              return const PreferencesBottomSheet();
+                            },
+                          );
+                        } else if (value == "Über") {
+                          Navigator.pushNamed(
+                            popupContext,
+                            AppRoutes.landingRoute,
+                            arguments: {"isReturningUser": true},
+                          );
+                        } else if (value == "Favoriten") {
+                          _scaffoldKey.currentState?.openDrawer();
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => [
+                        const PopupMenuItem(
+                          value: "Light/Dark -Mode",
+                          child: Row(
+                            children: [
+                              Text(
+                                "Light/Dark -Mode",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.light_mode,
+                                color: Colors.white,
+                              ),
+                            ],
                           ),
-                        );
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => [
-                      const PopupMenuItem(
-                        value: "Light/Dark -Mode",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Light/Dark -Mode",
-                              style: TextStyle(
+                        ),
+                        const PopupMenuItem(
+                          value: "Über",
+                          child: Row(
+                            children: [
+                              Text(
+                                "Über diese App",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_back,
                                 color: Colors.white,
                               ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.light_mode,
-                              color: Colors.white,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuItem(
-                        value: "Über",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Über diese App",
-                              style: TextStyle(
+                        const PopupMenuItem(
+                          value: "Favoriten",
+                          child: Row(
+                            children: [
+                              Text(
+                                "Favoriten",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.star,
                                 color: Colors.white,
                               ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuItem(
-                        value: "Favoriten",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Favoriten",
-                              style: TextStyle(
+                        const PopupMenuItem(
+                          value: "Einstellungen",
+                          child: Row(
+                            children: [
+                              Text(
+                                "Einstellungen",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.settings,
                                 color: Colors.white,
                               ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.star,
-                              color: Colors.white,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const PopupMenuItem(
-                        value: "Einstellungen",
-                        child: Row(
-                          children: [
-                            Text(
-                              "Einstellungen",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -338,6 +332,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ],
       ),
+      // drawer: const Drawer(
+      //   child: FavoritesDrawerContent(),
+      // ),
     );
   }
 }
