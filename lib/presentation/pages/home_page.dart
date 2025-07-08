@@ -21,6 +21,7 @@ import '../../application/providers/episode_controller_provider.dart';
 import '../widgets/bottom_player_widget.dart';
 import '../../core/placeholders/placeholder_content.dart';
 import '../../domain/models/podcast_collection_model.dart';
+import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,7 +42,8 @@ class HomePage extends ConsumerStatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
+class _HomePageState extends ConsumerState<HomePage>
+    with SingleTickerProviderStateMixin {
   // GlobalKey für Scaffold, damit das Drawer gezielt geöffnet werden kann
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
@@ -51,18 +53,38 @@ class _HomePageState extends ConsumerState<HomePage> {
   late final ScrollShadowController _hostsScrollShadowController;
 
   bool _snackbarShown = false;
+  late final AnimationController _starController;
+  late final Animation<Color?> _starColorAnim;
+  Timer? _starTimer;
 
   @override
   void initState() {
     super.initState();
     _podcastScrollShadowController = ScrollShadowController();
     _hostsScrollShadowController = ScrollShadowController();
+    _starController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    _starColorAnim = ColorTween(
+      begin: Colors.grey[500]!.withAlpha(140),
+      end: Colors.amber,
+    ).animate(CurvedAnimation(
+      parent: _starController,
+      curve: Curves.easeInOut,
+    ));
+    _starTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+      await _starController.forward();
+      await _starController.reverse();
+    });
   }
 
   @override
   void dispose() {
     _podcastScrollShadowController.dispose();
     _hostsScrollShadowController.dispose();
+    _starController.dispose();
+    _starTimer?.cancel();
     // Provider-State explizit invalidieren, um State-Leaks und ScrollController-Probleme zu vermeiden
     final container = ProviderScope.containerOf(context, listen: false);
     container.invalidate(collectionLoadControllerProvider);
@@ -105,24 +127,55 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: FavoritesDrawerContent(),
       ),
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 4, right: 4),
+        margin: const EdgeInsets.only(bottom: 22, right: 1),
         child: Material(
           color: Colors.transparent,
-          shadowColor: Colors.black54,
+          shadowColor: Colors.black12,
           child: GestureDetector(
             onTap: () => _scaffoldKey.currentState?.openDrawer(),
             behavior: HitTestBehavior.opaque,
-            child: Icon(
-              Icons.star,
-              color: Colors.grey[300],
-              size: 56,
-              shadows: const [
-                Shadow(
-                  color: Colors.black38,
-                  blurRadius: 8,
-                  offset: Offset(1, 4),
-                ),
-              ],
+            child: AnimatedBuilder(
+              animation: _starColorAnim,
+              builder: (context, child) {
+                Color? color = _starColorAnim.value;
+                double luminance =
+                    color != null ? color.computeLuminance() : 0.0;
+                // Schatten-Alpha dynamisch je nach Luminanz: dunkel (amber) = 70, hell (grau) = 20
+                int shadowAlpha =
+                    ((1.0 - luminance) * 50 + 20).round(); // Wertebereich 20-70
+                final shadowColor = Colors.black.withAlpha(shadowAlpha);
+                final shadowBlur = luminance < 0.6 ? 10.0 : 6.0;
+                final shadowOffset =
+                    luminance < 0.6 ? const Offset(9, 10) : const Offset(4, 5);
+                final outline = luminance < 0.6
+                    ? [
+                        Shadow(
+                          color: Colors.grey[600]!.withAlpha(120),
+                          blurRadius: 1.5,
+                          offset: Offset(0, 0),
+                        ),
+                      ]
+                    : [
+                        Shadow(
+                          color: Colors.grey[400]!.withAlpha(80),
+                          blurRadius: 1.5,
+                          offset: Offset(0, 0),
+                        ),
+                      ];
+                return Icon(
+                  Icons.star_rounded,
+                  color: color,
+                  size: 56,
+                  shadows: [
+                    Shadow(
+                      color: shadowColor,
+                      blurRadius: shadowBlur,
+                      offset: shadowOffset,
+                    ),
+                    ...outline,
+                  ],
+                );
+              },
             ),
           ),
         ),

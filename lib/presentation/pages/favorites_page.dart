@@ -17,8 +17,8 @@ class FavoritesDrawerContent extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.star,
-                  color: Colors.grey[300],
+                  Icons.star_rounded,
+                  color: Colors.amber,
                   size: 32,
                   shadows: [
                     Shadow(
