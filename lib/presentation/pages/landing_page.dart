@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers/collection_provider.dart';
 import '../../application/providers/onboarding_status_provider.dart';
 import '../../application/providers/podcast_provider.dart';
+import '../../application/providers/episode_controller_provider.dart';
 import '../../config/app_routes.dart';
 import 'preferences_page.dart';
 import '../widgets/button_icon_navigation.dart';
@@ -164,6 +165,8 @@ class _LandingPageState extends ConsumerState<LandingPage> {
                     label: "Starten",
                     icon: Icons.play_arrow,
                     onPressed: () {
+                      ref.invalidate(collectionLoadControllerProvider);
+                      ref.invalidate(episodeLoadControllerProvider);
                       ref
                           .read(hasCompletedStartProvider.notifier)
                           .markStartComplete();

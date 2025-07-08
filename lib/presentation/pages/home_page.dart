@@ -17,6 +17,7 @@ import '../../core/utils/scroll_shadow_controller.dart';
 import '../../core/services/audio_player_bloc.dart';
 import '../../application/providers/audio_player_provider.dart';
 import '../../application/providers/current_episode_provider.dart';
+import '../../application/providers/episode_controller_provider.dart';
 import '../widgets/bottom_player_widget.dart';
 import '../../core/placeholders/placeholder_content.dart';
 import '../../domain/models/podcast_collection_model.dart';
@@ -60,6 +61,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   void dispose() {
     _podcastScrollShadowController.dispose();
     _hostsScrollShadowController.dispose();
+    // Provider-State explizit invalidieren, um State-Leaks und ScrollController-Probleme zu vermeiden
+    final container = ProviderScope.containerOf(context, listen: false);
+    container.invalidate(collectionLoadControllerProvider);
+    container.invalidate(episodeLoadControllerProvider);
     super.dispose();
   }
 
