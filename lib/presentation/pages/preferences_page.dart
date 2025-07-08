@@ -35,18 +35,34 @@ class PreferencesBottomSheet extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(8, 24, 8, 8),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
                       child: Icon(
                         Icons.settings,
-                        color: Color.fromARGB(180, 0, 0, 0),
-                        size: 28,
+                        color: Colors.grey[300],
+                        size: 32,
+                        shadows: [
+                          Shadow(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withAlpha((0.7 * 255).round()),
+                            blurRadius: 8,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(width: 12),
                     Text(
-                      '  Einstellungen',
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      'Einstellungen',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ],
                 ),

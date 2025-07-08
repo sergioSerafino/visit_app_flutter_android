@@ -104,6 +104,29 @@ class _HomePageState extends ConsumerState<HomePage> {
       drawer: const Drawer(
         child: FavoritesDrawerContent(),
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 4, right: 4),
+        child: Material(
+          color: Colors.transparent,
+          shadowColor: Colors.black54,
+          child: GestureDetector(
+            onTap: () => _scaffoldKey.currentState?.openDrawer(),
+            behavior: HitTestBehavior.opaque,
+            child: Icon(
+              Icons.star,
+              color: Colors.grey[300],
+              size: 56,
+              shadows: const [
+                Shadow(
+                  color: Colors.black38,
+                  blurRadius: 8,
+                  offset: Offset(1, 4),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: Consumer(
@@ -196,8 +219,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                             AppRoutes.landingRoute,
                             arguments: {"isReturningUser": true},
                           );
-                        } else if (value == "Favoriten") {
-                          _scaffoldKey.currentState?.openDrawer();
                         }
                       },
                       itemBuilder: (BuildContext context) => [
@@ -219,42 +240,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ],
                           ),
                         ),
-                        const PopupMenuItem(
-                          value: "Über",
-                          child: Row(
-                            children: [
-                              Text(
-                                "Über diese App",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem(
-                          value: "Favoriten",
-                          child: Row(
-                            children: [
-                              Text(
-                                "Favoriten",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.star,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
+                        // const PopupMenuItem(
+                        //   value: "Favoriten",
+                        //   child: Row(
+                        //     children: [
+                        //       Text(
+                        //         "Favoriten",
+                        //         style: TextStyle(
+                        //           color: Colors.white,
+                        //         ),
+                        //       ),
+                        //       Spacer(),
+                        //       Icon(
+                        //         Icons.star,
+                        //         color: Colors.white,
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         const PopupMenuItem(
                           value: "Einstellungen",
                           child: Row(
@@ -268,6 +271,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                               Spacer(),
                               Icon(
                                 Icons.settings,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: "Über",
+                          child: Row(
+                            children: [
+                              Text(
+                                "Über diese App",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_back,
                                 color: Colors.white,
                               ),
                             ],

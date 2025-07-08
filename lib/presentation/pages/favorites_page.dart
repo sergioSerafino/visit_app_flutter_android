@@ -6,6 +6,8 @@ class FavoritesDrawerContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Favoriten-Provider einbinden und Liste anzeigen
+
+    final theme = Theme.of(context);
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -13,14 +15,31 @@ class FavoritesDrawerContent extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
-              children: const [
-                Icon(Icons.star, color: Colors.amber, size: 28),
-                SizedBox(width: 12),
+              children: [
+                Icon(
+                  Icons.star,
+                  color: Colors.grey[300],
+                  size: 32,
+                  shadows: [
+                    Shadow(
+                      color: theme.colorScheme.primary.withAlpha(140),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 12),
                 Text('Favoriten',
-                    style:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    )),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 18,
           ),
           const Divider(),
           const Expanded(

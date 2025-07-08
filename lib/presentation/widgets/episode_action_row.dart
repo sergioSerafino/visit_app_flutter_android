@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/podcast_episode_model.dart';
 import '../../application/providers/cast_airplay_provider.dart';
-import '../../application/providers/audio_player_provider.dart';
 import '../../application/providers/current_episode_provider.dart';
-import '../../core/services/audio_player_bloc.dart';
 import '../widgets/cast_airplay_button.dart';
 import '../widgets/episode_play_button.dart';
 import '../../core/messaging/snackbar_manager.dart';
@@ -26,18 +24,13 @@ class EpisodeActionRow extends ConsumerWidget {
     final statusText = isConnected
         ? 'Verbunden mit {connectedDevice.name}'
         : (isAvailable ? 'Mit Gerät verbinden' : 'Kein Gerät gefunden');
-    final service = ref.watch(castAirPlayServiceProvider);
-    final audioBloc = ref.watch(audioPlayerBlocProvider);
-    final audioStateAsync = ref.watch(audioPlayerStateProvider);
-    final audioState = audioStateAsync.asData?.value;
     final currentEpisode = ref.watch(currentEpisodeProvider);
     final isActiveEpisode = currentEpisode?.trackId == episode.trackId;
     final hasEverBeenLoaded = isActiveEpisode;
     final playIconColor = !hasEverBeenLoaded
         ? Theme.of(context).colorScheme.onSurface.withAlpha(140)
         : Colors.grey[400];
-    final isPlaying = isActiveEpisode && audioState is Playing;
-    final isEnabled = audioState is! Loading && audioState is! ErrorState;
+    final service = ref.watch(castAirPlayServiceProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

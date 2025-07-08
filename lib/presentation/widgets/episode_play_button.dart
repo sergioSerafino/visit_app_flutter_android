@@ -68,7 +68,9 @@ class EpisodePlayButton extends ConsumerWidget {
                 audioBloc.add(Stop());
                 notifier.state = episode;
                 audioBloc.add(PlayEpisode(episode.episodeUrl));
-              } else {
+              } else if (isPlaying) {
+                audioBloc.add(Pause());
+              } else if (isPaused) {
                 audioBloc.add(TogglePlayPause());
               }
             }
