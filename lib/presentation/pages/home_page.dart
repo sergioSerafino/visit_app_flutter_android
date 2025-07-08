@@ -24,6 +24,7 @@ import '../../domain/models/podcast_collection_model.dart';
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widgets/animated_star_icon.dart';
 
 // Eigene Padding-Constants für HomePage
 class HomePageConstants {
@@ -140,40 +141,22 @@ class _HomePageState extends ConsumerState<HomePage>
                 Color? color = _starColorAnim.value;
                 double luminance =
                     color != null ? color.computeLuminance() : 0.0;
-                // Schatten-Alpha dynamisch je nach Luminanz: dunkel (amber) = 70, hell (grau) = 20
-                int shadowAlpha =
-                    ((1.0 - luminance) * 50 + 20).round(); // Wertebereich 20-70
+                int shadowAlpha = ((1.0 - luminance) * 50 + 20).round();
                 final shadowColor = Colors.black.withAlpha(shadowAlpha);
                 final shadowBlur = luminance < 0.6 ? 10.0 : 6.0;
                 final shadowOffset =
                     luminance < 0.6 ? const Offset(9, 10) : const Offset(4, 5);
-                final outline = luminance < 0.6
-                    ? [
-                        Shadow(
-                          color: Colors.grey[600]!.withAlpha(120),
-                          blurRadius: 1.5,
-                          offset: Offset(0, 0),
-                        ),
-                      ]
-                    : [
-                        Shadow(
-                          color: Colors.grey[400]!.withAlpha(80),
-                          blurRadius: 1.5,
-                          offset: Offset(0, 0),
-                        ),
-                      ];
-                return Icon(
-                  Icons.star_rounded,
-                  color: color,
+                final outlineColor = luminance < 0.6
+                    ? Colors.transparent
+                    : Colors.grey[600]!.withAlpha(180);
+                return AnimatedStarIcon(
+                  color: color ?? Colors.grey,
                   size: 56,
-                  shadows: [
-                    Shadow(
-                      color: shadowColor,
-                      blurRadius: shadowBlur,
-                      offset: shadowOffset,
-                    ),
-                    ...outline,
-                  ],
+                  outlineColor: outlineColor,
+                  outlineWidth: 2.0,
+                  shadowColor: shadowColor,
+                  shadowBlur: shadowBlur,
+                  shadowOffset: shadowOffset,
                 );
               },
             ),
