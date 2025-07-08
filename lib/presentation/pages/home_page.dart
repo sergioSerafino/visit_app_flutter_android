@@ -194,6 +194,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                           AppRoutes.landingRoute,
                           arguments: {"isReturningUser": true},
                         );
+                      } else if (value == "Favoriten") {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const FavoritesPage(),
+                          ),
+                        );
                       }
                     },
                     itemBuilder: (BuildContext context) => [
@@ -234,6 +240,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ),
                       const PopupMenuItem(
+                        value: "Favoriten",
+                        child: Row(
+                          children: [
+                            Text(
+                              "Favoriten",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.star,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
                         value: "Einstellungen",
                         child: Row(
                           children: [
@@ -263,7 +287,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          FavoritesPage(),
           PodcastPage(
               scrollController: _podcastScrollShadowController.controller),
           HostsPage(scrollController: _hostsScrollShadowController.controller),
@@ -280,17 +303,12 @@ class _HomePageState extends ConsumerState<HomePage> {
         unselectedLabelStyle: const TextStyle(color: Colors.white),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: "Favoriten",
-            backgroundColor: theme.colorScheme.primary,
-          ),
-          BottomNavigationBarItem(
             icon: Consumer(
               builder: (context, ref, _) {
                 final audioStateAsync = ref.watch(audioPlayerStateProvider);
                 final audioState = audioStateAsync.asData?.value;
                 final isPlaying = audioState is Playing;
-                final isSelected = _selectedIndex == 1;
+                final isSelected = _selectedIndex == 0;
                 Color? iconColor;
                 if (isSelected) {
                   iconColor = Colors.white;
@@ -307,7 +325,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             backgroundColor: theme.colorScheme.primary,
           ),
           BottomNavigationBarItem(
-            icon: _selectedIndex == 2
+            icon: _selectedIndex == 1
                 ? const Icon(Icons.person)
                 : const Icon(Icons.person),
             label: "Visit",
