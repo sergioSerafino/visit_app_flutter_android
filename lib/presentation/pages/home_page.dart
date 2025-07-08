@@ -74,6 +74,11 @@ class _HomePageState extends ConsumerState<HomePage>
       parent: _starController,
       curve: Curves.easeInOut,
     ));
+    // Beim ersten Betreten sofort animieren
+    Future.microtask(() async {
+      await _starController.forward();
+      await _starController.reverse();
+    });
     _starTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
       await _starController.forward();
       await _starController.reverse();
@@ -128,7 +133,7 @@ class _HomePageState extends ConsumerState<HomePage>
         child: FavoritesDrawerContent(),
       ),
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 22, right: 1),
+        margin: const EdgeInsets.only(bottom: 16, right: 1),
         child: Material(
           color: Colors.transparent,
           shadowColor: Colors.black12,

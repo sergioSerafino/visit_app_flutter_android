@@ -39,7 +39,7 @@ class FavoritesDrawerContent extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 18,
+            height: 10,
           ),
           const Divider(),
           const Expanded(

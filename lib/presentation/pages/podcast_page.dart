@@ -191,10 +191,10 @@ class PodcastPage extends ConsumerWidget {
                       ),
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
-                      error: (e, _) => Center(
+                      error: (e, _) => const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(Icons.error_outline,
                                 color: Colors.red, size: 32),
                             SizedBox(height: 8),

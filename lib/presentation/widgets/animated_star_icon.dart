@@ -80,7 +80,7 @@ class _StarPainter extends CustomPainter {
     final r = size.width / 2 - outlineWidth;
     final star = _starPath(cx, cy, r, 5);
 
-    // Schatten
+    // Hauptschatten
     if (shadowBlur > 0 && shadowColor.a > 0) {
       final shadowPaint = Paint()
         ..color = shadowColor
@@ -91,6 +91,28 @@ class _StarPainter extends CustomPainter {
       canvas.drawPath(star, shadowPaint);
       canvas.restore();
     }
+
+    // Akzentuierte Schatten an zwei Ecken
+    final accentShadowPaint1 = Paint()
+      ..color =
+          shadowColor.withAlpha((shadowColor.a * 1.2).clamp(0, 255).toInt())
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, shadowBlur * 1.2)
+      ..style = PaintingStyle.fill;
+    final accentShadowPaint2 = Paint()
+      ..color =
+          shadowColor.withAlpha((shadowColor.a * 1.1).clamp(0, 255).toInt())
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, shadowBlur * 1.1)
+      ..style = PaintingStyle.fill;
+    // Obere Sternspitze
+    canvas.save();
+    canvas.translate(0, -size.height * 0.13);
+    canvas.drawPath(star, accentShadowPaint1);
+    canvas.restore();
+    // Rechte untere Sternspitze
+    canvas.save();
+    canvas.translate(size.width * 0.11, size.height * 0.11);
+    canvas.drawPath(star, accentShadowPaint2);
+    canvas.restore();
 
     // Sternfüllung
     final fillPaint = Paint()
