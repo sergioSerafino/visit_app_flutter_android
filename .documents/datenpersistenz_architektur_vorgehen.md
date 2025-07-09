@@ -49,6 +49,18 @@ collectionId → iTunes Lookup → RSS Abruf → Merge JSON → PodcastHostColle
 - Wie werden Migrationen/Schema-Änderungen in Hive gehandhabt?
 - Wie werden Timestamps und TTLs für verschiedene Entitäten sinnvoll gesetzt?
 - Wie werden Favoriten, Einstellungen und andere User-Daten persistent verwaltet?
+- **Wie wird die Persistenz- und Fallback-Strategie getestet und dokumentiert?**
+  - Nach jedem Abruf/Merge muss ein Integrationstest sicherstellen, dass die Daten korrekt in Hive gespeichert und wiederhergestellt werden können (Serialisierung/Deserialisierung).
+  - Testfälle für Fallback auf Cache und Placeholder bei Fehler/Offline.
+- **Wie wird ein ConnectivityInterceptor/Retry-Service eingebunden?**
+  - Zentrale Retry- und Fallback-Logik als Interceptor/Service, der alle Netzwerkabrufe kapselt und bei Fehlern automatisch auf lokale Daten (Hive) zurückfällt.
+  - Beispiel: Siehe `.documents/riverpod_provider_architektur.mmd` und `.documents/datenpersistenz_provider_abrufanalyse.md`.
+- **Wie werden Migrationen/Schemaversionen in Hive dokumentiert und getestet?**
+  - Bei jeder Änderung an Datenmodellen/Hive-Adaptern: Migrationsstrategie und Versionierung dokumentieren.
+  - Testfälle für Upgrades und Datenmigration ergänzen.
+- **Wie werden neue persistente Features (z.B. Favoriten, Suchergebnisse, Downloads) integriert?**
+  - Eigene Hive-Boxen und Provider für jede neue persistente Entität.
+  - Doku und Beispiel-Implementierung ergänzen.
 
 ## 7. Nächste Schritte
 1. Analyse aller Netzwerkabrufe und Provider (API, RSS, JSON, Local)
