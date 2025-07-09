@@ -45,6 +45,8 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
+  bool _showFab = false;
+  Timer? _fabTimer;
   // GlobalKey für Scaffold, damit das Drawer gezielt geöffnet werden kann
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
@@ -74,6 +76,10 @@ class _HomePageState extends ConsumerState<HomePage>
       parent: _starController,
       curve: Curves.easeInOut,
     ));
+    // FAB erst nach 30 Sekunden anzeigen, wenn Podcast-Tab aktiv ist
+    if (_selectedIndex == 0) {
+      _startFabTimer();
+    }
     // Beim ersten Betreten sofort animieren
     Future.microtask(() async {
       await _starController.forward();
@@ -91,6 +97,7 @@ class _HomePageState extends ConsumerState<HomePage>
     _hostsScrollShadowController.dispose();
     _starController.dispose();
     _starTimer?.cancel();
+    _fabTimer?.cancel();
     // Provider-State explizit invalidieren, um State-Leaks und ScrollController-Probleme zu vermeiden
     final container = ProviderScope.containerOf(context, listen: false);
     container.invalidate(collectionLoadControllerProvider);
@@ -101,6 +108,22 @@ class _HomePageState extends ConsumerState<HomePage>
   void _onTabSelected(int index) {
     setState(() {
       _selectedIndex = index;
+      _showFab = false;
+      _fabTimer?.cancel();
+      if (_selectedIndex == 0) {
+        _startFabTimer();
+      }
+    });
+  }
+
+  void _startFabTimer() {
+    _fabTimer?.cancel();
+    _fabTimer = Timer(const Duration(seconds: 30), () {
+      if (mounted && _selectedIndex == 0) {
+        setState(() {
+          _showFab = true;
+        });
+      }
     });
   }
 
@@ -132,42 +155,43 @@ class _HomePageState extends ConsumerState<HomePage>
       drawer: const Drawer(
         child: FavoritesDrawerContent(),
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 16, right: 1),
-        child: Material(
-          color: Colors.transparent,
-          shadowColor: Colors.black12,
-          child: GestureDetector(
-            onTap: () => _scaffoldKey.currentState?.openDrawer(),
-            behavior: HitTestBehavior.opaque,
-            child: AnimatedBuilder(
-              animation: _starColorAnim,
-              builder: (context, child) {
-                Color? color = _starColorAnim.value;
-                double luminance =
-                    color != null ? color.computeLuminance() : 0.0;
-                int shadowAlpha = ((1.0 - luminance) * 50 + 20).round();
-                final shadowColor = Colors.black.withAlpha(shadowAlpha);
-                final shadowBlur = luminance < 0.6 ? 10.0 : 6.0;
-                final shadowOffset =
-                    luminance < 0.6 ? const Offset(9, 10) : const Offset(4, 5);
-                final outlineColor = luminance < 0.6
-                    ? Colors.transparent
-                    : Colors.grey[600]!.withAlpha(180);
-                return AnimatedStarIcon(
-                  color: color ?? Colors.grey,
-                  size: 56,
-                  outlineColor: outlineColor,
-                  outlineWidth: 2.0,
-                  shadowColor: shadowColor,
-                  shadowBlur: shadowBlur,
-                  shadowOffset: shadowOffset,
-                );
-              },
-            ),
-          ),
-        ),
-      ),
+      floatingActionButton: (_selectedIndex == 0 && _showFab)
+          ? Container(
+              margin: const EdgeInsets.only(bottom: 16, right: 1),
+              child: Material(
+                color: Colors.transparent,
+                shadowColor: Colors.black12,
+                child: GestureDetector(
+                  onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                  behavior: HitTestBehavior.opaque,
+                  child: AnimatedBuilder(
+                    animation: _starColorAnim,
+                    builder: (context, child) {
+                      Color? color = _starColorAnim.value;
+                      double luminance =
+                          color != null ? color.computeLuminance() : 0.0;
+                      // Schatten für FAB deutlicher machen
+                      final shadowColor = Colors.black.withAlpha(180);
+                      final shadowBlur = 20.0;
+                      final shadowOffset = const Offset(12, 16);
+                      final outlineColor = luminance < 0.6
+                          ? Colors.transparent
+                          : Colors.grey[600]!.withAlpha(180);
+                      return AnimatedStarIcon(
+                        color: color ?? Colors.grey,
+                        size: 56,
+                        outlineColor: outlineColor,
+                        outlineWidth: 2.0,
+                        shadowColor: shadowColor,
+                        shadowBlur: shadowBlur,
+                        shadowOffset: shadowOffset,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            )
+          : null,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child: Consumer(
