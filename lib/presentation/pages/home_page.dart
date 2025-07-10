@@ -118,7 +118,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   void _startFabTimer() {
     _fabTimer?.cancel();
-    _fabTimer = Timer(const Duration(seconds: 20), () {
+    _fabTimer = Timer(const Duration(seconds: 7), () {
       if (mounted && _selectedIndex == 0) {
         setState(() {
           _showFab = true;
