@@ -118,7 +118,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   void _startFabTimer() {
     _fabTimer?.cancel();
-    _fabTimer = Timer(const Duration(seconds: 30), () {
+    _fabTimer = Timer(const Duration(seconds: 20), () {
       if (mounted && _selectedIndex == 0) {
         setState(() {
           _showFab = true;
@@ -305,42 +305,6 @@ class _HomePageState extends ConsumerState<HomePage>
                             ],
                           ),
                         ),
-                        // const PopupMenuItem(
-                        //   value: "Favoriten",
-                        //   child: Row(
-                        //     children: [
-                        //       Text(
-                        //         "Favoriten",
-                        //         style: TextStyle(
-                        //           color: Colors.white,
-                        //         ),
-                        //       ),
-                        //       Spacer(),
-                        //       Icon(
-                        //         Icons.star,
-                        //         color: Colors.white,
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        const PopupMenuItem(
-                          value: "Einstellungen",
-                          child: Row(
-                            children: [
-                              Text(
-                                "Einstellungen",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.settings,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
                         const PopupMenuItem(
                           value: "Über",
                           child: Row(
@@ -354,6 +318,24 @@ class _HomePageState extends ConsumerState<HomePage>
                               Spacer(),
                               Icon(
                                 Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: "Einstellungen",
+                          child: Row(
+                            children: [
+                              Text(
+                                "Einstellungen",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.settings,
                                 color: Colors.white,
                               ),
                             ],
