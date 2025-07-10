@@ -115,7 +115,7 @@ class ApiPodcastRepository implements PodcastRepository {
         downloadedAt: DateTime.now(),
       );
 
-      // 💾 Cache speichern
+      // 💾 Cache speichern (vorerst wieder deaktiviert, da UI-Probleme)
       // await _cacheClient.savePodcastCollection(collectionWithTimestamp);
       // await _cacheClient.savePodcastEpisodes(
       //   collectionId,

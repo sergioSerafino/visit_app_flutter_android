@@ -6,6 +6,12 @@
 
 ---
 
+## Lessons Learned & Fehlschläge
+- **10.07.2025:** Erster Versuch, das produktive Caching für `podcastBox` (savePodcastCollection/savePodcastEpisodes) zu aktivieren, führte dazu, dass auf LandingPage, HomePage, PodcastPage und HostsPage nur Platzhalter angezeigt wurden und keine echten Daten aus dem Cache geladen wurden. Auf der HivePage waren keine Episoden-Daten sichtbar ("Keine Einträge vorhanden"). Die Funktionalität der App war dadurch beeinträchtigt. Das Caching wurde daraufhin wieder deaktiviert. 
+- **Fazit:** Caching muss gezielt und seitenweise aktiviert und getestet werden, um unerwünschte Nebeneffekte zu vermeiden.
+
+---
+
 ## Schritt 1: Status Quo sichern & Sichtbarkeit schaffen
 - **HivePage** als Debug-/Admin-UI nutzen, um aktuelle Inhalte der `podcastBox` transparent zu machen.
 - Sicherstellen, dass `savePodcastCollection` und `savePodcastEpisodes` im produktiven Code aktiviert sind (nicht auskommentiert!) und das Caching genutzt wird.
