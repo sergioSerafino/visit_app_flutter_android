@@ -197,24 +197,70 @@ class _HivePageState extends State<HivePage> {
             return const Center(child: Text('Keine Einträge vorhanden'));
           }
           final entries = box.toMap().entries.toList();
-          return ListView.builder(
-            itemCount: entries.length,
-            itemBuilder: (_, index) {
-              final entry = entries[index];
-              return ListTile(
-                title: Text(entry.key.toString()),
-                subtitle: Text(entry.value.toString()),
-                onTap: () => _showEditDialog(entry),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  tooltip: 'Löschen',
-                  onPressed: () {
-                    box.delete(entry.key);
-                    setState(() {});
-                  },
-                ),
-              );
-            },
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text('Key')),
+                DataColumn(label: Text('collectionId')),
+                DataColumn(label: Text('collectionName')),
+                DataColumn(label: Text('artistName')),
+                DataColumn(label: Text('primaryGenreName')),
+                DataColumn(label: Text('actions')),
+              ],
+              rows: entries.map((entry) {
+                final value = entry.value;
+                // Versuche, typische Felder zu extrahieren (Map, PodcastCollection, etc.)
+                String collectionId = '';
+                String collectionName = '';
+                String artistName = '';
+                String primaryGenreName = '';
+                try {
+                  if (value is Map) {
+                    collectionId = value['collectionId']?.toString() ?? '';
+                    collectionName = value['collectionName']?.toString() ?? '';
+                    artistName = value['artistName']?.toString() ?? '';
+                    primaryGenreName =
+                        value['primaryGenreName']?.toString() ?? '';
+                  } else if (value != null) {
+                    // Fallback: Versuche per Reflection/String
+                    final str = value.toString();
+                    RegExp exp = RegExp(r'collectionId: (\d+)');
+                    collectionId = exp.firstMatch(str)?.group(1) ?? '';
+                    exp = RegExp(r'collectionName: ([^,}]+)');
+                    collectionName = exp.firstMatch(str)?.group(1) ?? '';
+                    exp = RegExp(r'artistName: ([^,}]+)');
+                    artistName = exp.firstMatch(str)?.group(1) ?? '';
+                    exp = RegExp(r'primaryGenreName: ([^,}]+)');
+                    primaryGenreName = exp.firstMatch(str)?.group(1) ?? '';
+                  }
+                } catch (_) {}
+                return DataRow(cells: [
+                  DataCell(Text(entry.key.toString())),
+                  DataCell(Text(collectionId)),
+                  DataCell(Text(collectionName)),
+                  DataCell(Text(artistName)),
+                  DataCell(Text(primaryGenreName)),
+                  DataCell(Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        tooltip: 'Bearbeiten',
+                        onPressed: () => _showEditDialog(entry),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        tooltip: 'Löschen',
+                        onPressed: () {
+                          box.delete(entry.key);
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  )),
+                ]);
+              }).toList(),
+            ),
           );
         },
       ),
@@ -224,4 +270,19 @@ class _HivePageState extends State<HivePage> {
       ),
     );
   }
+  // --- Ursprüngliche tabellarische Darstellung für podcastHostCollection (auskommentiert, für spätere Nutzung) ---
+  /*
+  // Beispiel für komplexere DataTable mit podcastHostCollection:
+  // DataTable(
+  //   columns: [
+  //     DataColumn(label: Text('Key')),
+  //     DataColumn(label: Text('collectionId')),
+  //     DataColumn(label: Text('collectionName')),
+  //     DataColumn(label: Text('hostName')),
+  //     DataColumn(label: Text('downloadedAt')),
+  //     DataColumn(label: Text('actions')),
+  //   ],
+  //   rows: ...
+  // )
+  */
 }

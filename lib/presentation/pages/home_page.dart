@@ -11,6 +11,7 @@ import 'podcast_page.dart';
 import 'hosts_page.dart';
 import 'preferences_page.dart';
 import 'favorites_page.dart';
+import 'hive_page.dart';
 import '../../config/app_routes.dart';
 import '../../core/messaging/snackbar_manager.dart';
 import '../../core/utils/scroll_shadow_controller.dart';
@@ -67,7 +68,7 @@ class _HomePageState extends ConsumerState<HomePage>
     _hostsScrollShadowController = ScrollShadowController();
     _starController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
     );
     _starColorAnim = ColorTween(
       begin: Colors.grey[500]!.withAlpha(140),
@@ -81,6 +82,7 @@ class _HomePageState extends ConsumerState<HomePage>
       _startFabTimer();
     }
     // Beim ersten Betreten sofort animieren
+    ///TODO: starController.forward() sollte erst nach Ablauf der Verzögerung durch den Timer in startFabTimer loszählen
     Future.microtask(() async {
       await _starController.forward();
       await _starController.reverse();
@@ -118,7 +120,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   void _startFabTimer() {
     _fabTimer?.cancel();
-    _fabTimer = Timer(const Duration(seconds: 7), () {
+    _fabTimer = Timer(const Duration(seconds: 5), () {
       if (mounted && _selectedIndex == 0) {
         setState(() {
           _showFab = true;
@@ -172,8 +174,8 @@ class _HomePageState extends ConsumerState<HomePage>
                           color != null ? color.computeLuminance() : 0.0;
                       // Schatten für FAB deutlicher machen
                       final shadowColor = Colors.black.withAlpha(180);
-                      final shadowBlur = 20.0;
-                      final shadowOffset = const Offset(12, 16);
+                      final shadowBlur = 23.0;
+                      final shadowOffset = const Offset(18, 18);
                       final outlineColor = luminance < 0.6
                           ? Colors.transparent
                           : Colors.grey[600]!.withAlpha(180);
@@ -357,6 +359,7 @@ class _HomePageState extends ConsumerState<HomePage>
           PodcastPage(
               scrollController: _podcastScrollShadowController.controller),
           HostsPage(scrollController: _hostsScrollShadowController.controller),
+          HivePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -396,6 +399,13 @@ class _HomePageState extends ConsumerState<HomePage>
                 ? const Icon(Icons.person)
                 : const Icon(Icons.person),
             label: "Visit",
+            backgroundColor: theme.colorScheme.primary,
+          ),
+          BottomNavigationBarItem(
+            icon: _selectedIndex == 2
+                ? const Icon(Icons.storage)
+                : const Icon(Icons.storage_outlined),
+            label: "Cache",
             backgroundColor: theme.colorScheme.primary,
           ),
         ],
