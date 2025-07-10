@@ -1,18 +1,19 @@
 # Migrations- und Testplan: Schrittweise, risikoarme Umstellung des Podcast-Caching-Systems
 
 ## Ziel
-- Sicherstellung, dass alle UI-Seiten (LandingPage, PodcastPage, HostsPage, HomePage, EpisodeDetailPage, ...) weiterhin reibungslos mit den gecachten Daten funktionieren.
+- Sicherstellung, dass alle UI-Seiten (LandingPage, PodcastPage, HostsPage, HomePage, EpisodeDetailPage, ...) weiterhin reibungslos auch mit den gecachten Daten funktionieren.
 - Schrittweise Migration von flacher `podcastBox`-Key-Value-Struktur hin zu strukturierter Hive-Box (`podcastHostCollections`), ohne Funktionsverlust oder Dateninkonsistenzen.
 
 ---
 
 ## Schritt 1: Status Quo sichern & Sichtbarkeit schaffen
 - **HivePage** als Debug-/Admin-UI nutzen, um aktuelle Inhalte der `podcastBox` transparent zu machen.
-- Sicherstellen, dass `savePodcastCollection` und `savePodcastEpisodes` im produktiven Code aktiviert sind (nicht auskommentiert!).
+- Sicherstellen, dass `savePodcastCollection` und `savePodcastEpisodes` im produktiven Code aktiviert sind (nicht auskommentiert!) und das Caching genutzt wird.
 - Nach jedem erfolgreichen API-Request werden PodcastCollection und Episoden in die `podcastBox` geschrieben.
 - **Test:**
   - App starten, Podcasts/Episoden laden, HivePage prüfen: Sind Einträge sichtbar?
   - UI (PodcastPage, HostsPage, etc.) muss wie gewohnt funktionieren.
+  - Wenn an dieser Stelle alles wie erwartet läuft, kann eine einfache UI-Anpassung zur Verwaltung der flachen `podcastBox`-CRUD Handhabung erfolgen.
 
 ## Schritt 2: Offline-Fähigkeit testen
 - **Internetverbindung trennen** (Flugmodus).
