@@ -104,10 +104,16 @@ final podcastCollectionProvider = FutureProvider.family<PodcastHostCollection, S
 
 ---
 
-**Empfohlene Datei für Fortschritt und Lessons Learned:**
-- `.documents/provider_architektur_migration.md`
+## Empfehlungen für Merge- und Hive-Migration (Querverweise)
 
-**Letztes Update:** 11.07.2025
+- Die Listener- und Snackbar-Integration sollte auch im Merge-Prozess (z. B. in podcastCollectionProvider) und in der HivePage umgesetzt werden.
+- Status-Updates (pending, success, error, offline) im Merge-Prozess gezielt setzen, damit die UI und Nutzer:innen direktes Feedback erhalten.
+- Querverweis: Siehe `.documents/migration_plan_podcast_cache_hivebox.md` für den Migrationsplan und Lessons Learned zur Hive-Box-Umwandlung.
+- Querverweis: Siehe `.documents/hive_podcastbox_nutzung.md` für die Analyse und Best Practices zur Hive-Nutzung.
+
+**Nächster Schritt:**
+- Listener- und Status-Integration für Merge-Prozess und HivePage konkret umsetzen.
+- Fortschritt und Erkenntnisse fortlaufend dokumentieren.
 
 ---
 

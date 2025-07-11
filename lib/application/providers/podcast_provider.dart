@@ -5,15 +5,29 @@ import '../../domain/models/podcast_episode_model.dart';
 import 'repository_provider.dart';
 import 'itunes_result_count_provider.dart';
 import '../../core/placeholders/placeholder_content.dart';
+import 'rss_merge_status_provider.dart';
 
 /// Lädt eine gesamte PodcastCollection anhand der Collection-ID
 final podcastCollectionProvider =
     FutureProvider.family<ApiResponse<PodcastCollection>, int>(
   (ref, collectionId) async {
+    ref.read(rssMergeStatusProvider.notifier).state = RssMergeStatus.pending;
     final repository = ref.watch(podcastRepositoryProvider);
     final limit = ref.watch(itunesResultCountProvider);
-    return await repository.fetchPodcastCollectionById(collectionId,
-        limit: limit);
+    try {
+      final response = await repository.fetchPodcastCollectionById(collectionId,
+          limit: limit);
+      if (response.isSuccess && response.data != null) {
+        ref.read(rssMergeStatusProvider.notifier).state =
+            RssMergeStatus.success;
+      } else {
+        ref.read(rssMergeStatusProvider.notifier).state = RssMergeStatus.error;
+      }
+      return response;
+    } catch (e) {
+      ref.read(rssMergeStatusProvider.notifier).state = RssMergeStatus.error;
+      return ApiResponse<PodcastCollection>.error('Fehler beim Laden: $e');
+    }
   },
 );
 

@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../application/providers/rss_merge_status_provider.dart';
+import '../../core/messaging/snackbar_manager.dart';
 
 // import '../../domain/models/podcast_host_collection_hive_adapter.dart';
 // import '../../domain/models/podcast_host_collection_mapper.dart';
@@ -11,14 +15,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 // import '../../domain/models/data_origin_model.dart';
 // import '../../domain/enums/data_source_type.dart';
 
-class HivePage extends StatefulWidget {
+class HivePage extends ConsumerStatefulWidget {
   const HivePage({Key? key}) : super(key: key);
 
   @override
-  State<HivePage> createState() => _HivePageState();
+  ConsumerState<HivePage> createState() => _HivePageState();
 }
 
-class _HivePageState extends State<HivePage> {
+class _HivePageState extends ConsumerState<HivePage> {
   // Ursprüngliche Box und TTL auskommentiert
   // late final Box<HivePodcastHostCollection> box;
 
@@ -187,7 +191,31 @@ class _HivePageState extends State<HivePage> {
   */
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.listen<RssMergeStatus>(rssMergeStatusProvider, (prev, next) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (next == RssMergeStatus.error) {
+          ref
+              .read(snackbarManagerProvider.notifier)
+              .showByKey('host_fetch_failed');
+        }
+        if (next == RssMergeStatus.success) {
+          ref
+              .read(snackbarManagerProvider.notifier)
+              .showByKey('host_info_saved');
+        }
+        if (next == RssMergeStatus.offline) {
+          ref
+              .read(snackbarManagerProvider.notifier)
+              .showByKey('host_update_failed_offline');
+        }
+      });
+    });
     return Scaffold(
       appBar: AppBar(title: const Text('Hive podcastBox (flach)')),
       body: ValueListenableBuilder(
