@@ -53,6 +53,27 @@
 
 ---
 
+## Erkenntnisse zur Provider-Analyse und RSS-Handling
+- Die zentralen Provider für die Mediendaten-Ebene sind aktuell `podcastCollectionProvider` und `podcastEpisodeProvider`.
+- Ein expliziter Provider für den RSS-Abruf existiert bislang nicht. Der RSS-Download und das Merging der RSS-Daten erfolgen direkt im Repository/Service (z. B. im MergeService oder ApiPodcastRepository).
+- Ursache: Die Architektur sieht vor, dass die Provider immer ein vollständiges, gemergtes Modell liefern (inkl. RSS, iTunes, JSON), sodass die UI nie mit halbfertigen Daten arbeitet. Der RSS-Abruf ist ein Teil des Merge-Prozesses und wird nicht separat als Provider gekapselt.
+- Empfehlung: Für bessere Testbarkeit und Transparenz könnte ein eigener `rssProvider` oder ein expliziter RSS-Merge-Status-Provider ergänzt werden. So ließen sich Fortschritt, Fehler und Fallbacks gezielter steuern und debuggen.
+- TODO: Architektur- und Doku-Review, ob ein eigener RSS-Provider sinnvoll und zukunftssicher ist.
+
+---
+
+## Best-Practice-Vorschlag: RSS-Abruf als eigener Provider
+- Für eine robustere, testbare und transparente Architektur empfiehlt sich die Einführung eines eigenen `rssProvider` (z. B. FutureProvider.family<RssData, String>), der gezielt den RSS-Abruf übernimmt.
+- Ergänzend kann ein `rssMergeStatusProvider` den Status des Merges und etwaige Fehler/Fallbacks transparent machen.
+- Die Provider für die UI (z. B. podcastCollectionProvider) können dann gezielt auf den Status und die Daten des RSS-Providers reagieren und das Modell entsprechend mergen.
+- Vorteil: Fortschritt und Fehler beim RSS-Abruf sind transparent und testbar, die UI kann gezielt reagieren (z. B. Ladeindikator, Fehlerhinweis, Retry-Button).
+- Nach erfolgreichem Merge werden die Daten wie gewohnt in Hive persistiert.
+- **Wichtig:** Das aktuelle UX- und UI-Verhalten bleibt unverändert – die UI erhält weiterhin nur vollständige, gemergte Modelle und zeigt nie halbfertige Daten.
+- Die Integration des RSS-Providers ist ein optionaler, transparenter Schritt für bessere Testbarkeit und Debugging, ohne die Nutzererfahrung zu beeinträchtigen.
+- Querverweise: `.documents/state_management_caching_multitenant.md`, `.instructions/howto_merge_caching.md`, `.documents/migration_plan_podcast_cache_hivebox.md`
+
+---
+
 ## Hinweise
 - Nach jedem Schritt: UI und Datenintegrität testen!
 - Keine "Big Bang"-Migration, sondern inkrementell und nachvollziehbar.
