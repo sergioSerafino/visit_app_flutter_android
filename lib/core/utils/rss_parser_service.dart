@@ -19,8 +19,8 @@ class RssMetadata {
   final String? longPrimaryGenreName;
 
   RssMetadata({
-    this.websiteUrl,
     this.description,
+    this.websiteUrl,
     this.defaultLanguageCode,
     this.hostName,
     this.podcastType,
@@ -107,16 +107,16 @@ class RssParserService {
       return;
     }
 
-    logDebug('🧩 RSS-Metadaten:');
-    logDebug('• Website URL: ${data.websiteUrl}');
-    logDebug('• Beschreibung: ${data.description}');
-    logDebug('• Sprache: ${data.defaultLanguageCode}');
-    logDebug('• Host-Name: ${data.hostName}');
-    logDebug('• Podcast-Typ: ${data.podcastType}');
-    logDebug('• Kontakt-E-Mail: ${data.contactEmail}');
-    logDebug('• Owner-Name: ${data.ownerName}');
-    logDebug('• Logo-URL: ${data.logoUrl}');
-    logDebug('• Kategorie: ${data.longPrimaryGenreName}');
+    // logDebug('🧩 RSS-Metadaten:');
+    // logDebug('• Website URL: ${data.websiteUrl}');
+    // logDebug('• Beschreibung: ${data.description}');
+    // logDebug('• Sprache: ${data.defaultLanguageCode}');
+    // logDebug('• Host-Name: ${data.hostName}');
+    // logDebug('• Podcast-Typ: ${data.podcastType}');
+    // logDebug('• Kontakt-E-Mail: ${data.contactEmail}');
+    // logDebug('• Owner-Name: ${data.ownerName}');
+    // logDebug('• Logo-URL: ${data.logoUrl}');
+    // logDebug('• Kategorie: ${data.longPrimaryGenreName}');
   }
 
   String? _getElementValue(XmlElement parent, String path) {

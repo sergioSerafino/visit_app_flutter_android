@@ -24,6 +24,10 @@ import '../widgets/host_rss_meta_tile.dart';
 import '../../application/providers/overlay_header_provider.dart';
 import '../../application/providers/overlay_tab_provider.dart';
 import '../widgets/safe_image.dart';
+import '../../core/messaging/snackbar_messages.dart';
+import '../../application/providers/rss_provider.dart';
+import '../../application/providers/rss_merge_status_provider.dart';
+import '../../core/messaging/snackbar_manager.dart';
 
 class HostsPage extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -77,6 +81,25 @@ class _HostsPageState extends ConsumerState<HostsPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<RssMergeStatus>(rssMergeStatusProvider, (prev, next) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (next == RssMergeStatus.error) {
+          ref
+              .read(snackbarManagerProvider.notifier)
+              .showByKey('host_fetch_failed');
+        }
+        if (next == RssMergeStatus.success) {
+          ref
+              .read(snackbarManagerProvider.notifier)
+              .showByKey('host_info_saved');
+        }
+        if (next == RssMergeStatus.offline) {
+          ref
+              .read(snackbarManagerProvider.notifier)
+              .showByKey('host_update_failed_offline');
+        }
+      });
+    });
     initializeDateFormatting('de_DE', null);
     final host = ref.watch(coll_prov.hostModelProvider);
     final showOverlay = ref.watch(overlayTabProvider)[1] ?? false;

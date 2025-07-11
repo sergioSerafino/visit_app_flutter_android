@@ -22,6 +22,29 @@
 - Status und Fehler über das Snackbar-System (`SnackbarMessages`) transparent machen.
 - Erkenntnisse und Probleme direkt dokumentieren.
 
+## Schritt 2: Aktivierung und Test des neuen RSS-Providers
+
+### Testfall 1: Einzelne Collection (Test-Feed)
+- Provider für eine Test-Collection aktiviert (z. B. Demo-Feed).
+- App-Neustart: RSS-Daten werden wie erwartet geladen und gemappt.
+- UI zeigt vollständige, gemergte Daten ohne Fehler.
+- Keine Fehler oder leere States beobachtet.
+- Erkenntnis: Die neue Provider-Architektur funktioniert für Einzel-Feeds stabil.
+
+### Testfall 2: Mehrere Collections
+- Provider für weitere Collections aktiviert.
+- App-Neustart und Navigation zwischen Seiten getestet.
+- RSS-Daten werden für alle aktivierten Feeds korrekt geladen und gemappt.
+- UI bleibt konsistent, keine Fehler oder Inkonsistenzen.
+- Erkenntnis: Die Architektur ist skalierbar und robust.
+
+### Lessons Learned
+- Die Auslagerung der Mapper-Funktion in eine eigene Datei verhindert Import-Probleme und sorgt für Klarheit.
+- Die Provider-Architektur ist testbar und transparent.
+- Statusanzeigen (Snackbar) können gezielt für Fehler und Fortschritt ergänzt werden.
+
+---
+
 ## Schritt 3: Ausweitung und Stabilisierung
 - Nach erfolgreichem Test: Ausweitung auf weitere Collections/Seiten.
 - Fortlaufende Tests (UI, Offline-Modus, HivePage).
@@ -85,3 +108,22 @@ final podcastCollectionProvider = FutureProvider.family<PodcastHostCollection, S
 - `.documents/provider_architektur_migration.md`
 
 **Letztes Update:** 11.07.2025
+
+---
+
+## Beispiel für die Verwendung der bestehenden Host-bezogenen SnackbarMessages für RSS-Status in einer Page/Listener
+
+```dart
+// Beispiel: Integration in eine Page mit Riverpod-Listener
+ref.listen<RssMergeStatus>(rssMergeStatusProvider, (prev, next) {
+  if (next == RssMergeStatus.error) {
+    SnackbarMessages.show(context, snackbarMessages['host_fetch_failed']!);
+  }
+  if (next == RssMergeStatus.success) {
+    SnackbarMessages.show(context, snackbarMessages['host_info_saved']!);
+  }
+  if (next == RssMergeStatus.offline) {
+    SnackbarMessages.show(context, snackbarMessages['host_update_failed_offline']!);
+  }
+});
+```
