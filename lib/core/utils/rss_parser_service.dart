@@ -5,6 +5,7 @@ import '../../core/logging/logger_config.dart';
 import 'package:dio/dio.dart';
 import 'package:xml/xml.dart';
 import 'network_cache_manager.dart';
+import '../../domain/models/merge_models.dart';
 
 class RssMetadata {
   final String? websiteUrl;
@@ -142,5 +143,16 @@ class RssParserService {
   String? _getCategoryText(XmlElement channel) {
     final category = channel.findElements('itunes:category').firstOrNull;
     return category?.getAttribute('text');
+  }
+
+  /// Hilfsmethode: Konvertiert RssMetadata zu RssData
+  RssData rssMetadataToRssData(RssMetadata meta) {
+    return RssData(
+      title: meta.hostName, // Alternativ: meta.websiteUrl oder ein anderes Feld
+      description: meta.description,
+      imageUrl: meta.logoUrl,
+      author: meta.ownerName,
+      ownerEmail: meta.contactEmail,
+    );
   }
 }
