@@ -551,3 +551,33 @@ r
 - Siehe Kommentare und Docstrings in den oben genannten Dateien.
 - Die Architektur folgt Clean Architecture und ist für zukünftige API-Erweiterungen vorbereitet.
 - Die Tests und Mocks müssen nach Interface-Änderungen neu generiert werden (siehe Build-Runner-Hinweis).
+
+---
+
+## TODOs & Empfehlungen für Caching und Fallback-Strategie
+
+- Hinweis-Felder für HostsPage ergänzen, wenn Host-Informationsfelder (z. B. aus RSS) noch nicht verfügbar sind. (Siehe auch `.documents/migration_plan_podcast_cache_hivebox.md`)
+- Retry-Mechanismus für RSS-Abruf und Merge implementieren. (Siehe `.instructions/howto_merge_caching.md`)
+- Validierungslogik für Cache und API-Abruf klar dokumentieren und ggf. als Utility/Service kapseln. (Siehe PRD und `.instructions/adr-001-merge-strategy.md`)
+- Lessons Learned und typische Fehlerquellen weiterhin dokumentieren (z. B. in `.documents/migration_plan_podcast_cache_hivebox.md`)
+
+---
+
+## Nächste Schritte für robustes Caching
+
+1. **Analyse:**
+   - Prüfen, wie die Provider (`podcastCollectionProvider`, `podcastEpisodeProvider`) auf den Cache zugreifen und welche Bedingungen zu Fallbacks führen.
+   - Reihenfolge: Cache → API → Placeholder.
+2. **Definition des Soll-Verhaltens:**
+   - Was soll im Cache landen? (Komplette Collection, Episoden, Metadaten?)
+   - Wie lange ist ein Cache-Eintrag gültig? (TTL, Timestamp)
+   - Was ist der gewünschte Fallback?
+3. **Gezieltes, seitenweises Testen:**
+   - Caching für einzelne Seiten/Use-Cases gezielt aktivieren und UI-Verhalten beobachten.
+   - Fehlerquellen und Nebeneffekte dokumentieren.
+
+**Querverweise:**
+- `.documents/migration_plan_podcast_cache_hivebox.md`
+- `.instructions/howto_merge_caching.md`
+- `.instructions/adr-001-merge-strategy.md`
+- PRD: `.instructions/prd_white_label_podcast_app.md`
